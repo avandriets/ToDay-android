@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">ToDay</string>
     <string name="string_archive">Archive</string>
     <string name="string_quiz">Quiz</string>
     <string name="string_favorite">Favorite</string>
