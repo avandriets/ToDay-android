@@ -22,14 +22,26 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // name of the database file for your application -- change to something appropriate for your app
-    private static final String DATABASE_NAME = "FreeHandsTaxi.db";
+    private static final String DATABASE_NAME = "ToDayQuiz.db";
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // the DAO object we use to access the SimpleData table
 
-    private Dao<Questions, Long> QuestionsDao = null;
-    private RuntimeExceptionDao<Questions, Long> QuestionsRuntimeDao = null;
+    private Dao<DB_Questions, Long> QuestionsDao = null;
+    private RuntimeExceptionDao<DB_Questions, Long> QuestionsRuntimeDao = null;
+
+    private Dao<DB_ThemeQuiz, Long> ThemeQuizDao = null;
+    private RuntimeExceptionDao<DB_ThemeQuiz, Long> ThemeQuizRuntimeDao = null;
+
+    private Dao<DB_ThemeQuestion, Long> ThemeQuestionDao = null;
+    private RuntimeExceptionDao<DB_ThemeQuestion, Long> ThemeQuestionRuntimeDao = null;
+
+    private Dao<DB_Answers, Long> AnswersDao = null;
+    private RuntimeExceptionDao<DB_Answers, Long> AnswersRuntimeDao = null;
+
+    private Dao<DB_FavoriteThemeQuestions, Long> FavoriteDao = null;
+    private RuntimeExceptionDao<DB_FavoriteThemeQuestions, Long> FavoriteRuntimeDao = null;
 
 
     public DatabaseHelper(Context context) {
@@ -45,7 +57,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         try {
             Log.i(DatabaseHelper.class.getName(), "onCreate");
-            TableUtils.createTable(connectionSource, Questions.class);
+            TableUtils.createTable(connectionSource, DB_Questions.class);
 
 
         } catch (SQLException e) {
@@ -63,7 +75,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
 
-            TableUtils.dropTable(connectionSource, Questions.class, true);
+            TableUtils.dropTable(connectionSource, DB_Questions.class, true);
 
 
             // after we drop the old databases, we create the new ones
@@ -76,18 +88,74 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
 
-    public Dao<Questions, Long> getCityDao() throws SQLException {
+    public Dao<DB_Questions, Long> getQuestionDao() throws SQLException {
         if (QuestionsDao == null) {
-            QuestionsDao = getDao(Questions.class);
+            QuestionsDao = getDao(DB_Questions.class);
         }
         return QuestionsDao;
     }
 
-    public RuntimeExceptionDao<Questions, Long> getCityDataDao() {
+    public RuntimeExceptionDao<DB_Questions, Long> getQuestionDataDao() {
         if (QuestionsRuntimeDao == null) {
-            QuestionsRuntimeDao = getRuntimeExceptionDao(Questions.class);
+            QuestionsRuntimeDao = getRuntimeExceptionDao(DB_Questions.class);
         }
         return QuestionsRuntimeDao;
+    }
+
+    public Dao<DB_ThemeQuiz, Long> getThemeQuizDao() throws SQLException {
+        if (ThemeQuizDao == null) {
+            ThemeQuizDao = getDao(DB_ThemeQuiz.class);
+        }
+        return ThemeQuizDao;
+    }
+
+    public RuntimeExceptionDao<DB_ThemeQuiz, Long> getThemeQuizDataDao() {
+        if (ThemeQuizRuntimeDao == null) {
+            ThemeQuizRuntimeDao = getRuntimeExceptionDao(DB_ThemeQuiz.class);
+        }
+        return ThemeQuizRuntimeDao;
+    }
+
+    public Dao<DB_ThemeQuestion, Long> getThemeQuizQuestionsDao() throws SQLException {
+        if (ThemeQuestionDao == null) {
+            ThemeQuestionDao = getDao(DB_ThemeQuestion.class);
+        }
+        return ThemeQuestionDao;
+    }
+
+    public RuntimeExceptionDao<DB_ThemeQuestion, Long> getThemeQuizQuestionsDataDao() {
+        if (ThemeQuestionRuntimeDao == null) {
+            ThemeQuestionRuntimeDao = getRuntimeExceptionDao(DB_ThemeQuestion.class);
+        }
+        return ThemeQuestionRuntimeDao;
+    }
+
+    public Dao<DB_Answers, Long> getAnswerDao() throws SQLException {
+        if (AnswersDao == null) {
+            AnswersDao = getDao(DB_Answers.class);
+        }
+        return AnswersDao;
+    }
+
+    public RuntimeExceptionDao<DB_Answers, Long> getAnswerDataDao() {
+        if (AnswersRuntimeDao == null) {
+            AnswersRuntimeDao = getRuntimeExceptionDao(DB_Answers.class);
+        }
+        return AnswersRuntimeDao;
+    }
+
+    public Dao<DB_FavoriteThemeQuestions, Long> getFavoriteDao() throws SQLException {
+        if (FavoriteDao == null) {
+            FavoriteDao = getDao(DB_FavoriteThemeQuestions.class);
+        }
+        return FavoriteDao;
+    }
+
+    public RuntimeExceptionDao<DB_FavoriteThemeQuestions, Long> getFavoriteDataDao() {
+        if (FavoriteRuntimeDao == null) {
+            FavoriteRuntimeDao = getRuntimeExceptionDao(DB_FavoriteThemeQuestions.class);
+        }
+        return FavoriteRuntimeDao;
     }
 
     /**
@@ -99,5 +167,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         QuestionsDao = null;
         QuestionsRuntimeDao = null;
+
+        ThemeQuizDao = null;
+        ThemeQuizRuntimeDao = null;
+
+        ThemeQuestionDao = null;
+        ThemeQuestionRuntimeDao = null;
+
+        AnswersDao = null;
+        AnswersRuntimeDao = null;
+
+        FavoriteDao = null;
+        FavoriteRuntimeDao = null;
     }
 }

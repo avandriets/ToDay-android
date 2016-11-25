@@ -25,9 +25,10 @@ public class Utility {
 
     public static final String BASE_URL             = "http://today1077.cloudapp.net";
 
-    public static final String Questions    = "/rest/marathon-questions/";
 
     public static OkHttpClient mClientOkHttp;
+    public static final String QuestionsURL = "/rest/marathon-questions/";
+    public static final String ThemeURL = "/rest/theme-questions/get-day-theme-questions/";
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

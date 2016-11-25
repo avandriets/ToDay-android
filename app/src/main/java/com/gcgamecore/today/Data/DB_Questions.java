@@ -8,10 +8,11 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
-@DatabaseTable(tableName = "city")
-public class Questions {
+@DatabaseTable(tableName = "questions")
+public class DB_Questions {
 
     public static final String ID               = "_id";
+    public static final String HEADER               = "HEADER";
     public static final String LANGUAGE         = "LANGUAGE";
     public static final String QUESTION         = "QUESTION";
     public static final String ANSWER1          = "ANSWER1";
@@ -24,6 +25,10 @@ public class Questions {
     @Expose
     @DatabaseField(id = true, canBeNull = false, columnName = ID)
     private long id;
+
+    @Expose
+    @DatabaseField(columnName = HEADER)
+    private long header;
 
     @Expose
     @DatabaseField(columnName = LANGUAGE)
@@ -52,6 +57,14 @@ public class Questions {
     @Expose
     @DatabaseField(canBeNull = true, columnName = UPDATED_AT, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd'T'HH:mm:ssZ")
     private Date updated_at;
+
+    public long getHeader() {
+        return header;
+    }
+
+    public void setHeader(long header) {
+        this.header = header;
+    }
 
     public long getId() {
         return id;
