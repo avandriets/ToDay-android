@@ -2,6 +2,7 @@
 <manifest package="com.gcgamecore.today"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
@@ -24,6 +25,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".Data.TODAYProvider"
+            android:authorities="@string/content_authority"
+            android:exported="false"
+            android:syncable="true" />
+
+        <service android:name=".sync.TODAYAuthenticatorService" >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <!-- The SyncAdapter service -->
+        <service
+            android:name=".sync.TODAYSyncService"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
+
     </application>
 
 </manifest>

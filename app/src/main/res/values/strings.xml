@@ -1,7 +1,11 @@
 <resources>
+    <string name="sync_account_type" translatable="false">today.gcgamecore.com</string>
+    <string name="content_authority" translatable="false">com.gcgamecore.today</string>
+
     <string name="app_name" translatable="false">ToDay</string>
     <string name="string_archive">Archive</string>
     <string name="string_quiz">Quiz</string>
     <string name="string_favorite">Favorite</string>
     <string name="string_action">Event</string>
+    <string name="locale">eng</string>
 </resources>

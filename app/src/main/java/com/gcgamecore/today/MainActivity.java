@@ -7,6 +7,7 @@ import android.widget.Button;
 
 import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.Utility.Utility;
+import com.gcgamecore.today.sync.TODAYSyncAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,29 +58,35 @@ public class MainActivity extends AppCompatActivity {
         relativeLayout_Quiz.setBackgroundColor(Utility.getColor(this, R.color.colorBlack));
 
         currentView.setBackgroundColor(Utility.getColor(this, R.color.colorRed));
+
+        TODAYSyncAdapter.syncImmediately(this);
     }
 
     @OnClick(R.id.btn_archive)
     public void showArchive(Button button) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new ArchiveFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Archive);
+        TODAYSyncAdapter.syncImmediately(this);
     }
 
     @OnClick(R.id.btn_favorite)
     public void showFavorite(Button button) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new FavoriteFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Favorite);
+        TODAYSyncAdapter.syncImmediately(this);
     }
 
     @OnClick(R.id.btn_quiz)
     public void showQuiz(Button button) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new QuizFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Quiz);
+        TODAYSyncAdapter.syncImmediately(this);
     }
 
     @OnClick(R.id.btn_action)
     public void showAction(Button button) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new EventFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Event);
+        TODAYSyncAdapter.syncImmediately(this);
     }
 }

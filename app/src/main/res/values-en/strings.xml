@@ -4,4 +4,5 @@
     <string name="string_quiz">Quiz</string>
     <string name="string_favorite">Favorite</string>
     <string name="string_action">Event</string>
+    <string name="locale">eng</string>
 </resources>
