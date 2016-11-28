@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -94,18 +95,16 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void loadQuestionsFromServer(QuizService service) {
 
-        Call<List<DB_Questions>> retGetCountries = service.getQuestions();
+        Call<List<DB_Questions>> retGetQuestions = service.getQuestions();
 
         try {
-            Response<List<DB_Questions>> response = retGetCountries.execute();
+            Response<List<DB_Questions>> response = retGetQuestions.execute();
 
             if (response.isSuccessful()) {
-                List<DB_Questions> countries = response.body();
+                List<DB_Questions> questions = response.body();
 
-                DB_Questions newCountry = null;
-                for (DB_Questions country :countries) {
-                    //newCountry =
-                    mDatabaseHelper.getQuestionDataDao().createIfNotExists(country);
+                for (DB_Questions question :questions) {
+                    mDatabaseHelper.getQuestionDataDao().createIfNotExists(question);
                 }
                 Log.d(LOG_TAG, "Get questions successful");
             } else {
@@ -136,7 +135,12 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
             lang_code = "E";
         }
 
-        Call<ResponseBody> retGetTheme = service.getTheme(lang_code);
+        Calendar c = Calendar.getInstance();
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int month = c.get(Calendar.MONTH) + 1;
+        int year = c.get(Calendar.YEAR);
+
+        Call<ResponseBody> retGetTheme = service.getTheme(lang_code, day, month, year);
 
         try {
             Response<ResponseBody> response = retGetTheme.execute();
@@ -152,16 +156,28 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
                 String theme_questions = jsonObj.getString("questions");
                 DB_ThemeQuiz theme_quiz = gson.fromJson(theme, DB_ThemeQuiz.class);
 
+                //DB_ThemeQuiz theme_quiz_from_db = mDatabaseHelper.getThemeQuizDataDao().queryForId(theme_quiz.getId());
+                DB_ThemeQuiz theme_quiz_from_db = mDatabaseHelper.getThemeQuizDataDao().createIfNotExists(theme_quiz);
+
+                if(theme_quiz.getUpdated_at().after(theme_quiz_from_db.getUpdated_at())) {
+                    mDatabaseHelper.getThemeQuizDataDao().update(theme_quiz);
+                }
+
                 Type listType = new TypeToken<ArrayList<DB_ThemeQuestion>>(){}.getType();
-                List<DB_ThemeQuestion> yourClassList = new Gson().fromJson(theme_questions, listType);
+                List<DB_ThemeQuestion> theme_questions_list = new Gson().fromJson(theme_questions, listType);
 
-                Log.d(LOG_TAG, "End parsing. ");
-
-                //TODO Add data to database
+                DB_ThemeQuestion theme_quest = null;
+                for (DB_ThemeQuestion t_quest : theme_questions_list) {
+                    t_quest.setTheme(theme_quiz_from_db.getId());
+                    theme_quest = mDatabaseHelper.getThemeQuizQuestionsDataDao().createIfNotExists(t_quest);
+                    if(t_quest.getUpdated_at().after(theme_quest.getUpdated_at())){
+                        mDatabaseHelper.getThemeQuizQuestionsDataDao().update(t_quest);
+                    }
+                }
 
             } else {
-                JSONObject error_obj = Utility.ReadRetrofitResponseToJsonObj(response);
-                Log.d(LOG_TAG, "Error. " + error_obj.toString() + " " + response.message());
+                //JSONObject error_obj = Utility.ReadRetrofitResponseToJsonObj(response);
+                Log.d(LOG_TAG, "Error. " + response.code() + " " + response.message());
             }
 
         } catch (IOException | JSONException e) {

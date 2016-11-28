@@ -4,7 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.gcgamecore.today.Adapters.ArchiveRecyclerViewAdapter;
 import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.Utility.Utility;
 import com.gcgamecore.today.sync.TODAYSyncAdapter;
@@ -14,7 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ArchiveFragment.Callback {
 
     private static final String EVENT_FRAGMENT_TAG = "EVENT_FRAGMENT";
     private DatabaseHelper mDatabaseHelper  = null;
@@ -66,27 +68,30 @@ public class MainActivity extends AppCompatActivity {
     public void showArchive(Button button) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new ArchiveFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Archive);
-        TODAYSyncAdapter.syncImmediately(this);
     }
 
     @OnClick(R.id.btn_favorite)
     public void showFavorite(Button button) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new FavoriteFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Favorite);
-        TODAYSyncAdapter.syncImmediately(this);
     }
 
     @OnClick(R.id.btn_quiz)
     public void showQuiz(Button button) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new QuizFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Quiz);
-        TODAYSyncAdapter.syncImmediately(this);
     }
 
     @OnClick(R.id.btn_action)
     public void showAction(Button button) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new EventFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Event);
-        TODAYSyncAdapter.syncImmediately(this);
+    }
+
+    @Override
+    public void onItemCustomerOrderSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
+
+        Toast.makeText(this, vh.tvHeader.getText(), Toast.LENGTH_SHORT).show();
+
     }
 }

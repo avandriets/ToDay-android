@@ -5,4 +5,5 @@
     <string name="string_favorite">Избранное</string>
     <string name="string_action">Событие</string>
     <string name="locale">rus</string>
+    <string name="No_information_available">There is no data</string>
 </resources>

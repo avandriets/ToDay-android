@@ -24,7 +24,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // name of the database file for your application -- change to something appropriate for your app
     private static final String DATABASE_NAME = "ToDayQuiz.db";
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
 
     // the DAO object we use to access the SimpleData table
 
@@ -58,6 +58,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.i(DatabaseHelper.class.getName(), "onCreate");
             TableUtils.createTable(connectionSource, DB_Questions.class);
+            TableUtils.createTable(connectionSource, DB_Answers.class);
+            TableUtils.createTable(connectionSource, DB_FavoriteThemeQuestions.class);
+            TableUtils.createTable(connectionSource, DB_ThemeQuestion.class);
+            TableUtils.createTable(connectionSource, DB_ThemeQuiz.class);
 
 
         } catch (SQLException e) {
@@ -76,6 +80,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
 
             TableUtils.dropTable(connectionSource, DB_Questions.class, true);
+
+            TableUtils.dropTable(connectionSource, DB_Answers.class, true);
+            TableUtils.dropTable(connectionSource, DB_FavoriteThemeQuestions.class, true);
+            TableUtils.dropTable(connectionSource, DB_ThemeQuestion.class, true);
+            TableUtils.dropTable(connectionSource, DB_ThemeQuiz.class, true);
 
 
             // after we drop the old databases, we create the new ones

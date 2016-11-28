@@ -14,6 +14,7 @@ public class DB_ThemeQuiz {
     public static final String ID               = "_id";
     public static final String LANGUAGE         = "language";
     public static final String THEME_IMAGE      = "theme_image";
+    public static final String TARGET_DATE      = "target_date";
     public static final String NAME             = "name";
     public static final String DESCRIPTION      = "description";
     public static final String CREATED_AT       = "created_at";
@@ -30,6 +31,10 @@ public class DB_ThemeQuiz {
     @Expose
     @DatabaseField(columnName = THEME_IMAGE)
     private String theme_image;
+
+    @Expose
+    @DatabaseField(canBeNull = true, columnName = TARGET_DATE, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
+    private Date target_date;
 
     @Expose
     @DatabaseField(columnName = NAME)
@@ -69,6 +74,14 @@ public class DB_ThemeQuiz {
 
     public void setTheme_image(String theme_image) {
         this.theme_image = theme_image;
+    }
+
+    public Date getTarget_date() {
+        return target_date;
+    }
+
+    public void setTarget_date(Date target_date) {
+        this.target_date = target_date;
     }
 
     public String getName() {
