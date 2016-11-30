@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
         Bundle arguments = new Bundle();
         arguments.putLong(MainActivity.KEY_POINT_ID, getIntent().getLongExtra(MainActivity.KEY_POINT_ID, pId));
 
-        ThemeQuestionsFragment fragment = new ThemeQuestionsFragment();
+        ThemeFragment fragment = new ThemeFragment();
         fragment.setArguments(arguments);
 
         getSupportFragmentManager().beginTransaction()
