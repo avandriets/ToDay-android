@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
@@ -8,12 +9,13 @@
     android:paddingBottom="4dp"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:paddingTop="4dp">
+    android:paddingTop="4dp"
+    android:layout_marginRight="26dp">
 
     <ImageView
         android:layout_width="70dp"
         android:layout_height="70dp"
-        app:srcCompat="@drawable/star"
+        app:srcCompat="@drawable/ic_status_element1"
         android:id="@+id/img_sign" />
 
     <LinearLayout
@@ -27,11 +29,26 @@
             android:text="Header"
             android:id="@+id/themeHeader" />
 
-        <TextView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="12.12.2012"
-            android:id="@+id/themeDate" />
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="12.12.2012"
+                android:id="@+id/themeDate"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/theme_questions"
+                android:layout_weight="10" />
+        </LinearLayout>
+
     </LinearLayout>
 
 

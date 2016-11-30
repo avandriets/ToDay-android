@@ -2,6 +2,7 @@ package com.gcgamecore.today;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -10,15 +11,18 @@ import com.gcgamecore.today.Adapters.ArchiveRecyclerViewAdapter;
 import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.Utility.Utility;
 import com.gcgamecore.today.sync.TODAYSyncAdapter;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MainActivity extends AppCompatActivity implements ArchiveFragment.Callback {
+public class MainActivity extends AppCompatActivity implements ArchiveListFragment.Callback {
 
     private static final String EVENT_FRAGMENT_TAG = "EVENT_FRAGMENT";
+    public static final String KEY_POINT_ID = "key_theme_id";
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private DatabaseHelper mDatabaseHelper  = null;
 
     @BindView(R.id.btn_archive)
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveFragment.C
 
         mDatabaseHelper = Utility.getDBHelper(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new EventFragment(), EVENT_FRAGMENT_TAG).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new EventsListFragment(), EVENT_FRAGMENT_TAG).commit();
 
         selectButton(relativeLayout_Event);
     }
@@ -66,13 +70,13 @@ public class MainActivity extends AppCompatActivity implements ArchiveFragment.C
 
     @OnClick(R.id.btn_archive)
     public void showArchive(Button button) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new ArchiveFragment(), EVENT_FRAGMENT_TAG).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new ArchiveListFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Archive);
     }
 
     @OnClick(R.id.btn_favorite)
     public void showFavorite(Button button) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new FavoriteFragment(), EVENT_FRAGMENT_TAG).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new FavoritesListFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Favorite);
     }
 
@@ -84,14 +88,40 @@ public class MainActivity extends AppCompatActivity implements ArchiveFragment.C
 
     @OnClick(R.id.btn_action)
     public void showAction(Button button) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new EventFragment(), EVENT_FRAGMENT_TAG).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new EventsListFragment(), EVENT_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Event);
     }
 
     @Override
-    public void onItemCustomerOrderSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
+    public void onItemArchiveSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
+        Toast.makeText(this, "Archive", Toast.LENGTH_SHORT).show();
+    }
 
-        Toast.makeText(this, vh.tvHeader.getText(), Toast.LENGTH_SHORT).show();
+    @Override
+    public void onItemThemeSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
+
+        Bundle arguments = new Bundle();
+        arguments.putLong(MainActivity.KEY_POINT_ID, getIntent().getLongExtra(MainActivity.KEY_POINT_ID, pId));
+
+        ThemeQuestionsFragment fragment = new ThemeQuestionsFragment();
+        fragment.setArguments(arguments);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_list_container, fragment)
+                .commit();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+
+        Log.d(LOG_TAG, "On destroy helper && GApiClient.");
+        if (mDatabaseHelper != null) {
+            OpenHelperManager.releaseHelper();
+            mDatabaseHelper = null;
+        }
 
     }
 }

@@ -5,6 +5,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion '25.0.1'
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "com.gcgamecore.today"
         minSdkVersion 10
         targetSdkVersion 25

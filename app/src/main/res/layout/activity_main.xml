@@ -11,14 +11,17 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorGray">
 
         <TextView
-            android:text="TextView"
+            android:text="FRIDAY, MARCH , 2017"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView" />
     </LinearLayout>
+
+    <include layout="@layout/titlebar" />
 
     <LinearLayout
         android:orientation="vertical"
