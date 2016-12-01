@@ -1,12 +1,14 @@
 package com.gcgamecore.today.Utility;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import com.gcgamecore.today.Data.DatabaseHelper;
+import com.gcgamecore.today.R;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +16,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -208,5 +213,45 @@ public class Utility {
         } else {
             return context.getResources().getColor(id);
         }
+    }
+
+    public static String getDayOfWeek(Context context,int day){
+        Resources res = context.getResources();
+        String day_of_week = "";
+
+        switch (day) {
+            case Calendar.SUNDAY:
+                day_of_week = res.getString(R.string.SUNDAY);
+                break;
+            case Calendar.MONDAY:
+                day_of_week = res.getString(R.string.MONDAY);
+                break;
+            case Calendar.TUESDAY:
+                day_of_week = res.getString(R.string.TUESDAY);
+                break;
+            case Calendar.WEDNESDAY:
+                day_of_week = res.getString(R.string.WEDNESDAY);
+                break;
+            case Calendar.THURSDAY:
+                day_of_week = res.getString(R.string.THURSDAY);
+                break;
+            case Calendar.FRIDAY:
+                day_of_week = res.getString(R.string.FRIDAY);
+                break;
+            case Calendar.SATURDAY:
+                day_of_week = res.getString(R.string.SATURDAY);
+        }
+
+        return day_of_week;
+    }
+
+    public static String getMonthForInt(int num) {
+        String month = "wrong";
+        DateFormatSymbols dfs = new DateFormatSymbols();
+        String[] months = dfs.getMonths();
+        if (num >= 0 && num <= 11 ) {
+            month = months[num];
+        }
+        return month;
     }
 }

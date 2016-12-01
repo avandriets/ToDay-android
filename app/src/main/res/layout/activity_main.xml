@@ -12,16 +12,43 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorGray">
+        android:background="@color/colorGray"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp">
 
-        <TextView
-            android:text="FRIDAY, MARCH , 2017"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView" />
-    </LinearLayout>
+            android:layout_height="match_parent">
 
-    <include layout="@layout/titlebar" />
+            <TextView
+                android:text="FRIDAY, MARCH , 2017"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/currentDate"
+                android:layout_weight="4"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_clock_element4"
+                android:id="@+id/imageView4"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="17:00"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/currentTime"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:gravity="left" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
@@ -43,10 +70,36 @@
         android:background="@android:color/background_dark">
 
         <RelativeLayout
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/holo_red_dark"
+            android:id="@+id/rl_main"
+            android:layout_width="0dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_home_black_24dp"
+                android:id="@+id/imageView3"
+                android:layout_centerInParent="false"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="false" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_main"
+                android:background="@android:color/transparent"
+                android:textAllCaps="false"
+                android:layout_centerVertical="false"
+                android:layout_centerInParent="true"
+                android:textColor="@color/colorWhite" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
             android:id="@+id/rl_archive">
 
             <Button
@@ -62,9 +115,9 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:id="@+id/rl_quiz">
 
             <Button
@@ -80,9 +133,9 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:id="@+id/rl_favorite">
 
             <Button
@@ -97,9 +150,9 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:id="@+id/rl_action">
 
             <Button

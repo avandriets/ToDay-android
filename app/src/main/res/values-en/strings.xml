@@ -6,4 +6,11 @@
     <string name="string_action">Event</string>
     <string name="locale">eng</string>
     <string name="No_information_available">There is no data</string>
+    <string name="SUNDAY">Sunday</string>
+    <string name="MONDAY">Monday</string>
+    <string name="TUESDAY">Tuesday</string>
+    <string name="WEDNESDAY">Wednesday</string>
+    <string name="THURSDAY">Thursday</string>
+    <string name="FRIDAY">Friday</string>
+    <string name="SATURDAY">Saturday</string>
 </resources>
