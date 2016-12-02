@@ -46,7 +46,7 @@ public class FavoritesListFragment extends ThemeListFragment {
                 new ArchiveRecyclerViewAdapter.ArchiveAdapterOnClickHandler() {
                     @Override
                     public void onClick(Long date, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
-                        ((ThemeListFragment.Callback) getActivity()).onItemThemeSelected(date, vh);
+                        ((ThemeListFragment.Callback) getActivity()).onItemFavoriteSelected(date, vh);
                     }
                 }, emptyView,  mDatabaseHelper);
     }

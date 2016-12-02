@@ -2,8 +2,6 @@ package com.gcgamecore.today;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,9 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.gcgamecore.today.Adapters.ArchiveRecyclerViewAdapter;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
-import com.gcgamecore.today.Data.DatabaseHelper;
-import com.gcgamecore.today.Utility.Utility;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.support.OrmLiteCursorLoader;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -36,6 +31,7 @@ public abstract class ThemeListFragment extends BaseFragment implements LoaderMa
     public interface Callback {
         void onItemArchiveSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh);
         void onItemThemeSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh);
+        void onItemFavoriteSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh);
     }
 
     public ThemeListFragment(){

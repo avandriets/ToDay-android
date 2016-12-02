@@ -1,7 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="24dp"
+        android:paddingEnd="33dp"
+        android:paddingStart="33dp"
+        android:paddingTop="30dp"
+        android:text="Merry Christmass"
+        android:textAllCaps="true"
+        android:textSize="24sp" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        app:srcCompat="@drawable/ic_line_element1" />
+
+    <TextView
+        android:id="@+id/textQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="27dp"
+        android:paddingEnd="33dp"
+        android:paddingStart="33dp"
+        android:paddingTop="18dp"
+        android:text="Зачем вьетнамская традиция рекомендует счастливым обладателям пруда у своего дома к Новому году выпускать карпа в этот самый пруд?"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/layout_answer_one"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/colorGray"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="45dp"
+            android:tintMode="screen"
+            app:srcCompat="@drawable/ic_shevron1" />
+
+        <TextView
+            android:id="@+id/textAnswerOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Чтобы карп принес богатство." />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_answer_two"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorGray"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="45dp"
+            app:srcCompat="@drawable/ic_shevron2" />
+
+        <TextView
+            android:id="@+id/textAnswerTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Чтобы карп принес богатство." />
+    </LinearLayout>
+
+    <TextView
+        android:text="И это не шутка! По вьетнамским поверьям, карп катает на своей спине домового, а домовой весь год присматривает за домом и семьей обладателя карпа и пруда"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/answerDescription"
+        android:layout_weight="1"
+        android:textSize="18sp"
+        android:paddingStart="33dp"
+        android:paddingEnd="33dp"
+        android:paddingTop="16dp" />
 
 </LinearLayout>

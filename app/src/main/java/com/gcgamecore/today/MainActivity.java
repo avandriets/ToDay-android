@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
     private static final String ARCHIVE_FRAGMENT_TAG = "ARCHIVE_FRAGMENT";
     private static final String FAVORITE_FRAGMENT_TAG = "FAVORITE_FRAGMENT";
     private static final String QUIZ_FRAGMENT_TAG = "QUIZ_FRAGMENT";
-    private DatabaseHelper mDatabaseHelper  = null;
+    private DatabaseHelper mDatabaseHelper = null;
 
     @BindView(R.id.btn_main)
     Button MainButton;
@@ -97,8 +97,9 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
 
             public void onTick(long millisUntilFinished) {
                 Calendar c = Calendar.getInstance();
-                tv_currentTime.setText(c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE));
+                tv_currentTime.setText(c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE));
             }
+
             public void onFinish() {
 
             }
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
         tv_currentDate.setText(str_cur_date);
     }
 
-    public void selectButton(View currentView){
+    public void selectButton(View currentView) {
         relativeLayout_Event.setBackgroundColor(Utility.getColor(this, R.color.colorBlack));
         relativeLayout_Archive.setBackgroundColor(Utility.getColor(this, R.color.colorBlack));
         relativeLayout_Favorite.setBackgroundColor(Utility.getColor(this, R.color.colorBlack));
@@ -160,12 +161,20 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
 
     @Override
     public void onItemArchiveSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
-        Toast.makeText(this, "Archive", Toast.LENGTH_SHORT).show();
+        StartThemePreview(pId);
     }
 
     @Override
     public void onItemThemeSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
+        StartThemePreview(pId);
+    }
 
+    @Override
+    public void onItemFavoriteSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
+        StartThemePreview(pId);
+    }
+
+    private void StartThemePreview(Long pId) {
         Bundle arguments = new Bundle();
         arguments.putLong(MainActivity.KEY_POINT_ID, getIntent().getLongExtra(MainActivity.KEY_POINT_ID, pId));
 
@@ -179,6 +188,14 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
 
     @Override
     public void onStartGame(Long themeId) {
-        Toast.makeText(this, "Start game", Toast.LENGTH_SHORT).show();
+        Bundle arguments = new Bundle();
+        arguments.putLong(MainActivity.KEY_POINT_ID, getIntent().getLongExtra(MainActivity.KEY_POINT_ID, themeId));
+
+        ThemeQuestionsFragment fragment = new ThemeQuestionsFragment();
+        fragment.setArguments(arguments);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_list_container, fragment)
+                .commit();
     }
 }
