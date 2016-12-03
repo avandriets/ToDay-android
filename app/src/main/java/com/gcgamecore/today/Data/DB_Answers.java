@@ -15,15 +15,15 @@ public class DB_Answers {
     public static final String ANSWER            = "answer";
 
     @Expose
-    @DatabaseField(id = true, canBeNull = false, columnName = ID)
+    @DatabaseField(canBeNull = false, columnName = ID, generatedId = true)
     private long id;
 
     @Expose
-    @DatabaseField(columnName = THEME_ID)
+    @DatabaseField(columnName = THEME_ID, uniqueCombo = true)
     private long theme_id;
 
     @Expose
-    @DatabaseField(columnName = QUESTION_ID)
+    @DatabaseField(columnName = QUESTION_ID, uniqueCombo = true)
     private long question_id;
 
     @Expose

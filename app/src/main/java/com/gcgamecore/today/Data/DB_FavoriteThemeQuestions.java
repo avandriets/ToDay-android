@@ -13,15 +13,15 @@ public class DB_FavoriteThemeQuestions {
     public static final String QUESTION_ID      = "question_id";
 
     @Expose
-    @DatabaseField(id = true, canBeNull = false, columnName = ID)
+    @DatabaseField(canBeNull = false, columnName = ID, generatedId = true)
     private long id;
 
     @Expose
-    @DatabaseField(columnName = THEME_ID)
+    @DatabaseField(columnName = THEME_ID, uniqueCombo = true)
     private long theme_id;
 
     @Expose
-    @DatabaseField(columnName = QUESTION_ID)
+    @DatabaseField(columnName = QUESTION_ID, uniqueCombo = true)
     private long question_id;
 
     public long getId() {

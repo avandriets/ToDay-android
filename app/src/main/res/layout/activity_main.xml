@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorGray"
+        android:background="@color/ToDayColorGray"
         android:paddingTop="7dp"
         android:paddingBottom="7dp">
 
@@ -33,7 +33,7 @@
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_clock_element4"
+                app:srcCompat="@drawable/ic_clock_on_top"
                 android:id="@+id/imageView4"
                 android:layout_weight="1" />
 
@@ -93,7 +93,7 @@
                 android:textAllCaps="false"
                 android:layout_centerVertical="false"
                 android:layout_centerInParent="true"
-                android:textColor="@color/colorWhite" />
+                android:textColor="@color/ToDayColorWhite" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -111,7 +111,7 @@
                 android:textAllCaps="false"
                 android:layout_centerVertical="false"
                 android:layout_centerInParent="true"
-                android:textColor="@color/colorWhite" />
+                android:textColor="@color/ToDayColorWhite" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -126,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_quiz"
                 android:background="@android:color/transparent"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/ToDayColorWhite"
                 android:textAllCaps="false"
                 android:layout_centerHorizontal="true" />
 
@@ -145,7 +145,7 @@
                 android:id="@+id/btn_favorite"
                 android:background="@android:color/transparent"
                 android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/ToDayColorWhite"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
@@ -162,7 +162,7 @@
                 android:id="@+id/btn_action"
                 android:textAllCaps="false"
                 android:background="@android:color/transparent"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/ToDayColorWhite"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
 

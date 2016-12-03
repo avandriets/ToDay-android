@@ -6,6 +6,8 @@
     android:orientation="vertical"
     android:weightSum="1">
 
+    <include layout="@layout/titlebar" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -22,7 +24,7 @@
                 android:gravity="center_horizontal"
                 android:text="С новым годом"
                 android:textAllCaps="true"
-                android:textColor="@color/colorBlack"
+                android:textColor="@color/ToDayColorBlack"
                 android:textSize="25sp"
                 android:paddingTop="24dp"
                 android:paddingEnd="33dp"
@@ -33,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum commodo nisi odio, in tempor felis fringilla vitae. Curabitur consequat lorem at purus imperdiet posuere. Quisque finibus magna vel metus pellentesque imperdiet."
-                android:textColor="@color/colortextGray"
+                android:textColor="@color/ToDayColorTextGray"
                 android:textSize="16sp"
                 android:paddingTop="24dp"
                 android:paddingBottom="33dp"
@@ -43,23 +45,33 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
+
+                <com.gcgamecore.today.CustomView.RoundedImageView
+                    android:id="@+id/background_image"
+                    android:layout_width="match_parent"
+                    android:scaleType="centerCrop"
+                    android:layout_height="400dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/background_image"
+                    android:id="@+id/background_image1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:civ_border_width="0dp"
-                    app:civ_border_color="#FF000000" />
+                    app:civ_border_color="#FF000000"
+                    android:visibility="gone"/>
 
                 <ImageButton
-                    app:srcCompat="@drawable/ic_start_element3"
+                    app:srcCompat="@drawable/ic_start_button"
                     android:id="@+id/start_game_button"
                     android:scaleType="fitXY"
-                    android:layout_centerInParent="true"
+                    android:layout_centerInParent="false"
                     android:background="@android:color/transparent"
                     android:layout_height="90dp"
-                    android:layout_width="180dp" />
+                    android:layout_width="180dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="120dp" />
             </RelativeLayout>
 
         </LinearLayout>

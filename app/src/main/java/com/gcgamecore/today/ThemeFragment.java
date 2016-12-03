@@ -8,15 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.gcgamecore.today.CustomView.RoundedImageView;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
 import com.squareup.picasso.Picasso;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -24,7 +22,7 @@ import butterknife.OnClick;
 public class ThemeFragment extends BaseFragment {
 
     @BindView(R.id.background_image)
-    ImageView background_image;
+    RoundedImageView background_image;
 
     @BindView(R.id.headLine)
     TextView headLine;
@@ -101,8 +99,8 @@ public class ThemeFragment extends BaseFragment {
 
             if (current_theme.getTheme_image() != null) {
                 Picasso.with(getContext()).load(Utility.BASE_URL + current_theme.getTheme_image())
-                        .placeholder(R.drawable.ic_oval_placeholder)
-                        .error(R.drawable.ic_oval_placeholder)
+//                        .placeholder(R.drawable.ic_oval_placeholder)
+//                        .error(R.drawable.ic_oval_placeholder)
                         .into(background_image);
             }
         }

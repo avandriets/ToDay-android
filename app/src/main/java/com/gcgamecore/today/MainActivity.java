@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gcgamecore.today.Adapters.ArchiveRecyclerViewAdapter;
 import com.gcgamecore.today.Data.DatabaseHelper;
@@ -22,7 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MainActivity extends AppCompatActivity implements ArchiveListFragment.Callback, ThemeFragment.Callback {
+public class MainActivity extends AppCompatActivity implements ArchiveListFragment.Callback, ThemeFragment.Callback, ThemeQuestionsFragment.Callback {
 
     private static final String EVENT_FRAGMENT_TAG = "EVENT_FRAGMENT";
     public static final String KEY_POINT_ID = "key_theme_id";
@@ -84,11 +83,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
 
         mDatabaseHelper = Utility.getDBHelper(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new ThemeFragment(), MAIN_FRAGMENT_TAG).commit();
-
-        selectButton(relativeLayout_Main);
-
-        initInterface();
+        goToMainPage();
     }
 
     private void initInterface() {
@@ -118,13 +113,13 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
     }
 
     public void selectButton(View currentView) {
-        relativeLayout_Event.setBackgroundColor(Utility.getColor(this, R.color.colorBlack));
-        relativeLayout_Archive.setBackgroundColor(Utility.getColor(this, R.color.colorBlack));
-        relativeLayout_Favorite.setBackgroundColor(Utility.getColor(this, R.color.colorBlack));
-        relativeLayout_Quiz.setBackgroundColor(Utility.getColor(this, R.color.colorBlack));
-        relativeLayout_Main.setBackgroundColor(Utility.getColor(this, R.color.colorBlack));
+        relativeLayout_Event.setBackgroundColor(Utility.getColor(this, R.color.ToDayColorBlack));
+        relativeLayout_Archive.setBackgroundColor(Utility.getColor(this, R.color.ToDayColorBlack));
+        relativeLayout_Favorite.setBackgroundColor(Utility.getColor(this, R.color.ToDayColorBlack));
+        relativeLayout_Quiz.setBackgroundColor(Utility.getColor(this, R.color.ToDayColorBlack));
+        relativeLayout_Main.setBackgroundColor(Utility.getColor(this, R.color.ToDayColorBlack));
 
-        currentView.setBackgroundColor(Utility.getColor(this, R.color.colorRed));
+        currentView.setBackgroundColor(Utility.getColor(this, R.color.ToDayColorRed));
 
         TODAYSyncAdapter.syncImmediately(this);
     }
@@ -197,5 +192,16 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_list_container, fragment)
                 .commit();
+    }
+
+    @Override
+    public void onFinishGame() {
+        goToMainPage();
+    }
+
+    private void goToMainPage(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new ThemeFragment(), MAIN_FRAGMENT_TAG).commit();
+        selectButton(relativeLayout_Main);
+        initInterface();
     }
 }

@@ -1,18 +1,28 @@
 package com.gcgamecore.today.Utility;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
 import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.R;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -253,5 +263,47 @@ public class Utility {
             month = months[num];
         }
         return month;
+    }
+
+    public static Bitmap getScreenShot(View view) {
+        View screenView = view.getRootView();
+        screenView.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
+        screenView.setDrawingCacheEnabled(false);
+        return bitmap;
+    }
+
+    public static File store(Bitmap bm, String fileName){
+        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
+        File dir = new File(dirPath);
+        if(!dir.exists())
+            dir.mkdirs();
+        File file = new File(dirPath, fileName);
+        try {
+            FileOutputStream fOut = new FileOutputStream(file);
+            bm.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return file;
+    }
+
+    public static void shareImage(File file, Context context){
+        Uri uri = Uri.fromFile(file);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("image/*");
+
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        try {
+            context.startActivity(Intent.createChooser(intent, "Share Screenshot"));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, "No App Available", Toast.LENGTH_SHORT).show();
+        }
     }
 }
