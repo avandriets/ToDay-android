@@ -27,7 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Header"
-            android:id="@+id/themeHeader" />
+            android:id="@+id/themeHeader"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -40,7 +41,8 @@
                 android:layout_height="wrap_content"
                 android:text="12.12.2012"
                 android:id="@+id/themeDate"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:layout_marginTop="10dp" />
 
             <TextView
                 android:layout_width="match_parent"

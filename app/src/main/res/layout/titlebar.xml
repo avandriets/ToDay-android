@@ -20,10 +20,10 @@
             android:layout_marginTop="25dp">
 
             <TextView
-                android:text="Заданных \nвопросов"
+                android:text="@string/questionsCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView3"
+                android:id="@+id/textQuestionCountCaption"
                 android:gravity="right" />
 
             <TextView
@@ -58,10 +58,10 @@
             android:layout_marginTop="25dp">
 
             <TextView
-                android:text="Правильных \nответов"
+                android:text="@string/rightAnswers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView6" />
+                android:id="@+id/textPercentCaption" />
 
             <TextView
                 android:text="67%"

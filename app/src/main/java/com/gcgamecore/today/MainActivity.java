@@ -92,7 +92,8 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
 
             public void onTick(long millisUntilFinished) {
                 Calendar c = Calendar.getInstance();
-                tv_currentTime.setText(c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE));
+
+                tv_currentTime.setText(String.format("%02d:%02d",c.get(Calendar.HOUR_OF_DAY),c.get(Calendar.MINUTE) ));
             }
 
             public void onFinish() {

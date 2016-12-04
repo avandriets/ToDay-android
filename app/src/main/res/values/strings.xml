@@ -16,4 +16,7 @@
     <string name="THURSDAY">Thursday</string>
     <string name="FRIDAY">Friday</string>
     <string name="SATURDAY">Saturday</string>
+    <string name="empty_theme">We do not have questions for today</string>
+    <string name="questionsCount">Questions \ncount</string>
+    <string name="rightAnswers">Правильных \nответов</string>
 </resources>

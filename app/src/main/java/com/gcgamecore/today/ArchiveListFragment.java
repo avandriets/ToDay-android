@@ -27,6 +27,11 @@ public class ArchiveListFragment extends ThemeListFragment {
     }
 
     @Override
+    protected String getCaption(){
+        return getContext().getResources().getString(R.string.string_archive);
+    }
+
+    @Override
     public void initDataAdapter(View rootView) {
 
         View emptyView = rootView.findViewById(getEmptyListTextID());
@@ -37,7 +42,7 @@ public class ArchiveListFragment extends ThemeListFragment {
                     public void onClick(Long date, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
                         ((Callback) getActivity()).onItemArchiveSelected(date, vh);
                     }
-                }, emptyView,  mDatabaseHelper);
+                }, emptyView,  mDatabaseHelper, 1);
     }
 
     @Override

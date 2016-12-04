@@ -126,7 +126,7 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
 
-        String lang = lang = mContext.getResources().getString(R.string.locale);
+        String lang = mContext.getResources().getString(R.string.locale);
         String lang_code = "";
 
         if (lang.equals("rus")){

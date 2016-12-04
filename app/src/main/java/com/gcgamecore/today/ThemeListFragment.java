@@ -10,14 +10,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import com.gcgamecore.today.Adapters.ArchiveRecyclerViewAdapter;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.j256.ormlite.android.apptools.support.OrmLiteCursorLoader;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public abstract class ThemeListFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+
+public abstract class ThemeListFragment extends BaseFragmentWithHeader implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private static final String LOG_TAG = ThemeListFragment.class.getSimpleName();
     private static final int ARCHIVE_LIST_ID_LOADER = 1100;
@@ -26,6 +31,9 @@ public abstract class ThemeListFragment extends BaseFragment implements LoaderMa
     private RecyclerView mRecyclerView;
     protected PreparedQuery<DB_ThemeQuiz> preparedQuery;
     protected Dao<DB_ThemeQuiz, Long> mOrderDao;
+
+    @BindView(R.id.pageCaption)
+    protected TextView pageCaption;
 
 
     public interface Callback {
@@ -45,15 +53,26 @@ public abstract class ThemeListFragment extends BaseFragment implements LoaderMa
 
     public abstract void initDataAdapter(View rootView);
 
+    protected abstract String getCaption();
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(getFragmentID(), container, false);
+        ButterKnife.bind(this, rootView);
 
         initDataAdapter(rootView);
 
         mRecyclerView = (RecyclerView)rootView.findViewById(getListViewID());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
+
+        pageCaption.setText(getCaption());
+        pageCaption.setTypeface(custom_font_bold);
+
+        TextView emptyTextField = (TextView) rootView.findViewById(getEmptyListTextID());
+        emptyTextField.setTypeface(custom_font_regular);
+
+        InitHeader();
 
         return rootView;
     }

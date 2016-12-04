@@ -123,10 +123,6 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
 
         Bundle arguments = getArguments();
 
-        Typeface custom_font_regular = Typeface.createFromAsset(getContext().getAssets(), "fonts/Book Antiqua Regular.ttf");
-        Typeface custom_font_bold = Typeface.createFromAsset(getContext().getAssets(), "fonts/Book Antiqua Bold.ttf");
-        Typeface custom_font_times = Typeface.createFromAsset(getContext().getAssets(), "fonts/Times New Roman Cyr Italic.ttf");
-
         headLine.setTypeface(custom_font_bold);
         question_text.setTypeface(custom_font_regular);
         one_answer_text.setTypeface(custom_font_regular);

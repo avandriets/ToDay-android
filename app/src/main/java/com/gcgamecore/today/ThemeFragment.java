@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.gcgamecore.today.CustomView.RoundedImageView;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
 import com.squareup.picasso.Picasso;
@@ -19,16 +18,25 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ThemeFragment extends BaseFragment {
+public class ThemeFragment extends BaseFragmentWithHeader {
 
     @BindView(R.id.background_image)
-    RoundedImageView background_image;
+    ImageView background_image;
 
     @BindView(R.id.headLine)
     TextView headLine;
 
     @BindView(R.id.leadText)
     TextView leadText;
+
+    @BindView(R.id.themeIntroduction)
+    View themeIntroduction;
+
+    @BindView(R.id.emptyTheme)
+    View emptyTheme;
+
+    @BindView(R.id.textViewEmpty)
+    TextView textViewEmpty;
 
     public interface Callback {
         void onStartGame(Long themeId);
@@ -46,11 +54,9 @@ public class ThemeFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.theme_preview_fragment_layout, container, false);
         ButterKnife.bind(this, rootView);
 
-
-        Typeface custom_font_regular = Typeface.createFromAsset(getContext().getAssets(), "fonts/Book Antiqua Regular.ttf");
-        Typeface custom_font_bold = Typeface.createFromAsset(getContext().getAssets(), "fonts/Book Antiqua Bold.ttf");
         headLine.setTypeface(custom_font_bold);
         leadText.setTypeface(custom_font_regular);
+        textViewEmpty.setTypeface(custom_font_regular);
 
         Bundle arguments = getArguments();
 
@@ -87,6 +93,7 @@ public class ThemeFragment extends BaseFragment {
 
 
         initTheme();
+        InitHeader();
 
         return rootView;
     }
@@ -99,10 +106,16 @@ public class ThemeFragment extends BaseFragment {
 
             if (current_theme.getTheme_image() != null) {
                 Picasso.with(getContext()).load(Utility.BASE_URL + current_theme.getTheme_image())
-//                        .placeholder(R.drawable.ic_oval_placeholder)
-//                        .error(R.drawable.ic_oval_placeholder)
+                        .placeholder(R.drawable.ic_oval_placeholder)
+                        .error(R.drawable.ic_oval_placeholder)
                         .into(background_image);
             }
+
+            themeIntroduction.setVisibility(View.VISIBLE);
+            emptyTheme.setVisibility(View.GONE);
+        }else{
+            themeIntroduction.setVisibility(View.GONE);
+            emptyTheme.setVisibility(View.VISIBLE);
         }
     }
 

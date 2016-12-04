@@ -29,6 +29,11 @@ public class EventsListFragment extends ThemeListFragment {
     }
 
     @Override
+    protected String getCaption(){
+        return getContext().getResources().getString(R.string.string_action);
+    }
+
+    @Override
     public void initDataAdapter(View rootView) {
 
         View emptyView = rootView.findViewById(getEmptyListTextID());
@@ -39,7 +44,7 @@ public class EventsListFragment extends ThemeListFragment {
                     public void onClick(Long date, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
                         ((Callback) getActivity()).onItemThemeSelected(date, vh);
                     }
-                }, emptyView,  mDatabaseHelper);
+                }, emptyView,  mDatabaseHelper, 3);
     }
 
     @Override

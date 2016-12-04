@@ -5,12 +5,15 @@
     <string name="string_favorite">Избранное</string>
     <string name="string_action">Событие</string>
     <string name="locale">rus</string>
-    <string name="No_information_available">There is no data</string>
-    <string name="SUNDAY">Sunday</string>
-    <string name="MONDAY">Monday</string>
-    <string name="TUESDAY">Tuesday</string>
-    <string name="WEDNESDAY">Wednesday</string>
-    <string name="THURSDAY">Thursday</string>
-    <string name="FRIDAY">Friday</string>
-    <string name="SATURDAY">Saturday</string>
+    <string name="No_information_available">Нет данных</string>
+    <string name="SUNDAY">Воскресенье</string>
+    <string name="MONDAY">Понедельник</string>
+    <string name="TUESDAY">Вторник</string>
+    <string name="WEDNESDAY">Среда</string>
+    <string name="THURSDAY">Четверг</string>
+    <string name="FRIDAY">Пятница</string>
+    <string name="SATURDAY">Суббота</string>
+    <string name="empty_theme">На сегодня нет вопросов</string>
+    <string name="questionsCount">Заданных \nвопросов</string>
+    <string name="rightAnswers">Правильных \nответов</string>
 </resources>
