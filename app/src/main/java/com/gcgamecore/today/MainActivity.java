@@ -3,6 +3,7 @@ package com.gcgamecore.today;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
     protected void onDestroy() {
         super.onDestroy();
 
-        new_timer.cancel();
+        //new_timer.cancel();
 
         Log.d(LOG_TAG, "On destroy helper && GApiClient.");
         if (mDatabaseHelper != null) {
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
 
             }
         };
-        new_timer.start();
+        //new_timer.start();
 
         Calendar c = Calendar.getInstance();
 

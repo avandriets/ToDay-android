@@ -16,4 +16,7 @@
     <string name="empty_theme">На сегодня нет вопросов</string>
     <string name="questionsCount">Заданных \nвопросов</string>
     <string name="rightAnswers">Правильных \nответов</string>
+    <string name="back">Назад</string>
+    <string name="next">Дальше</string>
+    <string name="finish_round_description">Вы дали правильные ответы на %s вопросов.</string>
 </resources>

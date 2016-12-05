@@ -19,4 +19,7 @@
     <string name="empty_theme">We do not have questions for today</string>
     <string name="questionsCount">Questions \ncount</string>
     <string name="rightAnswers">Правильных \nответов</string>
+    <string name="back">BACK</string>
+    <string name="next">NEXT</string>
+    <string name="finish_round_description">You answered right on %s questions.</string>
 </resources>

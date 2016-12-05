@@ -35,7 +35,8 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_clock_on_top"
                 android:id="@+id/imageView4"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:visibility="gone" />
 
             <TextView
                 android:text="17:00"
@@ -44,7 +45,8 @@
                 android:id="@+id/currentTime"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
-                android:gravity="left" />
+                android:gravity="left"
+                android:visibility="gone" />
 
         </LinearLayout>
 

@@ -5,7 +5,6 @@ import com.google.gson.annotations.Expose;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
 import java.util.Date;
 
 @DatabaseTable(tableName = "theme_quiz")
@@ -14,6 +13,7 @@ public class DB_ThemeQuiz {
     public static final String ID               = "_id";
     public static final String LANGUAGE         = "language";
     public static final String THEME_IMAGE      = "theme_image";
+    public static final String THEME_BACKGROUND_IMAGE      = "theme_background_image";
     public static final String TARGET_DATE      = "target_date";
     public static final String MAIN_THEME      = "main_theme";
     public static final String NAME             = "name";
@@ -32,6 +32,10 @@ public class DB_ThemeQuiz {
     @Expose
     @DatabaseField(columnName = THEME_IMAGE)
     private String theme_image;
+
+    @Expose
+    @DatabaseField(columnName = THEME_BACKGROUND_IMAGE)
+    private String theme_background_image;
 
     @Expose
     @DatabaseField(canBeNull = true, columnName = TARGET_DATE, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
@@ -75,6 +79,18 @@ public class DB_ThemeQuiz {
 
     public String getTheme_image() {
         return theme_image;
+    }
+
+    public boolean isMain_theme() {
+        return main_theme;
+    }
+
+    public String getTheme_background_image() {
+        return theme_background_image;
+    }
+
+    public void setTheme_background_image(String theme_background_image) {
+        this.theme_background_image = theme_background_image;
     }
 
     public void setTheme_image(String theme_image) {

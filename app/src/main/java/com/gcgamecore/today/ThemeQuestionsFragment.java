@@ -1,7 +1,6 @@
 package com.gcgamecore.today;
 
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -16,15 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.gcgamecore.today.Adapters.ArchiveRecyclerViewAdapter;
 import com.gcgamecore.today.Data.DB_Answers;
 import com.gcgamecore.today.Data.DB_FavoriteThemeQuestions;
 import com.gcgamecore.today.Data.DB_ThemeQuestion;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
@@ -94,6 +93,9 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
     @BindView(R.id.textFinishMessage)
     TextView textFinishMessage;
 
+    @BindView(R.id.ImageBackground)
+    ImageView ImageBackground;
+
 
     Drawable drw_answerOneOriginal;
     Drawable drw_answerOneLoser;
@@ -103,11 +105,11 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
     Drawable drw_answerTwoLoser;
     Drawable drw_answerTwoWinner;
 
-    Drawable drw_redStar;
-    Drawable drw_greenStar;
+    Drawable drw_favorite_on;
+    Drawable drw_favorite_off;
 
-    Drawable drw_redShare;
-    Drawable drw_greenShare;
+//    Drawable drw_redShare;
+//    Drawable drw_greenShare;
 
     public interface Callback {
         void onFinishGame();
@@ -137,10 +139,10 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         drw_answerTwoLoser = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_two_loser);
         drw_answerTwoWinner = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_two_winner);
 
-        drw_redStar = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_red_star);
-        drw_greenStar = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_green_star);
-        drw_redShare = ContextCompat.getDrawable(getContext(), R.drawable.ic_share_red);
-        drw_greenShare = ContextCompat.getDrawable(getContext(), R.drawable.ic_share_green);
+        drw_favorite_on = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_on);
+        drw_favorite_off = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_off);
+//        drw_redShare = ContextCompat.getDrawable(getContext(), R.drawable.ic_share_red);
+//        drw_greenShare = ContextCompat.getDrawable(getContext(), R.drawable.ic_share_green);
 
         if (arguments != null) {
             theme_id = arguments.getLong(MainActivity.KEY_POINT_ID);
@@ -172,6 +174,12 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         }
 
         headLine.setText(current_theme.getName());
+
+        if (current_theme.getTheme_image() != null) {
+            Picasso.with(getContext()).load(Utility.BASE_URL + current_theme.getTheme_background_image())
+                    .into(ImageBackground);
+        }
+
     }
 
     private void initQuestions() {
@@ -199,6 +207,24 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
 
         one_answer_text.setTextColor(Utility.getColor(getContext(),R.color.ToDayColorTextGray));
         two_answer_text.setTextColor(Utility.getColor(getContext(),R.color.ToDayColorTextGray));
+
+        DB_FavoriteThemeQuestions isFavorite = null;
+        try {
+            isFavorite = mDatabaseHelper.getFavoriteDataDao().queryBuilder().where()
+                    .eq(DB_FavoriteThemeQuestions.THEME_ID, theme_id)
+                    .and()
+                    .eq(DB_FavoriteThemeQuestions.QUESTION_ID, current_question.getId())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if(isFavorite != null)
+            imgButtonFavorite.setImageDrawable(drw_favorite_on);
+        else
+            imgButtonFavorite.setImageDrawable(drw_favorite_off);
+
     }
 
     @OnClick(R.id.layout_answer_one)
@@ -277,13 +303,13 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         if (winner) {
             view.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorGreen));
             img_view.setImageDrawable(drw_winner);
-            imgButtonFavorite.setImageDrawable(drw_greenStar);
-            imgButtonShare.setImageDrawable(drw_greenShare);
+//            imgButtonFavorite.setImageDrawable(drw_favorite_off);
+//            imgButtonShare.setImageDrawable(drw_greenShare);
         } else {
             view.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorRed));
             img_view.setImageDrawable(drw_loser);
-            imgButtonFavorite.setImageDrawable(drw_redStar);
-            imgButtonShare.setImageDrawable(drw_redShare);
+//            imgButtonFavorite.setImageDrawable(drw_favorite_on);
+//            imgButtonShare.setImageDrawable(drw_redShare);
         }
     }
 
@@ -304,11 +330,14 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
                 favorite_item.setQuestion_id(current_question.getId());
 
                 mDatabaseHelper.getFavoriteDataDao().createIfNotExists(favorite_item);
+                imgButtonFavorite.setImageDrawable(drw_favorite_on);
+            }else{
+                mDatabaseHelper.getFavoriteDataDao().delete(favorite_item);
+                imgButtonFavorite.setImageDrawable(drw_favorite_off);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     @OnClick(R.id.imgButtonShare)
@@ -378,17 +407,6 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
 
     public void onRightToLeftSwipe() {
         Log.i(LOG_TAG, "RightToLeftSwipe!");
-
-        if (currentAnswer == -1)
-            return;
-
-        if(current_question_index == question_list.size()-1){
-            ShowFinishScreen();
-        }else{
-            current_question_index +=1;
-            currentAnswer = -1;
-            initQuestions();
-        }
     }
 
     public void onTopToBottomSwipe() {
@@ -412,12 +430,31 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
     }
 
     private String getEndGameMessage() {
-        return "Вы дали правильные ответы на 67% вопросов.";
+        return getString(R.string.finish_round_description);
     }
 
     @OnClick(R.id.btnFinish)
     public void onClickFinishGame(){
         ((ThemeQuestionsFragment.Callback)getActivity()).onFinishGame();
+    }
+
+    @OnClick(R.id.imageButtonBACK)
+    protected void OnBACKClick(){
+
+    }
+
+    @OnClick(R.id.imageButtonNEXT)
+    protected void OnNEXTClick(){
+        if (currentAnswer == -1)
+            return;
+
+        if(current_question_index == question_list.size()-1){
+            ShowFinishScreen();
+        }else{
+            current_question_index +=1;
+            currentAnswer = -1;
+            initQuestions();
+        }
     }
 
 }

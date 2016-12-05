@@ -3,21 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/ToDayColorWhite">
+    android:background="@color/ToDayColorWhite"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textTheme"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="24dp"
-        android:paddingEnd="33dp"
-        android:paddingStart="33dp"
-        android:paddingTop="30dp"
-        android:text="Merry Christmass"
-        android:textAllCaps="true"
-        android:textColor="@color/ToDayColorBlack"
-        android:textSize="25sp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textTheme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="24dp"
+            android:paddingEnd="33dp"
+            android:paddingStart="33dp"
+            android:paddingTop="30dp"
+            android:text="Merry Christmass"
+            android:textAllCaps="true"
+            android:textColor="@color/ToDayColorBlack"
+            android:textSize="25sp"
+            android:layout_weight="7" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/imgButtonFavorite"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_favorite_off"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp" />
+
+            <ImageButton
+                android:id="@+id/imgButtonShare"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_share"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageView5"
@@ -51,115 +88,142 @@
                 android:text="Зачем вьетнамская традиция рекомендует счастливым обладателям пруда у своего дома к Новому году выпускать карпа в этот самый пруд?"
                 android:textSize="18sp" />
 
-            <LinearLayout
-                android:id="@+id/layout_answer_one"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:background="@color/ToDayColorGray"
-                android:minHeight="60dp"
-                android:orientation="horizontal"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/imageAnswerOne"
-                    android:layout_width="24dp"
-                    android:layout_height="45dp"
-                    app:srcCompat="@drawable/ic_answer_one_original"
-                    android:layout_gravity="top" />
-
-                <TextView
-                    android:id="@+id/textAnswerOne"
+                    android:id="@+id/ImageBackground"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Чтобы карп принес богатство."
-                    android:textSize="18sp"
-                    android:textColor="@color/ToDayColorTextGray" />
-            </LinearLayout>
+                    android:layout_height="300dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_below="@+id/questions_layout"
+                    android:layout_centerHorizontal="true" />
 
-            <LinearLayout
-                android:id="@+id/layout_answer_two"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/ToDayColorGray"
-                android:minHeight="60dp"
-                android:orientation="horizontal"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp">
-
-                <ImageView
-                    android:id="@+id/imageAnswerTwo"
-                    android:layout_width="24dp"
-                    android:layout_height="45dp"
-                    app:srcCompat="@drawable/ic_answer_two_original"
-                    android:layout_gravity="top" />
-
-                <TextView
-                    android:id="@+id/textAnswerTwo"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Чтобы карп принес богатство."
-                    android:textSize="18sp" />
-            </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    android:layout_alignParentTop="true"
+                    android:id="@+id/questions_layout">
 
-            <LinearLayout
-                android:id="@+id/finishGameDescription"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                    <LinearLayout
+                        android:id="@+id/layout_answer_one"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@color/ToDayColorGray"
+                        android:minHeight="60dp"
+                        android:orientation="horizontal"
+                        android:paddingEnd="16dp"
+                        android:paddingStart="16dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginEnd="33dp"
-                    android:layout_marginStart="33dp"
-                    android:layout_marginTop="15dp">
+                        <ImageView
+                            android:id="@+id/imageAnswerOne"
+                            android:layout_width="24dp"
+                            android:layout_height="45dp"
+                            android:layout_gravity="top"
+                            app:srcCompat="@drawable/ic_answer_one_original" />
 
-                    <ImageButton
-                        android:id="@+id/imgButtonFavorite"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/ic_favorite_red_star" />
+                        <TextView
+                            android:id="@+id/textAnswerOne"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="16dp"
+                            android:text="Чтобы карп принес богатство."
+                            android:textColor="@color/ToDayColorTextGray"
+                            android:textSize="18sp" />
+                    </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/imgButtonShare"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/ic_share_green" />
-                </RelativeLayout>
+                    <LinearLayout
+                        android:id="@+id/layout_answer_two"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/ToDayColorGray"
+                        android:minHeight="60dp"
+                        android:orientation="horizontal"
+                        android:paddingEnd="16dp"
+                        android:paddingStart="16dp">
 
-                <TextView
-                    android:id="@+id/answerDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:paddingBottom="16dp"
-                    android:paddingEnd="33dp"
-                    android:paddingStart="33dp"
-                    android:paddingTop="16dp"
-                    android:text="Описание ответа"
-                    android:textSize="18sp" />
-            </LinearLayout>
+                        <ImageView
+                            android:id="@+id/imageAnswerTwo"
+                            android:layout_width="24dp"
+                            android:layout_height="45dp"
+                            android:layout_gravity="top"
+                            app:srcCompat="@drawable/ic_answer_two_original" />
+
+                        <TextView
+                            android:id="@+id/textAnswerTwo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="16dp"
+                            android:text="Чтобы карп принес богатство."
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/finishGameDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginStart="16dp">
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:drawableLeft="@drawable/ic_left"
+                                android:id="@+id/imageButtonBACK"
+                                android:layout_alignParentLeft="true"
+                                android:text="@string/back"
+                                android:layout_height="33dp"
+                                android:background="@android:color/transparent"
+                                android:textSize="18sp" />
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:drawableRight="@drawable/ic_right"
+                                android:id="@+id/imageButtonNEXT"
+                                android:layout_alignParentRight="true"
+                                android:text="@string/next"
+                                android:layout_height="33dp"
+                                android:background="@android:color/transparent"
+                                android:textSize="18sp" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/answerDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:paddingBottom="16dp"
+                            android:paddingEnd="33dp"
+                            android:paddingStart="33dp"
+                            android:paddingTop="16dp"
+                            android:text="Описание ответа"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
         </LinearLayout>
 
     </ScrollView>
@@ -188,8 +252,8 @@
             android:layout_centerHorizontal="true"
             android:background="@android:color/transparent"
             android:text="OK"
-            android:textSize="30sp" />
-
+            android:textSize="30sp"
+            android:layout_alignParentRight="false" />
     </RelativeLayout>
 
 </LinearLayout>

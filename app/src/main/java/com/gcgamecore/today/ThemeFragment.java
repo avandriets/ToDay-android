@@ -1,7 +1,10 @@
 package com.gcgamecore.today;
 
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,8 @@ import android.widget.TextView;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
 import com.squareup.picasso.Picasso;
+
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -73,15 +78,22 @@ public class ThemeFragment extends BaseFragmentWithHeader {
 
             Date today_date = c.getTime();
 
-            List<DB_ThemeQuiz> theme_list = mDatabaseHelper.getThemeQuizDataDao().queryForEq(DB_ThemeQuiz.TARGET_DATE, today_date);
+            List<DB_ThemeQuiz> theme_list = null;// .queryForEq(DB_ThemeQuiz.TARGET_DATE, today_date);
             DB_ThemeQuiz main_theme = null;
-            for (DB_ThemeQuiz cc : theme_list) {
-                current_theme = cc;
 
-                if (cc.getMain_theme()) {
-                    main_theme = cc;
-                }
+            try {
+                main_theme = mDatabaseHelper.getThemeQuizDataDao().queryBuilder().orderBy(DB_ThemeQuiz.TARGET_DATE, false).where().eq(DB_ThemeQuiz.MAIN_THEME, true).queryForFirst();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
+
+//            for (DB_ThemeQuiz cc : theme_list) {
+//                current_theme = cc;
+//
+//                if (cc.getMain_theme()) {
+//                    main_theme = cc;
+//                }
+//            }
 
             if(main_theme != null){
                 current_theme = main_theme;
@@ -91,11 +103,14 @@ public class ThemeFragment extends BaseFragmentWithHeader {
                 theme_id = current_theme.getId();
         }
 
-
         initTheme();
         InitHeader();
 
         return rootView;
+    }
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     private void initTheme() {
@@ -105,9 +120,14 @@ public class ThemeFragment extends BaseFragmentWithHeader {
             leadText.setText(current_theme.getDescription());
 
             if (current_theme.getTheme_image() != null) {
+
+                Drawable mPlaceholderDrawable = ResourcesCompat.getDrawable(
+                        getContext().getResources(),
+                        R.drawable.ic_oval_placeholder, null);
+
                 Picasso.with(getContext()).load(Utility.BASE_URL + current_theme.getTheme_image())
-                        .placeholder(R.drawable.ic_oval_placeholder)
-                        .error(R.drawable.ic_oval_placeholder)
+                        .placeholder(mPlaceholderDrawable)
+                        .error(mPlaceholderDrawable)
                         .into(background_image);
             }
 
