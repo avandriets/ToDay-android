@@ -30,6 +30,7 @@ import java.util.Locale;
 public class ArchiveRecyclerViewAdapter extends OrmliteCursorRecyclerViewAdapter<DB_ThemeQuiz, ArchiveRecyclerViewAdapter.ArchiveViewHolder>{
 
     private final SimpleDateFormat dateFormatter;
+    private final Drawable drw_status_0;
     private final Drawable drw_status_1;
     private final Drawable drw_status_2;
     private final Drawable drw_status_3;
@@ -110,6 +111,7 @@ public class ArchiveRecyclerViewAdapter extends OrmliteCursorRecyclerViewAdapter
         custom_font_bold = Typeface.createFromAsset(context.getAssets(), "fonts/Book Antiqua Bold.ttf");
         custom_font_times = Typeface.createFromAsset(context.getAssets(), "fonts/Times New Roman Cyr Italic.ttf");
 
+        drw_status_0 = ContextCompat.getDrawable(context, R.drawable.ic_status_element0);
         drw_status_1 = ContextCompat.getDrawable(context, R.drawable.ic_status_element1);
         drw_status_2 = ContextCompat.getDrawable(context, R.drawable.ic_status_element2);
         drw_status_3 = ContextCompat.getDrawable(context, R.drawable.ic_status_element3);
@@ -157,17 +159,23 @@ public class ArchiveRecyclerViewAdapter extends OrmliteCursorRecyclerViewAdapter
         try {
             long numberThemeQuestions = questions_dao.queryBuilder().where().eq(DB_ThemeQuestion.THEME, theme_quiz.getId()).countOf();
             long countRightAnswers = answers_dao.queryBuilder().where().eq(DB_Answers.THEME_ID, theme_quiz.getId()).and().eq(DB_Answers.ANSWER,1) .countOf();
+            long countAnsweredQuestions = answers_dao.queryBuilder().where().eq(DB_Answers.THEME_ID, theme_quiz.getId()).countOf();
 
-            long res = 0;
-            if(numberThemeQuestions != 0)
-                res = (long)(((float)countRightAnswers / numberThemeQuestions) * 100);
+            if(countAnsweredQuestions == 0){
+                holder.ivShevron.setImageDrawable(drw_status_0);
+            }
+            else{
+                long res = 0;
+                if(numberThemeQuestions != 0)
+                    res = (long)(((float)countRightAnswers / numberThemeQuestions) * 100);
 
-            if(res <= 69){
-                holder.ivShevron.setImageDrawable(drw_status_1);
-            }else if(res >= 70 && res <=89 ){
-                holder.ivShevron.setImageDrawable(drw_status_2);
-            }else{
-                holder.ivShevron.setImageDrawable(drw_status_3);
+                if(res <= 69){
+                    holder.ivShevron.setImageDrawable(drw_status_1);
+                }else if(res >= 70 && res <=89 ){
+                    holder.ivShevron.setImageDrawable(drw_status_2);
+                }else{
+                    holder.ivShevron.setImageDrawable(drw_status_3);
+                }
             }
 
         } catch (SQLException e) {

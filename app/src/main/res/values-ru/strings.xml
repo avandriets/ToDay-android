@@ -19,4 +19,7 @@
     <string name="back">Назад</string>
     <string name="next">Дальше</string>
     <string name="finish_round_description">Вы дали правильные ответы на %s вопросов.</string>
+    <string name="exit_mesage">Выйти из игры!</string>
+    <string name="exit_button">Выйти</string>
+    <string name="cancel_button">Отмена</string>
 </resources>

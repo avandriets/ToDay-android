@@ -19,4 +19,7 @@
     <string name="back">BACK</string>
     <string name="next">NEXT</string>
     <string name="finish_round_description">You answered right on %s questions.</string>
+    <string name="exit_mesage">Are you going to exit from game!</string>
+    <string name="exit_button">Exit</string>
+    <string name="cancel_button">Cancel</string>
 </resources>

@@ -24,9 +24,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // name of the database file for your application -- change to something appropriate for your app
     private static final String DATABASE_NAME = "ToDayQuiz.db";
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 12;
 
     // the DAO object we use to access the SimpleData table
+
+    private Dao<DB_LastQuestionInTheme, Long> LastQuestionsDao = null;
+    private RuntimeExceptionDao<DB_LastQuestionInTheme, Long> LastQuestionsRuntimeDao = null;
 
     private Dao<DB_Questions, Long> QuestionsDao = null;
     private RuntimeExceptionDao<DB_Questions, Long> QuestionsRuntimeDao = null;
@@ -62,7 +65,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, DB_FavoriteThemeQuestions.class);
             TableUtils.createTable(connectionSource, DB_ThemeQuestion.class);
             TableUtils.createTable(connectionSource, DB_ThemeQuiz.class);
-
+            TableUtils.createTable(connectionSource, DB_LastQuestionInTheme.class);
 
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
@@ -80,11 +83,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
 
             TableUtils.dropTable(connectionSource, DB_Questions.class, true);
-
             TableUtils.dropTable(connectionSource, DB_Answers.class, true);
             TableUtils.dropTable(connectionSource, DB_FavoriteThemeQuestions.class, true);
             TableUtils.dropTable(connectionSource, DB_ThemeQuestion.class, true);
             TableUtils.dropTable(connectionSource, DB_ThemeQuiz.class, true);
+            TableUtils.dropTable(connectionSource, DB_LastQuestionInTheme.class, true);
 
 
             // after we drop the old databases, we create the new ones
@@ -95,7 +98,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public Dao<DB_LastQuestionInTheme, Long> getLastQuestionDao() throws SQLException {
+        if (LastQuestionsDao == null) {
+            LastQuestionsDao = getDao(DB_LastQuestionInTheme.class);
+        }
+        return LastQuestionsDao;
+    }
 
+    public RuntimeExceptionDao<DB_LastQuestionInTheme, Long> getLastQuestionDataDao() {
+        if (LastQuestionsRuntimeDao == null) {
+            LastQuestionsRuntimeDao = getRuntimeExceptionDao(DB_LastQuestionInTheme.class);
+        }
+        return LastQuestionsRuntimeDao;
+    }
 
     public Dao<DB_Questions, Long> getQuestionDao() throws SQLException {
         if (QuestionsDao == null) {
@@ -188,5 +203,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         FavoriteDao = null;
         FavoriteRuntimeDao = null;
+
+        LastQuestionsDao = null;
+        LastQuestionsRuntimeDao = null;
     }
 }

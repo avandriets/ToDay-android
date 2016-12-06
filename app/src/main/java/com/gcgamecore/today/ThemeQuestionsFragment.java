@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.gcgamecore.today.Data.DB_Answers;
 import com.gcgamecore.today.Data.DB_FavoriteThemeQuestions;
+import com.gcgamecore.today.Data.DB_LastQuestionInTheme;
 import com.gcgamecore.today.Data.DB_ThemeQuestion;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
@@ -40,6 +41,7 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
     private DB_ThemeQuiz current_theme;
 
     private int current_question_index = 0;
+    private int last_question_index = 0;
 
     public long currentAnswer = -1;
 
@@ -141,8 +143,6 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
 
         drw_favorite_on = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_on);
         drw_favorite_off = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_off);
-//        drw_redShare = ContextCompat.getDrawable(getContext(), R.drawable.ic_share_red);
-//        drw_greenShare = ContextCompat.getDrawable(getContext(), R.drawable.ic_share_green);
 
         if (arguments != null) {
             theme_id = arguments.getLong(MainActivity.KEY_POINT_ID);
@@ -151,14 +151,42 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
             theme_id = -1;
         }
 
-        question_list = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryForEq(DB_ThemeQuestion.THEME, theme_id);
+        try {
+            question_list = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryBuilder()
+                    .orderBy(DB_ThemeQuestion.ID, true)
+                    .where()
+                    .eq(DB_ThemeQuestion.THEME, theme_id).query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        last_question_index = 0;
+
+        if(theme_id != -1) {
+            try {
+                DB_LastQuestionInTheme last_q = mDatabaseHelper.getLastQuestionDataDao().queryBuilder()
+                        .where()
+                        .eq(DB_LastQuestionInTheme.THEME_ID, theme_id).queryForFirst();
+
+                if(last_q != null){
+
+                    for (int i = 0; i < question_list.size(); i++) {
+                        if(question_list.get(i).getId() == last_q.getId()){
+                            last_question_index = i;
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
         if (question_list.size() > 0) {
             current_question_index = 0;
         }
 
         initHeadLine();
-        initQuestions();
+        initNexQuestion();
 
         mainLayout.setOnTouchListener(this);
 
@@ -180,9 +208,11 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
                     .into(ImageBackground);
         }
 
+        imgButtonFavorite.setVisibility(View.VISIBLE);
+        imgButtonShare.setVisibility(View.VISIBLE);
     }
 
-    private void initQuestions() {
+    private void initNexQuestion() {
         if (theme_id == -1) {
             return;
         }
@@ -224,7 +254,50 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
             imgButtonFavorite.setImageDrawable(drw_favorite_on);
         else
             imgButtonFavorite.setImageDrawable(drw_favorite_off);
+    }
 
+    private void initPrevQuestion() {
+        if (theme_id == -1) {
+            return;
+        }
+
+        DB_ThemeQuestion current_question = question_list.get(current_question_index);
+
+        question_text.setText(current_question.getQuestion());
+        one_answer_text.setText(current_question.getAnswer1());
+        two_answer_text.setText(current_question.getAnswer2());
+        answerDescription.setText(current_question.getDescription());
+
+        finishGameDescription.setVisibility(View.GONE);
+
+        one_layout_answer.setVisibility(View.VISIBLE);
+        two_layout_answer.setVisibility(View.VISIBLE);
+
+        one_layout_answer.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorGray));
+        two_layout_answer.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorGray));
+
+        one_image_answer.setImageDrawable(drw_answerOneOriginal);
+        two_image_answer.setImageDrawable(drw_answerTwoOriginal);
+
+        one_answer_text.setTextColor(Utility.getColor(getContext(),R.color.ToDayColorTextGray));
+        two_answer_text.setTextColor(Utility.getColor(getContext(),R.color.ToDayColorTextGray));
+
+        DB_FavoriteThemeQuestions isFavorite = null;
+        try {
+            isFavorite = mDatabaseHelper.getFavoriteDataDao().queryBuilder().where()
+                    .eq(DB_FavoriteThemeQuestions.THEME_ID, theme_id)
+                    .and()
+                    .eq(DB_FavoriteThemeQuestions.QUESTION_ID, current_question.getId())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if(isFavorite != null)
+            imgButtonFavorite.setImageDrawable(drw_favorite_on);
+        else
+            imgButtonFavorite.setImageDrawable(drw_favorite_off);
     }
 
     @OnClick(R.id.layout_answer_one)
@@ -294,6 +367,28 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
                 one_layout_answer.setVisibility(View.GONE);
                 break;
         }
+
+        // Save last question
+        try {
+            DB_LastQuestionInTheme lastQuestion = mDatabaseHelper.getLastQuestionDataDao().queryBuilder()
+                    .where()
+                    .eq(DB_LastQuestionInTheme.THEME_ID, theme_id)
+                    .queryForFirst();
+
+            if(lastQuestion != null){
+                DB_LastQuestionInTheme new_last_question = new DB_LastQuestionInTheme();
+                new_last_question.setTheme_id(theme_id);
+                new_last_question.setQuestion_id(current_question.getId());
+                mDatabaseHelper.getLastQuestionDataDao().createIfNotExists(new_last_question);
+            }else{
+                lastQuestion.setQuestion_id(current_question.getId());
+                mDatabaseHelper.getLastQuestionDataDao().createIfNotExists(lastQuestion);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         finishGameDescription.setVisibility(View.VISIBLE);
     }
 
@@ -303,13 +398,9 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         if (winner) {
             view.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorGreen));
             img_view.setImageDrawable(drw_winner);
-//            imgButtonFavorite.setImageDrawable(drw_favorite_off);
-//            imgButtonShare.setImageDrawable(drw_greenShare);
         } else {
             view.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorRed));
             img_view.setImageDrawable(drw_loser);
-//            imgButtonFavorite.setImageDrawable(drw_favorite_on);
-//            imgButtonShare.setImageDrawable(drw_redShare);
         }
     }
 
@@ -426,10 +517,43 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         gameLayout.setVisibility(View.GONE);
         finishLayout.setVisibility(View.VISIBLE);
 
-        textFinishMessage.setText(getEndGameMessage());
+        imgButtonFavorite.setVisibility(View.INVISIBLE);
+        imgButtonShare.setVisibility(View.INVISIBLE);
+
+        long numQuestions = 0;
+        long numRightAnswers = 0;
+
+        try {
+            numQuestions = mDatabaseHelper.getAnswerDataDao().queryBuilder()
+                    .where()
+                    .eq(DB_Answers.THEME_ID, theme_id)
+                    .countOf();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long res = 0;
+        try {
+            numRightAnswers = mDatabaseHelper.getAnswerDataDao().queryBuilder()
+                    .where()
+                    .eq(DB_Answers.ANSWER,1)
+                    .and()
+                    .eq(DB_Answers.THEME_ID, theme_id)
+                    .countOf();
+
+            if(numQuestions != 0)
+                res = (long)(((float)numRightAnswers / numQuestions) * 100);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String finish_message = String.format(getEndGameMessage(), String.valueOf(res)+ " %");
+
+        textFinishMessage.setText(finish_message);
     }
 
     private String getEndGameMessage() {
+
         return getString(R.string.finish_round_description);
     }
 
@@ -453,7 +577,7 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         }else{
             current_question_index +=1;
             currentAnswer = -1;
-            initQuestions();
+            initNexQuestion();
         }
     }
 

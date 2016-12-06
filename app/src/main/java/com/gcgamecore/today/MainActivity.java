@@ -1,6 +1,8 @@
 package com.gcgamecore.today;
 
+import android.content.DialogInterface;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
@@ -205,5 +207,29 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new ThemeFragment(), MAIN_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Main);
         initInterface();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.exit_button)
+                    .setMessage(R.string.exit_mesage)
+                    .setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener(){
+
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .setPositiveButton(R.string.exit_button, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            //ProfileActivity.super.onBackPressed();
+                            //moveTaskToBack(true);
+                            MainActivity.super.onBackPressed();
+                        }
+                    }).create().show();
     }
 }
