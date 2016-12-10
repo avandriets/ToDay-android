@@ -26,4 +26,8 @@
     <string name="looser_text">WRONG</string>
     <string name="finish">FINISH</string>
     <string name="how_much_time_do_you_have">How much time do you have?</string>
+    <string name="no_questions_string">There is no questions yet :(</string>
+    <string name="success_add_to_fav">Question was added to favorite.</string>
+    <string name="delete_from_favorite">Question was deleted from favorite.</string>
+    <string name="new_theme_notification">You have new theme for ToDay.</string>
 </resources>

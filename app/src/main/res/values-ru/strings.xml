@@ -24,6 +24,10 @@
     <string name="cancel_button">Отмена</string>
     <string name="winner_text">ВЕРНО</string>
     <string name="looser_text">НЕ ВЕРНО</string>
-    <string name="finish">FINISH</string>
-    <string name="how_much_time_do_you_have">How much time do you have?</string>
+    <string name="finish">КОНЕЦ</string>
+    <string name="how_much_time_do_you_have">Сколько у вас есть времени?</string>
+    <string name="no_questions_string">Еще нет вопросов для викторины :(</string>
+    <string name="success_add_to_fav">Вопрос был добавлен в избранное.</string>
+    <string name="delete_from_favorite">Вопрос был удален из избранного.</string>
+    <string name="new_theme_notification">You have new theme for ToDay.</string>
 </resources>

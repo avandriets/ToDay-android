@@ -1,20 +1,34 @@
 package com.gcgamecore.today;
 
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.gcgamecore.today.Data.DB_FavoriteThemeQuestions;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
+import com.j256.ormlite.android.apptools.support.OrmLiteCursorLoader;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ThemeFragment extends BaseFragmentWithHeader {
+public class ThemeFragment extends BaseFragmentWithHeader implements LoaderManager.LoaderCallbacks<Cursor>{
 
     @BindView(R.id.background_image)
     ImageView background_image;
@@ -41,6 +55,11 @@ public class ThemeFragment extends BaseFragmentWithHeader {
 
     @BindView(R.id.textViewEmpty)
     TextView textViewEmpty;
+
+    protected PreparedQuery<DB_ThemeQuiz> preparedQuery;
+    protected Dao<DB_ThemeQuiz, Long> mOrderDao;
+
+    private static final int ARCHIVE_LIST_ID_LOADER = 2100;
 
     public interface Callback {
         void onStartGame(Long themeId, boolean isFavorite);
@@ -68,44 +87,42 @@ public class ThemeFragment extends BaseFragmentWithHeader {
             theme_id = arguments.getLong(MainActivity.KEY_THEME_ID);
             current_theme = mDatabaseHelper.getThemeQuizDataDao().queryForId(theme_id);
         } else {
-            Calendar c = Calendar.getInstance();
-            c.set(Calendar.MILLISECOND, 0);
-            c.set(Calendar.SECOND, 0);
-            c.set(Calendar.MINUTE, 0);
-            c.set(Calendar.HOUR_OF_DAY, 0);
-
-
-            Date today_date = c.getTime();
-
-            List<DB_ThemeQuiz> theme_list = null;// .queryForEq(DB_ThemeQuiz.TARGET_DATE, today_date);
-            DB_ThemeQuiz main_theme = null;
-
-            try {
-                main_theme = mDatabaseHelper.getThemeQuizDataDao().queryBuilder().orderBy(DB_ThemeQuiz.TARGET_DATE, false).where().eq(DB_ThemeQuiz.MAIN_THEME, true).queryForFirst();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-//            for (DB_ThemeQuiz cc : theme_list) {
-//                current_theme = cc;
-//
-//                if (cc.getMain_theme()) {
-//                    main_theme = cc;
-//                }
-//            }
-
-            if(main_theme != null){
-                current_theme = main_theme;
-            }
-
-            if(current_theme != null)
-                theme_id = current_theme.getId();
+            initViewByCurrentDay();
         }
 
         initTheme();
         InitHeader();
 
         return rootView;
+    }
+
+    public void initViewByCurrentDay(){
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+
+        DB_ThemeQuiz main_theme = null;
+
+        try {
+            main_theme = mDatabaseHelper.getThemeQuizDataDao().queryBuilder()
+                    .orderBy(DB_ThemeQuiz.TARGET_DATE, false)
+                    .where().eq(DB_ThemeQuiz.MAIN_THEME, true)
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if(main_theme != null){
+            current_theme = main_theme;
+        }
+
+        if(current_theme != null)
+            theme_id = current_theme.getId();
+
     }
 
     static {
@@ -141,5 +158,62 @@ public class ThemeFragment extends BaseFragmentWithHeader {
     @OnClick(R.id.start_game_button)
     public void startGame(ImageButton button) {
         ((Callback) getActivity()).onStartGame(theme_id, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        android.support.v4.content.Loader<Object> loader = getLoaderManager().getLoader(ARCHIVE_LIST_ID_LOADER);
+
+        if (loader != null && !loader.isReset()) {
+            getLoaderManager().restartLoader(ARCHIVE_LIST_ID_LOADER, null, this);
+        } else {
+            getLoaderManager().initLoader(ARCHIVE_LIST_ID_LOADER, null, this);
+        }
+
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.d(LOG_TAG,"Create loader");
+
+        try {
+
+            mOrderDao = mDatabaseHelper.getThemeQuizDao();
+            RuntimeExceptionDao<DB_FavoriteThemeQuestions, Long> questions_favorite_dao = mDatabaseHelper.getFavoriteDataDao();
+
+            List<DB_FavoriteThemeQuestions> listOfFavorite = questions_favorite_dao.queryForAll();
+            ArrayList<Long> listFoIds = new ArrayList<>();
+
+            for (DB_FavoriteThemeQuestions cc :
+                    listOfFavorite) {
+                listFoIds.add(cc.getTheme_id());
+            }
+
+            QueryBuilder<DB_ThemeQuiz, Long> queryBuilder = mOrderDao.queryBuilder();
+            Where<DB_ThemeQuiz, Long> where = queryBuilder.where().in(DB_ThemeQuiz.ID,listFoIds);
+            preparedQuery = where.prepare();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new OrmLiteCursorLoader(getActivity(), mOrderDao, preparedQuery);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(LOG_TAG,"Finish loading");
+
+        initViewByCurrentDay();
+        initTheme();
+        InitHeader();
+
+        //mAdapter.changeCursor(data, preparedQuery);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        //mAdapter.swapCursor(null);
     }
 }

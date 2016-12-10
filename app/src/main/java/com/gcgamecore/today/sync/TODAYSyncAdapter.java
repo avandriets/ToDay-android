@@ -2,14 +2,18 @@ package com.gcgamecore.today.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.NotificationManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncRequest;
 import android.content.SyncResult;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.gcgamecore.today.Data.DB_Questions;
 import com.gcgamecore.today.Data.DB_ThemeQuestion;
@@ -45,6 +49,7 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
     // 60 seconds (1 minute) * 180 = 3 hours
     public static final int SYNC_INTERVAL = 60 * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
+    public static final int NOTIFICATION_ID = 1;
 
     private DatabaseHelper mDatabaseHelper = null;
     private Context mContext;
@@ -174,6 +179,20 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
                         mDatabaseHelper.getThemeQuizQuestionsDataDao().update(t_quest);
                     }
                 }
+
+                NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+                Bitmap largeIcon = BitmapFactory.decodeResource(getContext().getResources(), R.mipmap.ic_launcher);
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getContext())
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setLargeIcon(largeIcon)
+                                .setContentTitle(getContext().getString(R.string.app_name))
+                                //.setStyle(new NotificationCompat.BigTextStyle().bigText("You have " + newMessages.newAmount + " messages"))
+                                .setContentText(mContext.getString(R.string.new_theme_notification))
+                                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+                mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
             } else {
                 //JSONObject error_obj = Utility.ReadRetrofitResponseToJsonObj(response);

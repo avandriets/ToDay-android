@@ -131,11 +131,14 @@ public class QuizQuestionsFragment extends BaseFragment {
         question_list = new LinkedList<>();
 
         if (arguments != null) {
-            time_for_game = arguments.getLong(MainActivity.KEY_TIME);
+            time_for_game = arguments.getInt(MainActivity.KEY_TIME);
         }
 
         try {
-            current_question = mDatabaseHelper.getQuestionDataDao().queryBuilder().orderByRaw("RANDOM()").queryForFirst();
+            current_question = mDatabaseHelper.getQuestionDataDao()
+                    .queryBuilder()
+                    .orderByRaw("RANDOM()")
+                    .queryForFirst();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -145,7 +148,7 @@ public class QuizQuestionsFragment extends BaseFragment {
         gameLayout.setVisibility(View.VISIBLE);
         finishLayout.setVisibility(View.GONE);
 
-        game_timer = new CountDownTimer(time_for_game*1000, 10000) {
+        game_timer = new CountDownTimer(time_for_game*60*1000, 10000) {
 
             public void onTick(long millisUntilFinished) {
                 //Calendar c = Calendar.getInstance();

@@ -24,7 +24,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textQuestionCountCaption"
-                android:gravity="right" />
+                android:gravity="right"
+                android:textSize="12sp" />
 
             <TextView
                 android:text="333"
@@ -61,7 +62,8 @@
                 android:text="@string/rightAnswers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textPercentCaption" />
+                android:id="@+id/textPercentCaption"
+                android:textSize="12sp" />
 
             <TextView
                 android:text="67%"

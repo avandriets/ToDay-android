@@ -113,7 +113,8 @@
                 android:textAllCaps="false"
                 android:layout_centerVertical="false"
                 android:layout_centerInParent="true"
-                android:textColor="@color/ToDayColorWhite" />
+                android:textColor="@color/ToDayColorWhite"
+                android:textSize="12sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -130,7 +131,8 @@
                 android:background="@android:color/transparent"
                 android:textColor="@color/ToDayColorWhite"
                 android:textAllCaps="false"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:textSize="12sp" />
 
         </RelativeLayout>
 
@@ -148,7 +150,8 @@
                 android:background="@android:color/transparent"
                 android:textAllCaps="false"
                 android:textColor="@color/ToDayColorWhite"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:textSize="12sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -165,7 +168,8 @@
                 android:textAllCaps="false"
                 android:background="@android:color/transparent"
                 android:textColor="@color/ToDayColorWhite"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:textSize="12sp" />
         </RelativeLayout>
 
     </LinearLayout>

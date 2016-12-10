@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.gcgamecore.today.Data.DB_Answers;
 import com.gcgamecore.today.Data.DB_FavoriteThemeQuestions;
 import com.gcgamecore.today.Data.DB_LastQuestionInTheme;
@@ -508,9 +509,11 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
                 mDatabaseHelper.getFavoriteDataDao().createIfNotExists(favorite_item);
                 imgButtonFavorite.setImageDrawable(drw_favorite_on);
+                Toast.makeText(getActivity(), R.string.success_add_to_fav, Toast.LENGTH_SHORT).show();
             }else{
                 mDatabaseHelper.getFavoriteDataDao().delete(favorite_item);
                 imgButtonFavorite.setImageDrawable(drw_favorite_off);
+                Toast.makeText(getActivity(), R.string.delete_from_favorite, Toast.LENGTH_SHORT).show();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -540,15 +543,6 @@ public class ThemeQuestionsFragment extends BaseFragment {
         long numRightAnswers = 0;
 
         numQuestions = question_list.size();
-
-//        try {
-//            numQuestions = mDatabaseHelper.getAnswerDataDao().queryBuilder()
-//                    .where()
-//                    .eq(DB_Answers.THEME_ID, theme_id)
-//                    .countOf();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
 
         long res = 0;
         try {
@@ -622,5 +616,4 @@ public class ThemeQuestionsFragment extends BaseFragment {
             initNexQuestion();
         }
     }
-
 }

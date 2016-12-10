@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,22 +33,35 @@ public class QuizChoiceFragment extends BaseFragmentWithHeader {
 
         headLine.setTypeface(custom_font_bold);
 
+        InitHeader();
+
         return rootView;
     }
 
     @OnClick(R.id.FIVEimageButton)
     public void startGame5(ImageButton button) {
-        ((QuizChoiceFragment.Callback) getActivity()).onStartQuiz(5);
+
+        if(mDatabaseHelper.getQuestionDataDao().countOf() >0)
+            ((QuizChoiceFragment.Callback) getActivity()).onStartQuiz(5);
+        else
+            Toast.makeText(getActivity(), R.string.no_questions_string, Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.TENimageButton)
     public void startGame10(ImageButton button) {
-        ((QuizChoiceFragment.Callback) getActivity()).onStartQuiz(10);
+        if(mDatabaseHelper.getQuestionDataDao().countOf() >0)
+            ((QuizChoiceFragment.Callback) getActivity()).onStartQuiz(10);
+        else
+            Toast.makeText(getActivity(), R.string.no_questions_string, Toast.LENGTH_SHORT).show();
+
     }
 
     @OnClick(R.id.THYRTYimageButton)
     public void startGame30(ImageButton button) {
-        ((QuizChoiceFragment.Callback) getActivity()).onStartQuiz(30);
+        if(mDatabaseHelper.getQuestionDataDao().countOf() >0)
+            ((QuizChoiceFragment.Callback) getActivity()).onStartQuiz(30);
+        else
+            Toast.makeText(getActivity(), R.string.no_questions_string, Toast.LENGTH_SHORT).show();
     }
 
 }
