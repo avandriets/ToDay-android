@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ToDayColorWhite"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/gameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/textQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="27dp"
+                android:paddingEnd="33dp"
+                android:paddingStart="33dp"
+                android:paddingTop="18dp"
+                android:text="Зачем вьетнамская традиция рекомендует счастливым обладателям пруда у своего дома к Новому году выпускать карпа в этот самый пруд?"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ImageBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_below="@+id/questions_layout"
+                    android:layout_centerHorizontal="true" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    android:layout_alignParentTop="true"
+                    android:id="@+id/questions_layout">
+
+                    <LinearLayout
+                        android:id="@+id/layout_answer_one"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@color/ToDayColorGray"
+                        android:minHeight="60dp"
+                        android:orientation="horizontal"
+                        android:paddingEnd="16dp"
+                        android:paddingStart="16dp">
+
+                        <ImageView
+                            android:id="@+id/imageAnswerOne"
+                            android:layout_width="24dp"
+                            android:layout_height="45dp"
+                            android:layout_gravity="top"
+                            app:srcCompat="@drawable/ic_answer_one_original" />
+
+                        <TextView
+                            android:id="@+id/textAnswerOne"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="16dp"
+                            android:text="Чтобы карп принес богатство."
+                            android:textColor="@color/ToDayColorTextGray"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_answer_two"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/ToDayColorGray"
+                        android:minHeight="60dp"
+                        android:orientation="horizontal"
+                        android:paddingEnd="16dp"
+                        android:paddingStart="16dp">
+
+                        <ImageView
+                            android:id="@+id/imageAnswerTwo"
+                            android:layout_width="24dp"
+                            android:layout_height="45dp"
+                            android:layout_gravity="top"
+                            app:srcCompat="@drawable/ic_answer_two_original" />
+
+                        <TextView
+                            android:id="@+id/textAnswerTwo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="16dp"
+                            android:text="Чтобы карп принес богатство."
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/finishGameDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginStart="16dp">
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:drawableLeft="@drawable/ic_left"
+                                android:id="@+id/imageButtonBACK"
+                                android:layout_alignParentLeft="true"
+                                android:text="@string/back"
+                                android:layout_height="33dp"
+                                android:background="@android:color/transparent"
+                                android:textSize="16sp"
+                                android:visibility="invisible" />
+
+                            <TextView
+                                android:text="weew"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textResultView"
+                                android:layout_centerInParent="true"
+                                android:textSize="18sp"
+                                android:gravity="center" />
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:drawableRight="@drawable/ic_right"
+                                android:id="@+id/imageButtonNEXT"
+                                android:layout_alignParentRight="true"
+                                android:text="@string/next"
+                                android:layout_height="33dp"
+                                android:background="@android:color/transparent"
+                                android:textSize="16sp" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/answerDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:paddingBottom="16dp"
+                            android:paddingEnd="33dp"
+                            android:paddingStart="33dp"
+                            android:paddingTop="16dp"
+                            android:text="Описание ответа"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/finishLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textFinishMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="TextView"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btnFinish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="false"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            android:text="OK"
+            android:textSize="30sp"
+            android:layout_alignParentRight="false" />
+    </RelativeLayout>
+
+</LinearLayout>

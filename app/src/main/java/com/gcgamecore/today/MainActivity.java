@@ -23,11 +23,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MainActivity extends AppCompatActivity implements ArchiveListFragment.Callback, ThemeFragment.Callback, ThemeQuestionsFragment.Callback {
+public class MainActivity extends AppCompatActivity implements
+        ArchiveListFragment.Callback,
+        ThemeFragment.Callback,
+        ThemeQuestionsFragment.Callback,
+        QuizChoiceFragment.Callback,
+        QuizQuestionsFragment.Callback
+{
 
     private static final String EVENT_FRAGMENT_TAG = "EVENT_FRAGMENT";
     public static final String KEY_THEME_ID = "key_theme_id";
     public static final String KEY_IS_FAVORITE = "key_is_favorite";
+    public static final String KEY_TIME = "key_timer";
+
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String MAIN_FRAGMENT_TAG = "MAIN_FRAGMENT";
     private static final String ARCHIVE_FRAGMENT_TAG = "ARCHIVE_FRAGMENT";
@@ -148,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
 
     @OnClick(R.id.btn_quiz)
     public void showQuiz(Button button) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new QuizFragment(), QUIZ_FRAGMENT_TAG).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new QuizChoiceFragment(), QUIZ_FRAGMENT_TAG).commit();
         selectButton(relativeLayout_Quiz);
     }
 
@@ -200,6 +208,21 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
     }
 
     @Override
+    public void onStartQuiz(int p_min) {
+
+        Bundle arguments = new Bundle();
+        arguments.putInt(MainActivity.KEY_TIME, p_min);
+
+        QuizQuestionsFragment fragment = new QuizQuestionsFragment();
+        fragment.setArguments(arguments);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_list_container, fragment)
+                .commit();
+
+    }
+
+    @Override
     public void onFinishGame() {
         goToMainPage();
     }
@@ -230,5 +253,10 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
                             MainActivity.super.onBackPressed();
                         }
                     }).create().show();
+    }
+
+    @Override
+    public void onFinishQuiz() {
+        goToMainPage();
     }
 }
