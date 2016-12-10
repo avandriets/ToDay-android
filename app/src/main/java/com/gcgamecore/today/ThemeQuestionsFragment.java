@@ -4,18 +4,16 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.gcgamecore.today.Data.DB_Answers;
 import com.gcgamecore.today.Data.DB_FavoriteThemeQuestions;
 import com.gcgamecore.today.Data.DB_LastQuestionInTheme;
@@ -24,29 +22,26 @@ import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouchListener {
+public class ThemeQuestionsFragment extends BaseFragment {
 
     private static final String LOG_TAG = ThemeQuestionsFragment.class.getSimpleName();
     private long theme_id;
     private List<DB_ThemeQuestion> question_list;
     private DB_ThemeQuiz current_theme;
 
-    private int current_question_index = 0;
-    private int last_question_index = 0;
+    private long current_question_index = 0;
+    private long last_question_index = 0;
 
     public long currentAnswer = -1;
-
-    static final int MIN_DISTANCE = 70;// TODO change this runtime based on screen resolution. for 1920x1080 is to small the 100 distance
-    private float downX, downY, upX, upY;
 
     @BindView(R.id.textTheme)
     TextView headLine;
@@ -98,6 +93,14 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
     @BindView(R.id.ImageBackground)
     ImageView ImageBackground;
 
+    @BindView(R.id.textResultView)
+    TextView textResultView;
+
+    @BindView(R.id.imageButtonBACK)
+    Button imageButtonBACK;
+
+    @BindView(R.id.imageButtonNEXT)
+    Button imageButtonNEXT;
 
     Drawable drw_answerOneOriginal;
     Drawable drw_answerOneLoser;
@@ -109,9 +112,7 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
 
     Drawable drw_favorite_on;
     Drawable drw_favorite_off;
-
-//    Drawable drw_redShare;
-//    Drawable drw_greenShare;
+    private boolean game_from_favorite;
 
     public interface Callback {
         void onFinishGame();
@@ -133,6 +134,7 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         two_answer_text.setTypeface(custom_font_regular);
         answerDescription.setTypeface(custom_font_times);
         textFinishMessage.setTypeface(custom_font_regular);
+        textResultView.setTypeface(custom_font_regular);
 
         drw_answerOneOriginal = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_one_original);
         drw_answerOneLoser = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_one_loser);
@@ -145,17 +147,41 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         drw_favorite_off = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_off);
 
         if (arguments != null) {
-            theme_id = arguments.getLong(MainActivity.KEY_POINT_ID);
+            theme_id = arguments.getLong(MainActivity.KEY_THEME_ID);
+
+            if(arguments.containsKey(MainActivity.KEY_IS_FAVORITE)) {
+                game_from_favorite = arguments.getBoolean(MainActivity.KEY_IS_FAVORITE);
+            }
+            else{
+                game_from_favorite = false;
+            }
+
             current_theme = mDatabaseHelper.getThemeQuizDataDao().queryForId(theme_id);
         } else {
             theme_id = -1;
         }
 
         try {
-            question_list = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryBuilder()
-                    .orderBy(DB_ThemeQuestion.ID, true)
-                    .where()
-                    .eq(DB_ThemeQuestion.THEME, theme_id).query();
+            if(!game_from_favorite) {
+                question_list = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryBuilder()
+                        .orderBy(DB_ThemeQuestion.ID, true)
+                        .where()
+                        .eq(DB_ThemeQuestion.THEME, theme_id).query();
+            }else{
+                List<DB_FavoriteThemeQuestions> listOfFavorite = mDatabaseHelper.getFavoriteDataDao().queryBuilder().where()
+                        .eq(DB_FavoriteThemeQuestions.THEME_ID, theme_id).query();
+
+                ArrayList<Long> listFoIds = new ArrayList<>();
+                for (DB_FavoriteThemeQuestions cc :
+                        listOfFavorite) {
+                    listFoIds.add(cc.getQuestion_id());
+                }
+
+                question_list = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryBuilder()
+                        .orderBy(DB_ThemeQuestion.ID, true)
+                        .where().in(DB_ThemeQuestion.ID, listFoIds)
+                        .query();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -171,24 +197,36 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
                 if(last_q != null){
 
                     for (int i = 0; i < question_list.size(); i++) {
-                        if(question_list.get(i).getId() == last_q.getId()){
+                        if(question_list.get(i).getId() == last_q.getQuestion_id()){
                             last_question_index = i;
                         }
                     }
+                } else{
+                    last_question_index = -1;
                 }
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
         if (question_list.size() > 0) {
-            current_question_index = 0;
+            if(last_question_index> 0) {
+                if(last_question_index < question_list.size() -1)
+                    current_question_index = last_question_index + 1;
+                else
+                    current_question_index = last_question_index;
+
+            }
+            else
+            {
+                last_question_index = 0;
+                current_question_index = last_question_index;
+            }
         }
 
         initHeadLine();
         initNexQuestion();
-
-        mainLayout.setOnTouchListener(this);
 
         gameLayout.setVisibility(View.VISIBLE);
         finishLayout.setVisibility(View.GONE);
@@ -212,12 +250,26 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         imgButtonShare.setVisibility(View.VISIBLE);
     }
 
+    private void initNextPrevButtons(long position){
+        if(position == 0)
+            imageButtonBACK.setVisibility(View.GONE);
+        else
+            imageButtonBACK.setVisibility(View.VISIBLE);
+
+        if(position == question_list.size()-1)
+            imageButtonNEXT.setText(getString(R.string.finish));
+        else
+            imageButtonNEXT.setText(getString(R.string.next));
+    }
+
     private void initNexQuestion() {
         if (theme_id == -1) {
             return;
         }
 
-        DB_ThemeQuestion current_question = question_list.get(current_question_index);
+        initNextPrevButtons(current_question_index);
+
+        DB_ThemeQuestion current_question = question_list.get((int) current_question_index);
 
         question_text.setText(current_question.getQuestion());
         one_answer_text.setText(current_question.getAnswer1());
@@ -256,12 +308,14 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
             imgButtonFavorite.setImageDrawable(drw_favorite_off);
     }
 
-    private void initPrevQuestion() {
+    private void initOpenQuestion(int pQuestionNumber) {
         if (theme_id == -1) {
             return;
         }
 
-        DB_ThemeQuestion current_question = question_list.get(current_question_index);
+        initNextPrevButtons(pQuestionNumber);
+
+        DB_ThemeQuestion current_question = question_list.get(pQuestionNumber);
 
         question_text.setText(current_question.getQuestion());
         one_answer_text.setText(current_question.getAnswer1());
@@ -298,6 +352,23 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
             imgButtonFavorite.setImageDrawable(drw_favorite_on);
         else
             imgButtonFavorite.setImageDrawable(drw_favorite_off);
+
+
+        try {
+            DB_Answers answer_state = mDatabaseHelper.getAnswerDataDao().queryBuilder().where()
+                    .eq(DB_Answers.THEME_ID, theme_id)
+                    .and().eq(DB_Answers.QUESTION_ID, current_question.getId())
+                    .queryForFirst();
+
+            if(answer_state.getAnswer() == 1)
+                ShowResult(true);
+            else
+                ShowResult(false);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @OnClick(R.id.layout_answer_one)
@@ -318,7 +389,7 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
 
     public void applyAnswer() {
 
-        DB_ThemeQuestion current_question = question_list.get(current_question_index);
+        DB_ThemeQuestion current_question = question_list.get((int) current_question_index);
         boolean flag_winner = false;
         if (currentAnswer == current_question.getRight_answer()) {
             flag_winner = true;
@@ -356,17 +427,7 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
             e.printStackTrace();
         }
 
-        // Show right answer
-        switch ((int) currentAnswer) {
-            case 1:
-                setAnswerResult(one_layout_answer, one_image_answer, drw_answerOneLoser, drw_answerOneWinner, one_answer_text, flag_winner);
-                two_layout_answer.setVisibility(View.GONE);
-                break;
-            case 2:
-                setAnswerResult(two_layout_answer, two_image_answer, drw_answerTwoLoser, drw_answerTwoWinner, two_answer_text, flag_winner);
-                one_layout_answer.setVisibility(View.GONE);
-                break;
-        }
+        ShowResult(flag_winner);
 
         // Save last question
         try {
@@ -375,38 +436,63 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
                     .eq(DB_LastQuestionInTheme.THEME_ID, theme_id)
                     .queryForFirst();
 
+            long q = current_question.getId();
+            if(current_question_index == question_list.size() - 1){
+                q =0;
+            }
+
             if(lastQuestion != null){
-                DB_LastQuestionInTheme new_last_question = new DB_LastQuestionInTheme();
-                new_last_question.setTheme_id(theme_id);
-                new_last_question.setQuestion_id(current_question.getId());
-                mDatabaseHelper.getLastQuestionDataDao().createIfNotExists(new_last_question);
+                lastQuestion.setQuestion_id(q);
+                mDatabaseHelper.getLastQuestionDataDao().createOrUpdate(lastQuestion);
             }else{
-                lastQuestion.setQuestion_id(current_question.getId());
+                lastQuestion = new DB_LastQuestionInTheme();
+                lastQuestion.setTheme_id(theme_id);
+                lastQuestion.setQuestion_id(q);
                 mDatabaseHelper.getLastQuestionDataDao().createIfNotExists(lastQuestion);
             }
+
+            last_question_index = question_list.indexOf(current_question);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        finishGameDescription.setVisibility(View.VISIBLE);
     }
 
-    public void setAnswerResult(View view, ImageView img_view, Drawable drw_loser, Drawable drw_winner, TextView caption, boolean winner) {
+    public void ShowResult(boolean flag_winner){
+        // Show right answer
+        switch ((int) currentAnswer) {
+            case 1:
+                hideResultPanels(one_layout_answer, one_image_answer, drw_answerOneLoser, drw_answerOneWinner, one_answer_text, flag_winner);
+                two_layout_answer.setVisibility(View.GONE);
+                break;
+            case 2:
+                hideResultPanels(two_layout_answer, two_image_answer, drw_answerTwoLoser, drw_answerTwoWinner, two_answer_text, flag_winner);
+                one_layout_answer.setVisibility(View.GONE);
+                break;
+        }
+    }
+
+    public void hideResultPanels(View view, ImageView img_view, Drawable drw_loser, Drawable drw_winner, TextView caption, boolean winner) {
 
         caption.setTextColor(Utility.getColor(getContext(),R.color.ToDayColorWhite));
         if (winner) {
             view.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorGreen));
             img_view.setImageDrawable(drw_winner);
+            textResultView.setText(getString(R.string.winner_text));
+            textResultView.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorGreen));
         } else {
             view.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorRed));
             img_view.setImageDrawable(drw_loser);
+            textResultView.setText(getString(R.string.looser_text));
+            textResultView.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorRed));
         }
+
+        finishGameDescription.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.imgButtonFavorite)
     public void onClickAddFavorite() {
-        DB_ThemeQuestion current_question = question_list.get(current_question_index);
+        DB_ThemeQuestion current_question = question_list.get((int) current_question_index);
         DB_FavoriteThemeQuestions favorite_item;
 
         QueryBuilder<DB_FavoriteThemeQuestions, Long> qb = mDatabaseHelper.getFavoriteDataDao().queryBuilder();
@@ -433,7 +519,7 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
 
     @OnClick(R.id.imgButtonShare)
     public void onClickShare() {
-        DB_ThemeQuestion current_question = question_list.get(current_question_index);
+        DB_ThemeQuestion current_question = question_list.get((int) current_question_index);
         View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
 
         String file_name = String.format("ToDay theme-%d q-%d.jpg", theme_id, current_question.getId());
@@ -441,76 +527,6 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         Bitmap bmp = Utility.getScreenShot(rootView);
         File file = Utility.store(bmp, file_name);
         Utility.shareImage(file, getActivity());
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                downX = event.getX();
-                downY = event.getY();
-                return true;
-            }
-            case MotionEvent.ACTION_UP: {
-                upX = event.getX();
-                upY = event.getY();
-
-                float deltaX = downX - upX;
-                float deltaY = downY - upY;
-
-                // swipe horizontal?
-                if (Math.abs(deltaX) > MIN_DISTANCE) {
-                    // left or right
-                    if (deltaX < 0) {
-                        this.onLeftToRightSwipe();
-                        return true;
-                    }
-                    if (deltaX > 0) {
-                        this.onRightToLeftSwipe();
-                        return true;
-                    }
-                } else {
-                    Log.i(LOG_TAG, "Swipe was only " + Math.abs(deltaX) + " long horizontally, need at least " + MIN_DISTANCE);
-                    // return false; // We don't consume the event
-                }
-
-                // swipe vertical?
-                if (Math.abs(deltaY) > MIN_DISTANCE) {
-                    // top or down
-                    if (deltaY < 0) {
-                        this.onTopToBottomSwipe();
-                        return true;
-                    }
-                    if (deltaY > 0) {
-                        this.onBottomToTopSwipe();
-                        return true;
-                    }
-                } else {
-                    Log.i(LOG_TAG, "Swipe was only " + Math.abs(deltaX) + " long vertically, need at least " + MIN_DISTANCE);
-                    // return false; // We don't consume the event
-                }
-
-                return false; // no swipe horizontally and no swipe vertically
-            }// case MotionEvent.ACTION_UP:
-        }
-        return false;
-    }
-
-    public void onRightToLeftSwipe() {
-        Log.i(LOG_TAG, "RightToLeftSwipe!");
-    }
-
-    public void onTopToBottomSwipe() {
-        Log.i(LOG_TAG, "onTopToBottomSwipe!");
-    }
-
-    public void onBottomToTopSwipe() {
-        Log.i(LOG_TAG, "onBottomToTopSwipe!");
-    }
-
-    public void onLeftToRightSwipe() {
-        Log.i(LOG_TAG, "LeftToRightSwipe!");
-        //Toast.makeText(getContext(), "LeftToRightSwipe", Toast.LENGTH_SHORT).show();
     }
 
     private void ShowFinishScreen() {
@@ -523,23 +539,41 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
         long numQuestions = 0;
         long numRightAnswers = 0;
 
-        try {
-            numQuestions = mDatabaseHelper.getAnswerDataDao().queryBuilder()
-                    .where()
-                    .eq(DB_Answers.THEME_ID, theme_id)
-                    .countOf();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        numQuestions = question_list.size();
+
+//        try {
+//            numQuestions = mDatabaseHelper.getAnswerDataDao().queryBuilder()
+//                    .where()
+//                    .eq(DB_Answers.THEME_ID, theme_id)
+//                    .countOf();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         long res = 0;
         try {
-            numRightAnswers = mDatabaseHelper.getAnswerDataDao().queryBuilder()
-                    .where()
-                    .eq(DB_Answers.ANSWER,1)
-                    .and()
-                    .eq(DB_Answers.THEME_ID, theme_id)
-                    .countOf();
+            if(!game_from_favorite) {
+                numRightAnswers = mDatabaseHelper.getAnswerDataDao().queryBuilder()
+                        .where()
+                        .eq(DB_Answers.ANSWER, 1)
+                        .and()
+                        .eq(DB_Answers.THEME_ID, theme_id)
+                        .countOf();
+            }else{
+                ArrayList<Long> listFoIds = new ArrayList<>();
+                for (DB_ThemeQuestion cc :question_list) {
+                    listFoIds.add(cc.getId());
+                }
+
+                numRightAnswers = mDatabaseHelper.getAnswerDataDao().queryBuilder()
+                        .where()
+                        .eq(DB_Answers.ANSWER, 1)
+                        .and()
+                        .eq(DB_Answers.THEME_ID, theme_id)
+                        .and()
+                        .in(DB_Answers.QUESTION_ID, listFoIds)
+                        .countOf();
+            }
 
             if(numQuestions != 0)
                 res = (long)(((float)numRightAnswers / numQuestions) * 100);
@@ -565,6 +599,10 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
     @OnClick(R.id.imageButtonBACK)
     protected void OnBACKClick(){
 
+        if(current_question_index > 0)
+            current_question_index -= 1;
+
+        initOpenQuestion((int) current_question_index);
     }
 
     @OnClick(R.id.imageButtonNEXT)
@@ -574,7 +612,11 @@ public class ThemeQuestionsFragment extends BaseFragment implements View.OnTouch
 
         if(current_question_index == question_list.size()-1){
             ShowFinishScreen();
-        }else{
+        }else if(last_question_index > current_question_index){
+            current_question_index +=1;
+            initOpenQuestion((int) current_question_index);
+        }
+        else{
             current_question_index +=1;
             currentAnswer = -1;
             initNexQuestion();

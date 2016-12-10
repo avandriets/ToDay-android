@@ -5,7 +5,6 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +26,8 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity implements ArchiveListFragment.Callback, ThemeFragment.Callback, ThemeQuestionsFragment.Callback {
 
     private static final String EVENT_FRAGMENT_TAG = "EVENT_FRAGMENT";
-    public static final String KEY_POINT_ID = "key_theme_id";
+    public static final String KEY_THEME_ID = "key_theme_id";
+    public static final String KEY_IS_FAVORITE = "key_is_favorite";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String MAIN_FRAGMENT_TAG = "MAIN_FRAGMENT";
     private static final String ARCHIVE_FRAGMENT_TAG = "ARCHIVE_FRAGMENT";
@@ -170,12 +170,12 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
 
     @Override
     public void onItemFavoriteSelected(Long pId, ArchiveRecyclerViewAdapter.ArchiveViewHolder vh) {
-        StartThemePreview(pId);
+        onStartGame(pId, true);
     }
 
     private void StartThemePreview(Long pId) {
         Bundle arguments = new Bundle();
-        arguments.putLong(MainActivity.KEY_POINT_ID, getIntent().getLongExtra(MainActivity.KEY_POINT_ID, pId));
+        arguments.putLong(MainActivity.KEY_THEME_ID, getIntent().getLongExtra(MainActivity.KEY_THEME_ID, pId));
 
         ThemeFragment fragment = new ThemeFragment();
         fragment.setArguments(arguments);
@@ -186,9 +186,10 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
     }
 
     @Override
-    public void onStartGame(Long themeId) {
+    public void onStartGame(Long themeId, boolean isFavorite) {
         Bundle arguments = new Bundle();
-        arguments.putLong(MainActivity.KEY_POINT_ID, getIntent().getLongExtra(MainActivity.KEY_POINT_ID, themeId));
+        arguments.putLong(MainActivity.KEY_THEME_ID, getIntent().getLongExtra(MainActivity.KEY_THEME_ID, themeId));
+        arguments.putBoolean(MainActivity.KEY_IS_FAVORITE, isFavorite);
 
         ThemeQuestionsFragment fragment = new ThemeQuestionsFragment();
         fragment.setArguments(arguments);
@@ -211,8 +212,6 @@ public class MainActivity extends AppCompatActivity implements ArchiveListFragme
 
     @Override
     public void onBackPressed() {
-
-
             new AlertDialog.Builder(this)
                     .setTitle(R.string.exit_button)
                     .setMessage(R.string.exit_mesage)

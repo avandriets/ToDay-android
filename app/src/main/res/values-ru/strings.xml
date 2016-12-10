@@ -22,4 +22,7 @@
     <string name="exit_mesage">Выйти из игры!</string>
     <string name="exit_button">Выйти</string>
     <string name="cancel_button">Отмена</string>
+    <string name="winner_text">ВЕРНО</string>
+    <string name="looser_text">НЕ ВЕРНО</string>
+    <string name="finish">FINISH</string>
 </resources>

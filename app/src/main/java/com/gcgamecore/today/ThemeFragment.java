@@ -1,6 +1,5 @@
 package com.gcgamecore.today;
 
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -44,7 +43,7 @@ public class ThemeFragment extends BaseFragmentWithHeader {
     TextView textViewEmpty;
 
     public interface Callback {
-        void onStartGame(Long themeId);
+        void onStartGame(Long themeId, boolean isFavorite);
     }
 
     private static final String LOG_TAG = ThemeFragment.class.getSimpleName();
@@ -66,7 +65,7 @@ public class ThemeFragment extends BaseFragmentWithHeader {
         Bundle arguments = getArguments();
 
         if (arguments != null) {
-            theme_id = arguments.getLong(MainActivity.KEY_POINT_ID);
+            theme_id = arguments.getLong(MainActivity.KEY_THEME_ID);
             current_theme = mDatabaseHelper.getThemeQuizDataDao().queryForId(theme_id);
         } else {
             Calendar c = Calendar.getInstance();
@@ -141,6 +140,6 @@ public class ThemeFragment extends BaseFragmentWithHeader {
 
     @OnClick(R.id.start_game_button)
     public void startGame(ImageButton button) {
-        ((Callback) getActivity()).onStartGame(theme_id);
+        ((Callback) getActivity()).onStartGame(theme_id, false);
     }
 }

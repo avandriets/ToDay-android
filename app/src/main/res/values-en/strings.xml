@@ -22,4 +22,7 @@
     <string name="exit_mesage">Are you going to exit from game!</string>
     <string name="exit_button">Exit</string>
     <string name="cancel_button">Cancel</string>
+    <string name="winner_text">RIGHT</string>
+    <string name="looser_text">WRONG</string>
+    <string name="finish">FINISH</string>
 </resources>
