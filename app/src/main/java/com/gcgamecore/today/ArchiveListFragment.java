@@ -6,6 +6,8 @@ import com.gcgamecore.today.Adapters.ArchiveRecyclerViewAdapter;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
+import com.j256.ormlite.stmt.Where;
+
 import java.sql.SQLException;
 
 
@@ -54,7 +56,10 @@ public class ArchiveListFragment extends ThemeListFragment {
             selectArgDeleted.setValue(0);
 
             QueryBuilder<DB_ThemeQuiz, Long> queryBuilder = mOrderDao.queryBuilder();
-            //Where<DB_ThemeQuiz, Long> where = queryBuilder.where().ge(Order.ID_LOCAL, 0);
+
+            Where<DB_ThemeQuiz, Long> where = queryBuilder.where()
+                    .eq(DB_ThemeQuiz.MAIN_THEME,true);
+
             preparedQuery = queryBuilder.prepare();
 
         } catch (SQLException e) {

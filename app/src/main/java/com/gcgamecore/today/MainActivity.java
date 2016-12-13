@@ -195,16 +195,26 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onStartGame(Long themeId, boolean isFavorite) {
+
         Bundle arguments = new Bundle();
         arguments.putLong(MainActivity.KEY_THEME_ID, getIntent().getLongExtra(MainActivity.KEY_THEME_ID, themeId));
-        arguments.putBoolean(MainActivity.KEY_IS_FAVORITE, isFavorite);
 
-        ThemeQuestionsFragment fragment = new ThemeQuestionsFragment();
-        fragment.setArguments(arguments);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_list_container, fragment)
-                .commit();
+        if(!isFavorite) {
+            ThemeQuestionsFragment fragment = new ThemeQuestionsFragment();
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_list_container, fragment)
+                    .commit();
+        }else{
+            FavoriteQuestionsFragment fragment = new FavoriteQuestionsFragment();
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_list_container, fragment)
+                    .commit();
+        }
     }
 
     @Override

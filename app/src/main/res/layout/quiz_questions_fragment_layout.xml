@@ -130,7 +130,6 @@
 
                             <Button
                                 android:layout_width="wrap_content"
-                                android:drawableLeft="@drawable/ic_left"
                                 android:id="@+id/imageButtonBACK"
                                 android:layout_alignParentLeft="true"
                                 android:text="@string/back"
@@ -150,7 +149,6 @@
 
                             <Button
                                 android:layout_width="wrap_content"
-                                android:drawableRight="@drawable/ic_right"
                                 android:id="@+id/imageButtonNEXT"
                                 android:layout_alignParentRight="true"
                                 android:text="@string/next"
@@ -169,7 +167,8 @@
                             android:paddingStart="33dp"
                             android:paddingTop="16dp"
                             android:text="Описание ответа"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                 </LinearLayout>

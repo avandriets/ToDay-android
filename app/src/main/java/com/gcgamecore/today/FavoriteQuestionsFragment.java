@@ -1,25 +1,32 @@
 package com.gcgamecore.today;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.gcgamecore.today.Data.DB_Questions;
+import com.gcgamecore.today.Data.DB_Answers;
+import com.gcgamecore.today.Data.DB_FavoriteThemeQuestions;
+import com.gcgamecore.today.Data.DB_LastQuestionInTheme;
+import com.gcgamecore.today.Data.DB_ThemeQuestion;
+import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,7 +34,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class QuizQuestionsFragment extends BaseFragment {
+public class FavoriteQuestionsFragment extends BaseFragment {
+
+    private static final String LOG_TAG = FavoriteQuestionsFragment.class.getSimpleName();
+
+    private long theme_id;
+    private List<DB_ThemeQuestion> question_list;
+    private DB_ThemeQuiz current_theme;
+
+    private long current_question_index = 0;
+
+
+    @BindView(R.id.textTheme)
+    TextView headLine;
 
     @BindView(R.id.textQuestion)
     TextView question_text;
@@ -52,6 +71,12 @@ public class QuizQuestionsFragment extends BaseFragment {
     @BindView(R.id.imageAnswerTwo)
     ImageView two_image_answer;
 
+    @BindView(R.id.imgButtonFavorite)
+    ImageButton imgButtonFavorite;
+
+    @BindView(R.id.imgButtonShare)
+    ImageButton imgButtonShare;
+
     @BindView(R.id.finishGameDescription)
     LinearLayout finishGameDescription;
 
@@ -73,6 +98,9 @@ public class QuizQuestionsFragment extends BaseFragment {
     @BindView(R.id.textResultView)
     TextView textResultView;
 
+    @BindView(R.id.imageButtonBACK)
+    Button imageButtonBACK;
+
     @BindView(R.id.imageButtonNEXT)
     Button imageButtonNEXT;
 
@@ -84,44 +112,31 @@ public class QuizQuestionsFragment extends BaseFragment {
     Drawable drw_answerTwoLoser;
     Drawable drw_answerTwoWinner;
 
-    private static final String LOG_TAG = QuizQuestionsFragment.class.getSimpleName();
-    private List<AnswersClass> question_list;
-    public long currentAnswer = -1;
-    private long time_for_game;
-    private DB_Questions current_question;
-    private CountDownTimer game_timer;
+    Drawable drw_favorite_on;
+    Drawable drw_favorite_off;
 
-    private class AnswersClass {
-
-        AnswersClass(DB_Questions questions, int answer) {
-            this.questions = questions;
-            this.answer = answer;
-        }
-
-        public DB_Questions questions;
-        public int answer;
-    }
 
     public interface Callback {
-        void onFinishQuiz();
+        void onFinishGame();
     }
 
-    public QuizQuestionsFragment() {
+    public FavoriteQuestionsFragment() {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.quiz_questions_fragment_layout, container, false);
+        View rootView = inflater.inflate(R.layout.theme_questions_fragment_layout, container, false);
         ButterKnife.bind(this, rootView);
 
         Bundle arguments = getArguments();
 
+        headLine.setTypeface(custom_font_bold);
         question_text.setTypeface(custom_font_regular);
         one_answer_text.setTypeface(custom_font_regular);
         two_answer_text.setTypeface(custom_font_regular);
         answerDescription.setTypeface(custom_font_times);
         textFinishMessage.setTypeface(custom_font_regular);
-        textResultView.setTypeface(custom_font_regular);
+        textResultView.setTypeface(custom_font_bold);
 
         drw_answerOneOriginal = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_one_original);
         drw_answerOneLoser = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_one_loser);
@@ -130,54 +145,97 @@ public class QuizQuestionsFragment extends BaseFragment {
         drw_answerTwoLoser = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_two_loser);
         drw_answerTwoWinner = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_two_winner);
 
+        drw_favorite_on = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_on);
+        drw_favorite_off = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_off);
+
         imageButtonNEXT.setCompoundDrawablesWithIntrinsicBounds(
                 null
                 , null
                 , ContextCompat.getDrawable(getContext(), R.drawable.ic_right)
                 , null);
 
-        question_list = new LinkedList<>();
+        imageButtonBACK.setCompoundDrawablesWithIntrinsicBounds(
+                ContextCompat.getDrawable(getContext(), R.drawable.ic_left)
+                , null
+                , null
+                , null);
 
         if (arguments != null) {
-            time_for_game = arguments.getInt(MainActivity.KEY_TIME);
+            theme_id = arguments.getLong(MainActivity.KEY_THEME_ID);
+
+            current_theme = mDatabaseHelper.getThemeQuizDataDao().queryForId(theme_id);
         }
 
         try {
-            current_question = mDatabaseHelper.getQuestionDataDao()
-                    .queryBuilder()
-                    .orderByRaw("RANDOM()")
-                    .queryForFirst();
+            List<DB_FavoriteThemeQuestions> listOfFavorite = mDatabaseHelper.getFavoriteDataDao().queryBuilder().where()
+                    .eq(DB_FavoriteThemeQuestions.THEME_ID, theme_id).query();
+
+            ArrayList<Long> listFoIds = new ArrayList<>();
+            for (DB_FavoriteThemeQuestions cc : listOfFavorite) {
+                listFoIds.add(cc.getQuestion_id());
+            }
+
+            question_list = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryBuilder()
+                    .orderBy(DB_ThemeQuestion.ID, true)
+                    .where().in(DB_ThemeQuestion.ID, listFoIds)
+                    .query();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        initNexQuestion();
+
+        current_question_index = 0;
+
+        current_theme = mDatabaseHelper.getThemeQuizDataDao().queryForId(theme_id);
+
+
+        initHeadLine();
+        initQuestion((int) current_question_index);
 
         gameLayout.setVisibility(View.VISIBLE);
         finishLayout.setVisibility(View.GONE);
 
-        game_timer = new CountDownTimer(time_for_game * 60 * 1000, 10000) {
-
-            public void onTick(long millisUntilFinished) {
-                //Calendar c = Calendar.getInstance();
-                //tv_currentTime.setText(String.format("%02d:%02d",c.get(Calendar.HOUR_OF_DAY),c.get(Calendar.MINUTE) ));
-            }
-
-            public void onFinish() {
-                ShowFinishScreen();
-            }
-        };
-        game_timer.start();
-
         return rootView;
     }
 
-    private void initNexQuestion() {
+    private void initHeadLine() {
+
+        textResultView.setVisibility(View.GONE);
+
+        headLine.setText(current_theme.getName());
+
+        if (current_theme.getTheme_image() != null) {
+            Picasso.with(getContext()).load(Utility.BASE_URL + current_theme.getTheme_background_image())
+                    .into(ImageBackground);
+        }
+
+        imgButtonFavorite.setVisibility(View.VISIBLE);
+        imgButtonShare.setVisibility(View.VISIBLE);
+    }
+
+    private void initNextPrevButtons(long position) {
+        if (position == 0)
+            imageButtonBACK.setVisibility(View.GONE);
+        else
+            imageButtonBACK.setVisibility(View.VISIBLE);
+
+        if (position == question_list.size() - 1)
+            imageButtonNEXT.setVisibility(View.GONE);
+        else
+            imageButtonNEXT.setVisibility(View.VISIBLE);
+    }
+
+
+    private void initQuestion(int pQuestionNumber) {
+
+        initNextPrevButtons(pQuestionNumber);
+
+        DB_ThemeQuestion current_question = question_list.get(pQuestionNumber);
 
         question_text.setText(current_question.getQuestion());
         one_answer_text.setText(current_question.getAnswer1());
         two_answer_text.setText(current_question.getAnswer2());
-
+        answerDescription.setText(current_question.getDescription());
 
         finishGameDescription.setVisibility(View.GONE);
 
@@ -193,49 +251,32 @@ public class QuizQuestionsFragment extends BaseFragment {
         one_answer_text.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorTextGray));
         two_answer_text.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorTextGray));
 
-    }
+        imgButtonFavorite.setVisibility(View.INVISIBLE);
 
-    @OnClick(R.id.layout_answer_one)
-    public void oneQuestionClick() {
-        if (currentAnswer == -1) {
-            currentAnswer = 1;
-            applyAnswer();
-        }
-    }
+        boolean flag_winner;
 
-    @OnClick(R.id.layout_answer_two)
-    public void twoQuestionClick() {
-        if (currentAnswer == -1) {
-            currentAnswer = 2;
-            applyAnswer();
-        }
-    }
-
-    public void applyAnswer() {
-
-        boolean flag_winner = false;
-        if (currentAnswer == current_question.getRight_answer()) {
+        if(current_question.getRight_answer() == 1){
             flag_winner = true;
+        }else{
+            flag_winner = false;
         }
 
-        question_list.add(new AnswersClass(current_question, flag_winner ? 1 : 0));
+        hideResultPanels(one_layout_answer,
+                one_image_answer,
+                drw_answerOneLoser,
+                drw_answerOneWinner,
+                one_answer_text,
+                flag_winner);
 
-        ShowResult(flag_winner);
+        hideResultPanels(two_layout_answer,
+                two_image_answer,
+                drw_answerTwoLoser,
+                drw_answerTwoWinner,
+                two_answer_text,
+                !flag_winner);
+
     }
 
-    public void ShowResult(boolean flag_winner) {
-        // Show right answer
-        switch ((int) currentAnswer) {
-            case 1:
-                hideResultPanels(one_layout_answer, one_image_answer, drw_answerOneLoser, drw_answerOneWinner, one_answer_text, flag_winner);
-                two_layout_answer.setVisibility(View.GONE);
-                break;
-            case 2:
-                hideResultPanels(two_layout_answer, two_image_answer, drw_answerTwoLoser, drw_answerTwoWinner, two_answer_text, flag_winner);
-                one_layout_answer.setVisibility(View.GONE);
-                break;
-        }
-    }
 
     public void hideResultPanels(View view, ImageView img_view, Drawable drw_loser, Drawable drw_winner, TextView caption, boolean winner) {
 
@@ -243,84 +284,42 @@ public class QuizQuestionsFragment extends BaseFragment {
         if (winner) {
             view.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorGreen));
             img_view.setImageDrawable(drw_winner);
-            textResultView.setText(getString(R.string.winner_text));
             textResultView.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorGreen));
         } else {
             view.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorRed));
             img_view.setImageDrawable(drw_loser);
-            textResultView.setText(getString(R.string.looser_text));
             textResultView.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorRed));
         }
 
         finishGameDescription.setVisibility(View.VISIBLE);
     }
 
+    @OnClick(R.id.imgButtonShare)
+    public void onClickShare() {
+        DB_ThemeQuestion current_question = question_list.get((int) current_question_index);
+        View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
 
-    private void ShowFinishScreen() {
-        gameLayout.setVisibility(View.GONE);
-        finishLayout.setVisibility(View.VISIBLE);
+        String file_name = String.format("ToDay theme-%d q-%d.jpg", theme_id, current_question.getId());
 
-        long numQuestions = 0;
-        long numRightAnswers = 0;
-
-        numQuestions = question_list.size();
-
-        long res = 0;
-
-        for (AnswersClass cc : question_list) {
-            numRightAnswers += cc.answer;
-        }
-
-        if (numQuestions != 0)
-            res = (long) (((float) numRightAnswers / numQuestions) * 100);
-
-        String finish_message = String.format(getEndGameMessage(), String.valueOf(res) + " %");
-
-        textFinishMessage.setText(finish_message);
+        Bitmap bmp = Utility.getScreenShot(rootView);
+        File file = Utility.store(bmp, file_name);
+        Utility.shareImage(file, getActivity());
     }
 
-    private String getEndGameMessage() {
+    @OnClick(R.id.imageButtonBACK)
+    protected void OnBACKClick() {
 
-        return getString(R.string.finish_round_description);
-    }
+        gameLayout.scrollTo(0, 0);
 
-    @OnClick(R.id.btnFinish)
-    public void onClickFinishGame() {
-        ((QuizQuestionsFragment.Callback) getActivity()).onFinishQuiz();
+        current_question_index -= 1;
+        initQuestion((int) current_question_index);
     }
 
     @OnClick(R.id.imageButtonNEXT)
     protected void OnNEXTClick() {
-        if (currentAnswer == -1)
-            return;
+        gameLayout.scrollTo(0, 0);
 
-        try {
-            ArrayList<Long> listFoIds = new ArrayList<>();
-            for (AnswersClass cc : question_list) {
-                listFoIds.add(cc.questions.getId());
-            }
-
-            current_question = mDatabaseHelper.getQuestionDataDao().queryBuilder()
-                    .orderByRaw("RANDOM()")
-                    .where().notIn(DB_Questions.ID, listFoIds)
-                    .queryForFirst();
-
-            if (current_question == null) {
-                current_question = mDatabaseHelper.getQuestionDataDao().queryBuilder()
-                        .orderByRaw("RANDOM()")
-                        .queryForFirst();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        currentAnswer = -1;
-        initNexQuestion();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        game_timer.cancel();
+        current_question_index += 1;
+        initQuestion((int) current_question_index);
     }
 }

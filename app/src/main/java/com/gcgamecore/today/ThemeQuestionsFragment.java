@@ -113,7 +113,6 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
     Drawable drw_favorite_on;
     Drawable drw_favorite_off;
-    private boolean game_from_favorite;
 
     public interface Callback {
         void onFinishGame();
@@ -135,7 +134,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
         two_answer_text.setTypeface(custom_font_regular);
         answerDescription.setTypeface(custom_font_times);
         textFinishMessage.setTypeface(custom_font_regular);
-        textResultView.setTypeface(custom_font_regular);
+        textResultView.setTypeface(custom_font_bold);
 
         drw_answerOneOriginal = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_one_original);
         drw_answerOneLoser = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_one_loser);
@@ -147,15 +146,20 @@ public class ThemeQuestionsFragment extends BaseFragment {
         drw_favorite_on = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_on);
         drw_favorite_off = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_off);
 
+        imageButtonNEXT.setCompoundDrawablesWithIntrinsicBounds(
+                null
+                , null
+                , ContextCompat.getDrawable(getContext(), R.drawable.ic_right)
+                , null);
+
+        imageButtonBACK.setCompoundDrawablesWithIntrinsicBounds(
+                ContextCompat.getDrawable(getContext(), R.drawable.ic_left)
+                , null
+                , null
+                , null);
+
         if (arguments != null) {
             theme_id = arguments.getLong(MainActivity.KEY_THEME_ID);
-
-            if(arguments.containsKey(MainActivity.KEY_IS_FAVORITE)) {
-                game_from_favorite = arguments.getBoolean(MainActivity.KEY_IS_FAVORITE);
-            }
-            else{
-                game_from_favorite = false;
-            }
 
             current_theme = mDatabaseHelper.getThemeQuizDataDao().queryForId(theme_id);
         } else {
@@ -163,26 +167,10 @@ public class ThemeQuestionsFragment extends BaseFragment {
         }
 
         try {
-            if(!game_from_favorite) {
-                question_list = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryBuilder()
-                        .orderBy(DB_ThemeQuestion.ID, true)
-                        .where()
-                        .eq(DB_ThemeQuestion.THEME, theme_id).query();
-            }else{
-                List<DB_FavoriteThemeQuestions> listOfFavorite = mDatabaseHelper.getFavoriteDataDao().queryBuilder().where()
-                        .eq(DB_FavoriteThemeQuestions.THEME_ID, theme_id).query();
-
-                ArrayList<Long> listFoIds = new ArrayList<>();
-                for (DB_FavoriteThemeQuestions cc :
-                        listOfFavorite) {
-                    listFoIds.add(cc.getQuestion_id());
-                }
-
-                question_list = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryBuilder()
-                        .orderBy(DB_ThemeQuestion.ID, true)
-                        .where().in(DB_ThemeQuestion.ID, listFoIds)
-                        .query();
-            }
+            question_list = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryBuilder()
+                    .orderBy(DB_ThemeQuestion.ID, true)
+                    .where()
+                    .eq(DB_ThemeQuestion.THEME, theme_id).query();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -228,6 +216,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
         initHeadLine();
         initNexQuestion();
+
 
         gameLayout.setVisibility(View.VISIBLE);
         finishLayout.setVisibility(View.GONE);
@@ -546,28 +535,12 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
         long res = 0;
         try {
-            if(!game_from_favorite) {
-                numRightAnswers = mDatabaseHelper.getAnswerDataDao().queryBuilder()
-                        .where()
-                        .eq(DB_Answers.ANSWER, 1)
-                        .and()
-                        .eq(DB_Answers.THEME_ID, theme_id)
-                        .countOf();
-            }else{
-                ArrayList<Long> listFoIds = new ArrayList<>();
-                for (DB_ThemeQuestion cc :question_list) {
-                    listFoIds.add(cc.getId());
-                }
-
-                numRightAnswers = mDatabaseHelper.getAnswerDataDao().queryBuilder()
-                        .where()
-                        .eq(DB_Answers.ANSWER, 1)
-                        .and()
-                        .eq(DB_Answers.THEME_ID, theme_id)
-                        .and()
-                        .in(DB_Answers.QUESTION_ID, listFoIds)
-                        .countOf();
-            }
+            numRightAnswers = mDatabaseHelper.getAnswerDataDao().queryBuilder()
+                    .where()
+                    .eq(DB_Answers.ANSWER, 1)
+                    .and()
+                    .eq(DB_Answers.THEME_ID, theme_id)
+                    .countOf();
 
             if(numQuestions != 0)
                 res = (long)(((float)numRightAnswers / numQuestions) * 100);
@@ -593,6 +566,8 @@ public class ThemeQuestionsFragment extends BaseFragment {
     @OnClick(R.id.imageButtonBACK)
     protected void OnBACKClick(){
 
+        gameLayout.scrollTo(0,0);
+
         if(current_question_index > 0)
             current_question_index -= 1;
 
@@ -603,6 +578,8 @@ public class ThemeQuestionsFragment extends BaseFragment {
     protected void OnNEXTClick(){
         if (currentAnswer == -1)
             return;
+
+        gameLayout.scrollTo(0,0);
 
         if(current_question_index == question_list.size()-1){
             ShowFinishScreen();

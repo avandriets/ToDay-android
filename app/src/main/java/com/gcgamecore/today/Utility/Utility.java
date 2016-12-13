@@ -42,7 +42,7 @@ public class Utility {
 
 
     public static OkHttpClient mClientOkHttp;
-    public static final String QuestionsURL = "/rest/marathon-questions/";
+    public static final String QuestionsURL = "/rest/marathon-header/get-questions/";
     public static final String ThemeURL = "/rest/theme-questions/get-day-theme-questions/";
 
     public static boolean isNetworkAvailable(Context context) {

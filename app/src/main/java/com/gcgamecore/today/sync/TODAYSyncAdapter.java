@@ -100,7 +100,16 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void loadQuestionsFromServer(QuizService service) {
 
-        Call<List<DB_Questions>> retGetQuestions = service.getQuestions();
+        String lang = mContext.getResources().getString(R.string.locale);
+        String lang_code = "";
+
+        if (lang.equals("rus")){
+            lang_code = "R";
+        }else{
+            lang_code = "E";
+        }
+
+        Call<List<DB_Questions>> retGetQuestions = service.getQuestions(lang_code);
 
         try {
             Response<List<DB_Questions>> response = retGetQuestions.execute();

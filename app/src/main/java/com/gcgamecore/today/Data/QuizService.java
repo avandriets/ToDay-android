@@ -14,8 +14,8 @@ import retrofit2.http.Query;
 public interface QuizService {
 
     @Headers({"Content-Type: application/json"})
-    @GET(Utility.QuestionsURL)
-    Call<List<DB_Questions>> getQuestions();
+    @GET(Utility.QuestionsURL+"{lang}/")
+    Call<List<DB_Questions>> getQuestions(@Path("lang") String lang);
 
     @Headers({"Content-Type: application/json"})
     @GET(Utility.ThemeURL+"{lang}/")

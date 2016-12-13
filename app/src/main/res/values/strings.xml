@@ -3,10 +3,10 @@
     <string name="content_authority" translatable="false">com.gcgamecore.today</string>
 
     <string name="app_name" translatable="false">ToDay</string>
-    <string name="string_archive">Archive</string>
+    <string name="string_archive">Topics</string>
     <string name="string_quiz">Quiz</string>
     <string name="string_favorite">Favorite</string>
-    <string name="string_action">Event</string>
+    <string name="string_action">Events</string>
     <string name="locale">eng</string>
     <string name="No_information_available">There is no data</string>
     <string name="SUNDAY">Sunday</string>

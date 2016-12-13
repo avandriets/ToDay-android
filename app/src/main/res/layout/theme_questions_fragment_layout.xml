@@ -86,7 +86,8 @@
                 android:paddingStart="33dp"
                 android:paddingTop="18dp"
                 android:text="Зачем вьетнамская традиция рекомендует счастливым обладателям пруда у своего дома к Новому году выпускать карпа в этот самый пруд?"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/ToDayColorTextGray" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -95,23 +96,24 @@
                 <ImageView
                     android:id="@+id/ImageBackground"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_below="@+id/questions_layout"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_alignBottom="@+id/questions_layout"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:visibility="visible"
                     android:layout_alignParentTop="true"
-                    android:id="@+id/questions_layout">
+                    android:id="@+id/questions_layout"
+                    android:background="@android:color/transparent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="500dp">
 
                     <LinearLayout
                         android:id="@+id/layout_answer_one"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:background="@color/ToDayColorGray"
@@ -125,7 +127,8 @@
                             android:layout_width="24dp"
                             android:layout_height="45dp"
                             android:layout_gravity="top"
-                            app:srcCompat="@drawable/ic_answer_one_original" />
+                            app:srcCompat="@drawable/ic_answer_one_original"
+                            android:layout_marginTop="-2dp" />
 
                         <TextView
                             android:id="@+id/textAnswerOne"
@@ -143,7 +146,7 @@
                     <LinearLayout
                         android:id="@+id/layout_answer_two"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
@@ -158,7 +161,8 @@
                             android:layout_width="24dp"
                             android:layout_height="45dp"
                             android:layout_gravity="top"
-                            app:srcCompat="@drawable/ic_answer_two_original" />
+                            app:srcCompat="@drawable/ic_answer_two_original"
+                            android:layout_marginTop="-2dp" />
 
                         <TextView
                             android:id="@+id/textAnswerTwo"
@@ -175,8 +179,18 @@
                     <LinearLayout
                         android:id="@+id/finishGameDescription"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical">
+
+                        <TextView
+                            android:text="weew"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textResultView"
+                            android:layout_centerInParent="true"
+                            android:textSize="18sp"
+                            android:gravity="center"
+                            android:padding="10dp" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -188,7 +202,6 @@
 
                             <Button
                                 android:layout_width="wrap_content"
-                                android:drawableLeft="@drawable/ic_left"
                                 android:id="@+id/imageButtonBACK"
                                 android:layout_alignParentLeft="true"
                                 android:text="@string/back"
@@ -196,18 +209,8 @@
                                 android:background="@android:color/transparent"
                                 android:textSize="16sp" />
 
-                            <TextView
-                                android:text="weew"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/textResultView"
-                                android:layout_centerInParent="true"
-                                android:textSize="18sp"
-                                android:gravity="center" />
-
                             <Button
                                 android:layout_width="wrap_content"
-                                android:drawableRight="@drawable/ic_right"
                                 android:id="@+id/imageButtonNEXT"
                                 android:layout_alignParentRight="true"
                                 android:text="@string/next"
@@ -219,17 +222,19 @@
                         <TextView
                             android:id="@+id/answerDescription"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingBottom="16dp"
                             android:paddingEnd="33dp"
                             android:paddingStart="33dp"
                             android:paddingTop="16dp"
                             android:text="Описание ответа"
-                            android:textSize="18sp" />
+                            android:textSize="20sp"
+                            android:textColor="@color/ToDayColorTextGray" />
                     </LinearLayout>
 
                 </LinearLayout>
+
 
             </RelativeLayout>
 

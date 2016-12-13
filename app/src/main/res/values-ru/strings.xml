@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="string_archive">Архив</string>
+    <string name="string_archive">Темы</string>
     <string name="string_quiz">Викторина</string>
     <string name="string_favorite">Избранное</string>
-    <string name="string_action">Событие</string>
+    <string name="string_action">События</string>
     <string name="locale">rus</string>
     <string name="No_information_available">Нет данных</string>
     <string name="SUNDAY">Воскресенье</string>
@@ -22,8 +22,8 @@
     <string name="exit_mesage">Выйти из игры!</string>
     <string name="exit_button">Выйти</string>
     <string name="cancel_button">Отмена</string>
-    <string name="winner_text">ВЕРНО</string>
-    <string name="looser_text">НЕ ВЕРНО</string>
+    <string name="winner_text">ВЕРНО !</string>
+    <string name="looser_text">НЕ ВЕРНО !</string>
     <string name="finish">КОНЕЦ</string>
     <string name="how_much_time_do_you_have">Сколько у вас есть времени?</string>
     <string name="no_questions_string">Еще нет вопросов для викторины :(</string>

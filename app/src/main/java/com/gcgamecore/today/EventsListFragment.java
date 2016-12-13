@@ -66,7 +66,11 @@ public class EventsListFragment extends ThemeListFragment {
             selectArgDeleted.setValue(0);
 
             QueryBuilder<DB_ThemeQuiz, Long> queryBuilder = mOrderDao.queryBuilder();
-            Where<DB_ThemeQuiz, Long> where = queryBuilder.where().eq(DB_ThemeQuiz.TARGET_DATE, today_date);
+            Where<DB_ThemeQuiz, Long> where = queryBuilder.where()
+                    .eq(DB_ThemeQuiz.TARGET_DATE, today_date)
+                    .and()
+                    .eq(DB_ThemeQuiz.MAIN_THEME, false);
+
             preparedQuery = where.prepare();
 
         } catch (SQLException e) {
