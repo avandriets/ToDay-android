@@ -7,14 +7,15 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textTheme"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="7"
             android:paddingBottom="24dp"
             android:paddingEnd="33dp"
             android:paddingStart="33dp"
@@ -22,25 +23,24 @@
             android:text="Merry Christmass"
             android:textAllCaps="true"
             android:textColor="@color/ToDayColorBlack"
-            android:textSize="25sp"
-            android:layout_weight="7" />
+            android:textSize="25sp" />
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <ImageButton
                 android:id="@+id/imgButtonFavorite"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/ic_favorite_off"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="5dp" />
+                android:layout_margin="5dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_favorite_off" />
 
             <ImageButton
                 android:id="@+id/imgButtonShare"
@@ -48,11 +48,11 @@
                 android:layout_height="25dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/ic_share"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="5dp" />
+                app:srcCompat="@drawable/ic_share" />
         </LinearLayout>
     </LinearLayout>
 
@@ -68,7 +68,7 @@
         android:id="@+id/gameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/mainLayout"
@@ -86,8 +86,8 @@
                 android:paddingStart="33dp"
                 android:paddingTop="18dp"
                 android:text="Зачем вьетнамская традиция рекомендует счастливым обладателям пруда у своего дома к Новому году выпускать карпа в этот самый пруд?"
-                android:textSize="18sp"
-                android:textColor="@color/ToDayColorTextGray" />
+                android:textColor="@color/ToDayColorTextGray"
+                android:textSize="18sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -96,19 +96,19 @@
                 <ImageView
                     android:id="@+id/ImageBackground"
                     android:layout_width="match_parent"
-                    android:layout_alignBottom="@+id/questions_layout"
                     android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/questions_layout"
                     android:scaleType="centerCrop" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    android:layout_alignParentTop="true"
                     android:id="@+id/questions_layout"
-                    android:background="@android:color/transparent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="500dp">
+                    android:layout_alignParentTop="true"
+                    android:background="@android:color/transparent"
+                    android:minHeight="500dp"
+                    android:orientation="vertical"
+                    android:visibility="visible">
 
                     <LinearLayout
                         android:id="@+id/layout_answer_one"
@@ -127,8 +127,8 @@
                             android:layout_width="24dp"
                             android:layout_height="45dp"
                             android:layout_gravity="top"
-                            app:srcCompat="@drawable/ic_answer_one_original"
-                            android:layout_marginTop="-2dp" />
+                            android:layout_marginTop="-2dp"
+                            app:srcCompat="@drawable/ic_answer_one_original" />
 
                         <TextView
                             android:id="@+id/textAnswerOne"
@@ -161,8 +161,8 @@
                             android:layout_width="24dp"
                             android:layout_height="45dp"
                             android:layout_gravity="top"
-                            app:srcCompat="@drawable/ic_answer_two_original"
-                            android:layout_marginTop="-2dp" />
+                            android:layout_marginTop="-2dp"
+                            app:srcCompat="@drawable/ic_answer_two_original" />
 
                         <TextView
                             android:id="@+id/textAnswerTwo"
@@ -183,39 +183,39 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:text="weew"
+                            android:id="@+id/textResultView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/textResultView"
                             android:layout_centerInParent="true"
-                            android:textSize="18sp"
                             android:gravity="center"
-                            android:padding="10dp" />
+                            android:padding="10dp"
+                            android:text="weew"
+                            android:textSize="18sp" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="15dp"
-                            android:layout_marginTop="15dp"
                             android:layout_marginEnd="16dp"
-                            android:layout_marginStart="16dp">
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="15dp">
 
                             <Button
-                                android:layout_width="wrap_content"
                                 android:id="@+id/imageButtonBACK"
-                                android:layout_alignParentLeft="true"
-                                android:text="@string/back"
+                                android:layout_width="wrap_content"
                                 android:layout_height="33dp"
+                                android:layout_alignParentLeft="true"
                                 android:background="@android:color/transparent"
+                                android:text="@string/back"
                                 android:textSize="16sp" />
 
                             <Button
-                                android:layout_width="wrap_content"
                                 android:id="@+id/imageButtonNEXT"
-                                android:layout_alignParentRight="true"
-                                android:text="@string/next"
+                                android:layout_width="wrap_content"
                                 android:layout_height="33dp"
+                                android:layout_alignParentRight="true"
                                 android:background="@android:color/transparent"
+                                android:text="@string/next"
                                 android:textSize="16sp" />
                         </RelativeLayout>
 
@@ -229,8 +229,8 @@
                             android:paddingStart="33dp"
                             android:paddingTop="16dp"
                             android:text="Описание ответа"
-                            android:textSize="20sp"
-                            android:textColor="@color/ToDayColorTextGray" />
+                            android:textColor="@color/ToDayColorTextGray"
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -247,15 +247,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
-        <TextView
-            android:id="@+id/textFinishMessage"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="TextView"
-            android:textSize="22sp" />
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_sign"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:srcCompat="@drawable/ic_status_element1" />
+
+            <TextView
+                android:id="@+id/textFinishMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="22sp"
+                android:layout_marginTop="30dp"
+                android:gravity="center" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnFinish"
@@ -263,11 +279,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="false"
+            android:layout_alignParentRight="false"
             android:layout_centerHorizontal="true"
             android:background="@android:color/transparent"
             android:text="OK"
             android:textSize="30sp"
-            android:layout_alignParentRight="false" />
+            android:layout_marginBottom="30dp" />
     </RelativeLayout>
 
 </LinearLayout>

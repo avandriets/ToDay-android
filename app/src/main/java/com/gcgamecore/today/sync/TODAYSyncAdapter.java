@@ -16,12 +16,14 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.gcgamecore.today.Data.DB_Questions;
+import com.gcgamecore.today.Data.DB_SentNotification;
 import com.gcgamecore.today.Data.DB_ThemeQuestion;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.Data.QuizService;
 import com.gcgamecore.today.Data.TODAYContract;
 import com.gcgamecore.today.R;
+import com.gcgamecore.today.Utility.DB_Utility;
 import com.gcgamecore.today.Utility.Utility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,6 +36,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -47,7 +50,7 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final String ACTION_DATA_UPDATED = "com.digitallifelab.environmentmonitor.ACTION_DATA_UPDATED";
     // Interval at which to sync, in seconds.
     // 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 60 * 180;
+    public static final int SYNC_INTERVAL = 60 * 120;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
     public static final int NOTIFICATION_ID = 1;
 
@@ -58,6 +61,12 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize);
         mContext = context;
     }
+
+    private String[] column_one = {"Интереснейшие", "Удивительные", "Поразительные",
+            "Необычные", "Невероятные", "Занимательные", "Любопытные", "Тайные"};
+
+    private String[] column_two = {"факты", "истории", "открытия",
+            "сведения", "данные", "новости", "знания", "события"};
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
@@ -189,19 +198,38 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
                     }
                 }
 
-                NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                DB_ThemeQuiz main_theme = DB_Utility.getCurrentTheme(mDatabaseHelper);
 
-                Bitmap largeIcon = BitmapFactory.decodeResource(getContext().getResources(), R.mipmap.ic_launcher);
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getContext())
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setLargeIcon(largeIcon)
-                                .setContentTitle(getContext().getString(R.string.app_name))
-                                //.setStyle(new NotificationCompat.BigTextStyle().bigText("You have " + newMessages.newAmount + " messages"))
-                                .setContentText(mContext.getString(R.string.new_theme_notification))
-                                .setPriority(NotificationCompat.PRIORITY_HIGH);
+                if(main_theme!= null){
+                    DB_SentNotification notification = DB_Utility.getNotificationByTheme(mDatabaseHelper, main_theme);
 
-                mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+                    if(notification == null){
+
+                        Calendar ten_o_clock = Calendar.getInstance();
+                        ten_o_clock.set(Calendar.HOUR_OF_DAY, 10);
+                        Calendar twelve_o_clock = Calendar.getInstance();
+                        twelve_o_clock.set(Calendar.HOUR_OF_DAY, 12);
+                        Calendar now = Calendar.getInstance();
+
+                        if(now.after(ten_o_clock) && now.before(twelve_o_clock)){
+                            NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+                            Bitmap largeIcon = BitmapFactory.decodeResource(getContext().getResources(), R.mipmap.ic_launcher);
+                            NotificationCompat.Builder mBuilder =
+                                    new NotificationCompat.Builder(getContext())
+                                            .setSmallIcon(R.mipmap.ic_launcher)
+                                            .setLargeIcon(largeIcon)
+                                            .setContentTitle(getContext().getString(R.string.app_name))
+                                            //.setStyle(new NotificationCompat.BigTextStyle().bigText("You have " + newMessages.newAmount + " messages"))
+                                            .setContentText(getNotificationString(main_theme))
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+                            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+                            DB_Utility.notificationWasSentByTheme(mDatabaseHelper, main_theme);
+                        }
+                    }
+                }
 
             } else {
                 //JSONObject error_obj = Utility.ReadRetrofitResponseToJsonObj(response);
@@ -212,6 +240,19 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
             e.printStackTrace();
         }
 
+    }
+
+    private String getNotificationString(DB_ThemeQuiz theme){
+        Random r = new Random();
+
+        int first_word = r.nextInt(column_one.length);
+        int second_word = r.nextInt(column_two.length);
+
+        String notification = "";
+
+        notification = theme.getName() + ". " + column_one[first_word] + " " + column_two[second_word];
+
+        return notification;
     }
 
     /**

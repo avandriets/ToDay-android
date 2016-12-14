@@ -103,6 +103,9 @@ public class ThemeQuestionsFragment extends BaseFragment {
     @BindView(R.id.imageButtonNEXT)
     Button imageButtonNEXT;
 
+    @BindView(R.id.img_sign)
+    ImageView img_sign;
+
     Drawable drw_answerOneOriginal;
     Drawable drw_answerOneLoser;
     Drawable drw_answerOneWinner;
@@ -113,6 +116,11 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
     Drawable drw_favorite_on;
     Drawable drw_favorite_off;
+
+    Drawable drw_status_0;
+    Drawable drw_status_1;
+    Drawable drw_status_2;
+    Drawable drw_status_3;
 
     public interface Callback {
         void onFinishGame();
@@ -145,6 +153,11 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
         drw_favorite_on = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_on);
         drw_favorite_off = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_off);
+
+        drw_status_0 = ContextCompat.getDrawable(getContext(), R.drawable.ic_status_element0);
+        drw_status_1 = ContextCompat.getDrawable(getContext(), R.drawable.ic_status_element1);
+        drw_status_2 = ContextCompat.getDrawable(getContext(), R.drawable.ic_status_element2);
+        drw_status_3 = ContextCompat.getDrawable(getContext(), R.drawable.ic_status_element3);
 
         imageButtonNEXT.setCompoundDrawablesWithIntrinsicBounds(
                 null
@@ -549,6 +562,14 @@ public class ThemeQuestionsFragment extends BaseFragment {
         }
 
         String finish_message = String.format(getEndGameMessage(), String.valueOf(res)+ " %");
+
+        if(res <= 69){
+            img_sign.setImageDrawable(drw_status_1);
+        }else if(res >= 70 && res <=89 ){
+            img_sign.setImageDrawable(drw_status_2);
+        }else{
+            img_sign.setImageDrawable(drw_status_3);
+        }
 
         textFinishMessage.setText(finish_message);
     }

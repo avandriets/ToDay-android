@@ -24,7 +24,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // name of the database file for your application -- change to something appropriate for your app
     private static final String DATABASE_NAME = "ToDayQuiz.db";
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 20;
 
     // the DAO object we use to access the SimpleData table
 
@@ -46,6 +46,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<DB_FavoriteThemeQuestions, Long> FavoriteDao = null;
     private RuntimeExceptionDao<DB_FavoriteThemeQuestions, Long> FavoriteRuntimeDao = null;
 
+    private Dao<DB_SentNotification, Long> NotificationDao = null;
+    private RuntimeExceptionDao<DB_SentNotification, Long> NotificationRuntimeDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -66,6 +68,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, DB_ThemeQuestion.class);
             TableUtils.createTable(connectionSource, DB_ThemeQuiz.class);
             TableUtils.createTable(connectionSource, DB_LastQuestionInTheme.class);
+            TableUtils.createTable(connectionSource, DB_SentNotification.class);
 
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
@@ -88,7 +91,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, DB_ThemeQuestion.class, true);
             TableUtils.dropTable(connectionSource, DB_ThemeQuiz.class, true);
             TableUtils.dropTable(connectionSource, DB_LastQuestionInTheme.class, true);
-
+            TableUtils.dropTable(connectionSource, DB_SentNotification.class, true);
 
             // after we drop the old databases, we create the new ones
             onCreate(db, connectionSource);
@@ -182,6 +185,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return FavoriteRuntimeDao;
     }
 
+    public Dao<DB_SentNotification, Long> getNotificationsDao() throws SQLException {
+        if (NotificationDao == null) {
+            NotificationDao = getDao(DB_SentNotification.class);
+        }
+        return NotificationDao;
+    }
+
+    public RuntimeExceptionDao<DB_SentNotification, Long> getNotificationsDataDao() {
+        if (NotificationRuntimeDao == null) {
+            NotificationRuntimeDao = getRuntimeExceptionDao(DB_SentNotification.class);
+        }
+        return NotificationRuntimeDao;
+    }
+
     /**
      * Close the database connections and clear any cached DAOs.
      */
@@ -206,5 +223,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         LastQuestionsDao = null;
         LastQuestionsRuntimeDao = null;
+
+        NotificationDao = null;
+        NotificationRuntimeDao = null;
     }
 }

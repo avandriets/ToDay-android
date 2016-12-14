@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.gcgamecore.today.Data.DB_FavoriteThemeQuestions;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
+import com.gcgamecore.today.Utility.DB_Utility;
 import com.gcgamecore.today.Utility.Utility;
 import com.j256.ormlite.android.apptools.support.OrmLiteCursorLoader;
 import com.j256.ormlite.dao.Dao;
@@ -98,23 +99,7 @@ public class ThemeFragment extends BaseFragmentWithHeader implements LoaderManag
 
     public void initViewByCurrentDay(){
 
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.MILLISECOND, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-
-        DB_ThemeQuiz main_theme = null;
-
-        try {
-            main_theme = mDatabaseHelper.getThemeQuizDataDao().queryBuilder()
-                    .orderBy(DB_ThemeQuiz.TARGET_DATE, false)
-                    .where().eq(DB_ThemeQuiz.MAIN_THEME, true)
-                    .queryForFirst();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        DB_ThemeQuiz main_theme = DB_Utility.getCurrentTheme(mDatabaseHelper);
 
         if(main_theme != null){
             current_theme = main_theme;

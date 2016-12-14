@@ -238,7 +238,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void goToMainPage(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_list_container, new ThemeFragment(), MAIN_FRAGMENT_TAG).commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_list_container, new ThemeFragment(), MAIN_FRAGMENT_TAG)
+                .commit();
         selectButton(relativeLayout_Main);
         initInterface();
     }
