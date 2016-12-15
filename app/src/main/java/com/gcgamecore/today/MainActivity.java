@@ -14,6 +14,8 @@ import com.gcgamecore.today.Adapters.ArchiveRecyclerViewAdapter;
 import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.Utility.Utility;
 import com.gcgamecore.today.sync.TODAYSyncAdapter;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.Calendar;
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements
     TextView tv_currentTime;
 
     private CountDownTimer new_timer = null;
+    private Tracker mTracker;
 
     @Override
     protected void onDestroy() {
@@ -93,6 +96,14 @@ public class MainActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         mDatabaseHelper = Utility.getDBHelper(this);
+
+        TODAYSyncAdapter.initializeSyncAdapter(this);
+
+        TODAYSyncAdapter.syncImmediately(this);
+
+        // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         goToMainPage();
     }
@@ -133,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements
 
         currentView.setBackgroundColor(Utility.getColor(this, R.color.ToDayColorRed));
 
-        TODAYSyncAdapter.syncImmediately(this);
+        // TODAYSyncAdapter.syncImmediately(this);
     }
 
     @OnClick(R.id.btn_main)
@@ -244,6 +255,11 @@ public class MainActivity extends AppCompatActivity implements
                 .commit();
         selectButton(relativeLayout_Main);
         initInterface();
+
+        Log.i(LOG_TAG, "Setting screen name: " + "Main page");
+        mTracker.setScreenName("Image~" + "Main page");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
     }
 
     @Override

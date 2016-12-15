@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "50149287644",
+    "project_id": "today-f52b7"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50149287644:android:6306e34b775d1a5f",
+        "android_client_info": {
+          "package_name": "com.gcgamecore.today"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50149287644-jog7k6np4snh1uql99lm0tkgih5qe3hq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1ElDZtK82SVJL392tU3C0e7JfkQZl8tQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-73806539-4"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

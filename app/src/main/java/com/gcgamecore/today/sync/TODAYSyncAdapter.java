@@ -46,12 +46,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
 
+    private static final int HOUR_FROM_SYNC = 10;
+    private static final int HOUR_BEFORE_SYNC = 12;
     public final String LOG_TAG = TODAYSyncAdapter.class.getSimpleName();
     public static final String ACTION_DATA_UPDATED = "com.digitallifelab.environmentmonitor.ACTION_DATA_UPDATED";
     // Interval at which to sync, in seconds.
     // 60 seconds (1 minute) * 180 = 3 hours
-    public static final int SYNC_INTERVAL = 60 * 120;
-    public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
+    public static final int SYNC_INTERVAL = 60 * 15;
+    public static final int SYNC_FLEXTIME = 150;
     public static final int NOTIFICATION_ID = 1;
 
     private DatabaseHelper mDatabaseHelper = null;
@@ -206,9 +208,9 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
                     if(notification == null){
 
                         Calendar ten_o_clock = Calendar.getInstance();
-                        ten_o_clock.set(Calendar.HOUR_OF_DAY, 10);
+                        ten_o_clock.set(Calendar.HOUR_OF_DAY, HOUR_FROM_SYNC);
                         Calendar twelve_o_clock = Calendar.getInstance();
-                        twelve_o_clock.set(Calendar.HOUR_OF_DAY, 12);
+                        twelve_o_clock.set(Calendar.HOUR_OF_DAY, HOUR_BEFORE_SYNC);
                         Calendar now = Calendar.getInstance();
 
                         if(now.after(ten_o_clock) && now.before(twelve_o_clock)){
@@ -295,6 +297,9 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
      * @return a fake account.
      */
     public static Account getSyncAccount(Context context) {
+
+        Log.d("Sync Adapter", "Starting sync getSyncAccount()");
+
         // Get an instance of the Android account manager
         AccountManager accountManager =
                 (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
@@ -329,6 +334,7 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Since we've created an account
          */
+        Log.d("Sync Adapter", "Starting sync onAccountCreated()");
         TODAYSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
 
         /*

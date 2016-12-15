@@ -39,6 +39,11 @@ public class Utility {
     private static final String LOG_TAG = Utility.class.getSimpleName();
 
     public static final String BASE_URL             = "http://today1077.cloudapp.net";
+    public static final String KEY_THEME_NAME = "key_theme_name";
+    public static final String KEY_QUESTION = "key_question";
+    public static final String KEY_BACKGROUND_IMAGE_URL = "key_back_ground_url";
+    public static final String KEY_THEME_ID = "key_theme_id";
+    public static final String KEY_QUESTION_ID = "key_question_id";
 
 
     public static OkHttpClient mClientOkHttp;
@@ -268,6 +273,7 @@ public class Utility {
     public static Bitmap getScreenShot(View view) {
         View screenView = view.getRootView();
         screenView.setDrawingCacheEnabled(true);
+        screenView.buildDrawingCache();
         Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
         screenView.setDrawingCacheEnabled(false);
         return bitmap;

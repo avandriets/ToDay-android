@@ -1,5 +1,7 @@
 package com.gcgamecore.today;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ import butterknife.OnClick;
 public class ThemeQuestionsFragment extends BaseFragment {
 
     private static final String LOG_TAG = ThemeQuestionsFragment.class.getSimpleName();
+    private static final int SHARE_ACTIVITY_REQUEST_CODE = 1002;
     private long theme_id;
     private List<DB_ThemeQuestion> question_list;
     private DB_ThemeQuiz current_theme;
@@ -524,14 +527,44 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
     @OnClick(R.id.imgButtonShare)
     public void onClickShare() {
+
         DB_ThemeQuestion current_question = question_list.get((int) current_question_index);
-        View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
 
-        String file_name = String.format("ToDay theme-%d q-%d.jpg", theme_id, current_question.getId());
+        Intent newShareActivity = new Intent(getActivity(), ShareActivity.class);
+        newShareActivity.putExtra(Utility.KEY_THEME_NAME, current_theme.getName());
+        newShareActivity.putExtra(Utility.KEY_QUESTION, current_question.getQuestion());
 
-        Bitmap bmp = Utility.getScreenShot(rootView);
-        File file = Utility.store(bmp, file_name);
-        Utility.shareImage(file, getActivity());
+        newShareActivity.putExtra(Utility.KEY_THEME_ID, current_theme.getId());
+        newShareActivity.putExtra(Utility.KEY_QUESTION_ID, current_question.getId());
+
+        if (current_theme.getTheme_image() != null) {
+            newShareActivity.putExtra(Utility.KEY_BACKGROUND_IMAGE_URL,Utility.BASE_URL + current_theme.getTheme_background_image());
+        }
+
+        startActivityForResult(newShareActivity,SHARE_ACTIVITY_REQUEST_CODE);
+
+//        DB_ThemeQuestion current_question = question_list.get((int) current_question_index);
+//        View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+//
+//        String file_name = String.format("ToDay theme-%d q-%d.jpg", theme_id, current_question.getId());
+//
+//        Bitmap bmp = Utility.getScreenShot(rootView);
+//        File file = Utility.store(bmp, file_name);
+//        Utility.shareImage(file, getActivity());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == SHARE_ACTIVITY_REQUEST_CODE){
+            if (resultCode == Activity.RESULT_OK) {
+                String newText = data.getStringExtra("FullFileName");
+                File dir = new File (newText);
+
+                Utility.shareImage(dir, getActivity());
+            }
+        }
     }
 
     private void ShowFinishScreen() {

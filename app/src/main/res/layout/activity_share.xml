@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="300dp"
+    android:id="@+id/topLayout">
+
+    <ImageView
+        android:id="@+id/ImageBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/parentLayout"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:id="@+id/parentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:minHeight="300dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textTheme"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:paddingBottom="24dp"
+                android:paddingEnd="33dp"
+                android:paddingStart="33dp"
+                android:paddingTop="30dp"
+                android:text="Merry Christmass"
+                android:textAllCaps="true"
+                android:textColor="@color/ToDayColorBlack"
+                android:textSize="25sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            app:srcCompat="@drawable/ic_line_dotted" />
+
+        <LinearLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/textQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="27dp"
+                android:paddingEnd="33dp"
+                android:paddingStart="33dp"
+                android:paddingTop="18dp"
+                android:text="Зачем вьетнамская традиция рекомендует счастливым обладателям пруда у своего дома к Новому году выпускать карпа в этот самый пруд?"
+                android:textColor="@color/ToDayColorTextGray"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_logo_line"
+                android:id="@+id/imageView6" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
