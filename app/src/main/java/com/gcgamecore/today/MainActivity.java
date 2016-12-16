@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements
         TODAYSyncAdapter.syncImmediately(this);
 
         // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        ToDayApplication application = (ToDayApplication) getApplication();
         mTracker = application.getDefaultTracker();
 
         goToMainPage();
@@ -256,9 +256,9 @@ public class MainActivity extends AppCompatActivity implements
         selectButton(relativeLayout_Main);
         initInterface();
 
-        Log.i(LOG_TAG, "Setting screen name: " + "Main page");
-        mTracker.setScreenName("Image~" + "Main page");
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+//        Log.i(LOG_TAG, "Setting screen name: " + "Main page");
+//        mTracker.setScreenName("Image~" + "Main page");
+//        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
     }
 

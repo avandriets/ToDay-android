@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:text="@string/how_much_time_do_you_have"
         android:textSize="25sp"
-        android:layout_margin="38dp"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_marginBottom="5dp" />
 
     <ImageButton
         app:srcCompat="@drawable/ic_quiz_5"

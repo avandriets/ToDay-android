@@ -66,6 +66,7 @@
                             android:id="@+id/imageAnswerOne"
                             android:layout_width="24dp"
                             android:layout_height="45dp"
+                            android:layout_marginTop="-3dp"
                             android:layout_gravity="top"
                             app:srcCompat="@drawable/ic_answer_one_original" />
 
@@ -99,6 +100,7 @@
                             android:id="@+id/imageAnswerTwo"
                             android:layout_width="24dp"
                             android:layout_height="45dp"
+                            android:layout_marginTop="-3dp"
                             android:layout_gravity="top"
                             app:srcCompat="@drawable/ic_answer_two_original" />
 
