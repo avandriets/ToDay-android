@@ -15,7 +15,7 @@
         android:text="@string/how_much_time_do_you_have"
         android:textSize="25sp"
         android:gravity="center"
-        android:layout_margin="38dp" />
+        android:layout_marginBottom="10dp" />
 
     <ImageButton
         app:srcCompat="@drawable/ic_quiz_5"
@@ -24,7 +24,7 @@
         android:layout_weight="0.22"
         android:background="@android:color/transparent"
         android:layout_width="190dp"
-        android:layout_height="25dp" />
+        android:layout_height="35dp" />
 
     <ImageButton
         app:srcCompat="@drawable/ic_quiz_10"
@@ -34,7 +34,7 @@
         android:background="@android:color/transparent"
         android:layout_marginTop="20dp"
         android:layout_width="220dp"
-        android:layout_height="25dp" />
+        android:layout_height="35dp" />
 
     <ImageButton
         app:srcCompat="@drawable/ic_quiz_30"
@@ -44,6 +44,6 @@
         android:background="@android:color/transparent"
         android:layout_marginTop="20dp"
         android:layout_width="250dp"
-        android:layout_height="25dp" />
+        android:layout_height="35dp" />
 
 </LinearLayout>

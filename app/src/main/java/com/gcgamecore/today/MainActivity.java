@@ -9,17 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.gcgamecore.today.Adapters.ArchiveRecyclerViewAdapter;
 import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.Utility.Utility;
 import com.gcgamecore.today.sync.TODAYSyncAdapter;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import java.util.Calendar;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -73,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements
     TextView tv_currentTime;
 
     private CountDownTimer new_timer = null;
-    private Tracker mTracker;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onDestroy() {
@@ -101,9 +97,8 @@ public class MainActivity extends AppCompatActivity implements
 
         TODAYSyncAdapter.syncImmediately(this);
 
-        // Obtain the shared Tracker instance.
-        ToDayApplication application = (ToDayApplication) getApplication();
-        mTracker = application.getDefaultTracker();
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         goToMainPage();
     }
@@ -218,6 +213,13 @@ public class MainActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_list_container, fragment)
                     .commit();
+
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Start theme: " + String.valueOf(themeId));
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Start theme");
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Start theme");
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
         }else{
             FavoriteQuestionsFragment fragment = new FavoriteQuestionsFragment();
             fragment.setArguments(arguments);
@@ -225,6 +227,12 @@ public class MainActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_list_container, fragment)
                     .commit();
+
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Start favorite theme: " + String.valueOf(themeId));
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Start favorite");
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Start favorite");
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         }
     }
 
@@ -241,6 +249,11 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.fragment_list_container, fragment)
                 .commit();
 
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Start quiz " + String.valueOf(p_min) + " minutes");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Start quiz");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "go to quiz");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     @Override
@@ -256,10 +269,11 @@ public class MainActivity extends AppCompatActivity implements
         selectButton(relativeLayout_Main);
         initInterface();
 
-//        Log.i(LOG_TAG, "Setting screen name: " + "Main page");
-//        mTracker.setScreenName("Image~" + "Main page");
-//        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Main page");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Main page");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "goto main page");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     @Override
