@@ -49,14 +49,13 @@ public class EventsListFragment extends ThemeListFragment {
 
     @Override
     public void initQuery() {
-        try {
 
+        try {
             Calendar c = Calendar.getInstance();
             c.set(Calendar.MILLISECOND, 0);
             c.set(Calendar.SECOND, 0);
             c.set(Calendar.MINUTE, 0);
             c.set(Calendar.HOUR_OF_DAY, 0);
-
 
             Date today_date = c.getTime();
 
@@ -66,10 +65,14 @@ public class EventsListFragment extends ThemeListFragment {
             selectArgDeleted.setValue(0);
 
             QueryBuilder<DB_ThemeQuiz, Long> queryBuilder = mOrderDao.queryBuilder();
-            Where<DB_ThemeQuiz, Long> where = queryBuilder.where()
-                    .eq(DB_ThemeQuiz.TARGET_DATE, today_date)
+            Where<DB_ThemeQuiz, Long> where = queryBuilder
+                    .orderBy(DB_ThemeQuiz.MAIN_THEME, false)
+                    .where()
+                    .le(DB_ThemeQuiz.TARGET_DATE, today_date)
                     .and()
-                    .eq(DB_ThemeQuiz.MAIN_THEME, false);
+                    .eq(DB_ThemeQuiz.MAIN_THEME, false)
+                    .and()
+                    .eq(DB_ThemeQuiz.LANGUAGE, pLanguage);
 
             preparedQuery = where.prepare();
 

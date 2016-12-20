@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.gcgamecore.today.Data.DB_Questions;
+import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
 
 import java.sql.SQLException;
@@ -146,6 +147,8 @@ public class QuizQuestionsFragment extends BaseFragment {
             current_question = mDatabaseHelper.getQuestionDataDao()
                     .queryBuilder()
                     .orderByRaw("RANDOM()")
+                    .where()
+                    .eq(DB_ThemeQuiz.LANGUAGE, pLanguage)
                     .queryForFirst();
         } catch (SQLException e) {
             e.printStackTrace();

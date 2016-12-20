@@ -51,11 +51,19 @@ public class DB_Questions {
     private long right_answer;
 
     @Expose
-    @DatabaseField(canBeNull = true, columnName = CREATED_AT, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd'T'HH:mm:ssZ")
+    @DatabaseField(
+            canBeNull = true,
+            columnName = CREATED_AT,
+            dataType = DataType.DATE_STRING,
+            format = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ")
     private Date created_at;
 
     @Expose
-    @DatabaseField(canBeNull = true, columnName = UPDATED_AT, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd'T'HH:mm:ssZ")
+    @DatabaseField(
+            canBeNull = true,
+            columnName = UPDATED_AT,
+            dataType = DataType.DATE_STRING,
+            format = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ")
     private Date updated_at;
 
     public long getHeader() {

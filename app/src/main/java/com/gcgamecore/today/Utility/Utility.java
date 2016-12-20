@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
@@ -48,7 +49,13 @@ public class Utility {
 
     public static OkHttpClient mClientOkHttp;
     public static final String QuestionsURL = "/rest/marathon-header/get-questions/";
-    public static final String ThemeURL = "/rest/theme-questions/get-day-theme-questions/";
+    public static final String QuestionsURLGetChanges = "/rest/marathon-header/get-changed-questions/";
+
+    public static final String ThemeURLbyDay = "/rest/theme-questions/get-day-theme-questions/";
+    public static final String ThemeURLbyInterval = "/rest/theme-questions/get-theme-questions-interval/";
+    public static final String ThemeURLGetChanges = "/rest/theme-questions/get-changed-theme-questions/";
+
+    public static final TimeZone utcTZ = TimeZone.getTimeZone("UTC");
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -311,5 +318,67 @@ public class Utility {
         } catch (ActivityNotFoundException e) {
             Toast.makeText(context, "No App Available", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static String getLangCode(Context mContext){
+
+        String lang = mContext.getResources().getString(R.string.locale);
+        String lang_code = "";
+
+        if (lang.equals("rus")){
+            lang_code = "R";
+        }else{
+            lang_code = "E";
+        }
+        return lang_code;
+    }
+
+    public static long toLocalTime(long time, TimeZone to) {
+        return convertTime(time, utcTZ, to);
+    }
+
+    public static long toUTC(long time, TimeZone from) {
+        return convertTime(time, from, utcTZ);
+    }
+
+    public static long convertTime(long time, TimeZone from, TimeZone to) {
+        return time + getTimeZoneOffset(time, from, to);
+    }
+
+    private static long getTimeZoneOffset(long time, TimeZone from, TimeZone to)    {
+        int fromOffset = from.getOffset(time);
+        int toOffset = to.getOffset(time);
+        int diff = 0;
+
+        if (fromOffset >= 0){
+            if (toOffset > 0){
+                toOffset = -1*toOffset;
+            } else {
+                toOffset = Math.abs(toOffset);
+            }
+            diff = (fromOffset+toOffset)*-1;
+        } else {
+            if (toOffset <= 0){
+                toOffset = -1*Math.abs(toOffset);
+            }
+            diff = (Math.abs(fromOffset)+toOffset);
+        }
+        return diff;
+    }
+
+    public static String loadJSONFromAsset(Context pContext, String file_name) {
+        String json = null;
+        try {
+            InputStream is = pContext.getAssets().open(file_name);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
     }
 }

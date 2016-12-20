@@ -205,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements
         Bundle arguments = new Bundle();
         arguments.putLong(MainActivity.KEY_THEME_ID, getIntent().getLongExtra(MainActivity.KEY_THEME_ID, themeId));
 
-
         if(!isFavorite) {
             ThemeQuestionsFragment fragment = new ThemeQuestionsFragment();
             fragment.setArguments(arguments);

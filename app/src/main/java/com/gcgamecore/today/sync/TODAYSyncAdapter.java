@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
 import com.gcgamecore.today.Data.DB_Questions;
 import com.gcgamecore.today.Data.DB_SentNotification;
 import com.gcgamecore.today.Data.DB_ThemeQuestion;
@@ -24,19 +25,24 @@ import com.gcgamecore.today.Data.QuizService;
 import com.gcgamecore.today.Data.TODAYContract;
 import com.gcgamecore.today.R;
 import com.gcgamecore.today.Utility.DB_Utility;
+import com.gcgamecore.today.Utility.ThemeWithQuestion;
 import com.gcgamecore.today.Utility.Utility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.TimeZone;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -75,7 +81,7 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
 
         Log.d(LOG_TAG, "Starting sync");
 
-        if(!Utility.isNetworkAvailable(getContext())){
+        if (!Utility.isNetworkAvailable(getContext())) {
             Log.e(LOG_TAG, "No internet connection.");
             return;
         }
@@ -90,8 +96,16 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
 
         QuizService service = retrofit.create(QuizService.class);
 
-        loadQuestionsFromServer(service);
-        loadThemeFromServer(service);
+//        loadQuestionsFromServer(service);
+
+
+        String pLanguage = Utility.getLangCode(getContext());
+        loadThemeChangedFromServer(service, pLanguage);
+        loadThemeFromServerByInterval(service, pLanguage);
+
+        LoadQuestions(service);
+
+        ShowNewThemeNotification(pLanguage);
 
         getContext().getContentResolver().insert(TODAYContract.QUESTIONS_CONTENT_URI, null);
 
@@ -99,7 +113,6 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
             OpenHelperManager.releaseHelper();
             mDatabaseHelper = null;
         }
-
     }
 
     private DatabaseHelper getHelper() {
@@ -109,16 +122,27 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
         return mDatabaseHelper;
     }
 
-    private void loadQuestionsFromServer(QuizService service) {
+    private void LoadQuestions(QuizService service){
 
-        String lang = mContext.getResources().getString(R.string.locale);
-        String lang_code = "";
+        try {
+            DB_Questions check_records = mDatabaseHelper.getQuestionDataDao()
+                    .queryBuilder()
+                    .orderBy(DB_Questions.UPDATED_AT,false)
+                    .queryForFirst();
 
-        if (lang.equals("rus")){
-            lang_code = "R";
-        }else{
-            lang_code = "E";
+            if(check_records == null){
+                loadQuestionsFirstly(service);
+            }else{
+                loadQuestionsChanges(service, check_records);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+    }
+
+    private void loadQuestionsFirstly(QuizService service) {
+
+        String lang_code = Utility.getLangCode(mContext);
 
         Call<List<DB_Questions>> retGetQuestions = service.getQuestions(lang_code);
 
@@ -128,37 +152,50 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
             if (response.isSuccessful()) {
                 List<DB_Questions> questions = response.body();
 
-                for (DB_Questions question :questions) {
+                for (DB_Questions question : questions) {
                     mDatabaseHelper.getQuestionDataDao().createIfNotExists(question);
                 }
                 Log.d(LOG_TAG, "Get questions successful");
             } else {
                 Log.d(LOG_TAG, "Get error.");
             }
-
-        } catch ( Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e(LOG_TAG, "Get error.");
         }
+    }
 
+    private void loadQuestionsChanges(QuizService service, DB_Questions check_records) {
+
+        String lang_code = Utility.getLangCode(mContext);
+
+        Call<List<DB_Questions>> retGetQuestions = service.getQuestionsGetChanges(lang_code, check_records.getUpdated_at().getTime());
+
+        try {
+            Response<List<DB_Questions>> response = retGetQuestions.execute();
+
+            if (response.isSuccessful()) {
+                List<DB_Questions> questions = response.body();
+
+                for (DB_Questions question : questions) {
+                    mDatabaseHelper.getQuestionDataDao().createOrUpdate(question);
+                }
+                Log.d(LOG_TAG, "Get questions successful");
+            } else {
+                Log.d(LOG_TAG, "Get error.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG, "Get error.");
+        }
     }
 
     private void loadThemeFromServer(QuizService service) {
 
-        //Locale current = mContext.getResources().getConfiguration().locale;
-        //String lang = current.getLanguage();
+        String lang_code = Utility.getLangCode(mContext);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
-
-        String lang = mContext.getResources().getString(R.string.locale);
-        String lang_code = "";
-
-        if (lang.equals("rus")){
-            lang_code = "R";
-        }else{
-            lang_code = "E";
-        }
 
         Calendar c = Calendar.getInstance();
         int day = c.get(Calendar.DAY_OF_MONTH);
@@ -184,52 +221,20 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
                 //DB_ThemeQuiz theme_quiz_from_db = mDatabaseHelper.getThemeQuizDataDao().queryForId(theme_quiz.getId());
                 DB_ThemeQuiz theme_quiz_from_db = mDatabaseHelper.getThemeQuizDataDao().createIfNotExists(theme_quiz);
 
-                if(theme_quiz.getUpdated_at().after(theme_quiz_from_db.getUpdated_at())) {
+                if (theme_quiz.getUpdated_at().after(theme_quiz_from_db.getUpdated_at())) {
                     mDatabaseHelper.getThemeQuizDataDao().update(theme_quiz);
                 }
 
-                Type listType = new TypeToken<ArrayList<DB_ThemeQuestion>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<DB_ThemeQuestion>>() {
+                }.getType();
                 List<DB_ThemeQuestion> theme_questions_list = new Gson().fromJson(theme_questions, listType);
 
                 DB_ThemeQuestion theme_quest = null;
                 for (DB_ThemeQuestion t_quest : theme_questions_list) {
                     t_quest.setTheme(theme_quiz_from_db.getId());
                     theme_quest = mDatabaseHelper.getThemeQuizQuestionsDataDao().createIfNotExists(t_quest);
-                    if(t_quest.getUpdated_at().after(theme_quest.getUpdated_at())){
+                    if (t_quest.getUpdated_at().after(theme_quest.getUpdated_at())) {
                         mDatabaseHelper.getThemeQuizQuestionsDataDao().update(t_quest);
-                    }
-                }
-
-                DB_ThemeQuiz main_theme = DB_Utility.getCurrentTheme(mDatabaseHelper);
-
-                if(main_theme!= null){
-                    DB_SentNotification notification = DB_Utility.getNotificationByTheme(mDatabaseHelper, main_theme);
-
-                    if(notification == null){
-
-                        Calendar ten_o_clock = Calendar.getInstance();
-                        ten_o_clock.set(Calendar.HOUR_OF_DAY, HOUR_FROM_SYNC);
-                        Calendar twelve_o_clock = Calendar.getInstance();
-                        twelve_o_clock.set(Calendar.HOUR_OF_DAY, HOUR_BEFORE_SYNC);
-                        Calendar now = Calendar.getInstance();
-
-                        if(now.after(ten_o_clock) && now.before(twelve_o_clock)){
-                            NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-                            Bitmap largeIcon = BitmapFactory.decodeResource(getContext().getResources(), R.mipmap.ic_launcher);
-                            NotificationCompat.Builder mBuilder =
-                                    new NotificationCompat.Builder(getContext())
-                                            .setSmallIcon(R.mipmap.ic_launcher)
-                                            .setLargeIcon(largeIcon)
-                                            .setContentTitle(getContext().getString(R.string.app_name))
-                                            //.setStyle(new NotificationCompat.BigTextStyle().bigText("You have " + newMessages.newAmount + " messages"))
-                                            .setContentText(getNotificationString(main_theme))
-                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-                            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-
-                            DB_Utility.notificationWasSentByTheme(mDatabaseHelper, main_theme);
-                        }
                     }
                 }
 
@@ -241,10 +246,156 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-
     }
 
-    private String getNotificationString(DB_ThemeQuiz theme){
+    private void loadThemeFromServerByInterval(QuizService service, String pLanguage) {
+
+        String lang_code = Utility.getLangCode(mContext);
+
+        Calendar cur_date = Calendar.getInstance();
+
+        DB_ThemeQuiz last_theme = DB_Utility.getLastTheme(mDatabaseHelper, pLanguage);
+
+        if (last_theme != null) {
+            if (last_theme.getTarget_date().after(cur_date.getTime())) {
+                return;
+            } else {
+                Calendar last_theme_date = Calendar.getInstance();
+                last_theme_date.setTime(last_theme.getTarget_date());
+
+                loadThemeByInterval(service, lang_code, last_theme_date, cur_date);
+            }
+        } else {
+            Calendar last_theme_date = Calendar.getInstance();
+            last_theme_date.setTimeInMillis(0);
+
+            loadThemeByInterval(service, lang_code, last_theme_date, cur_date);
+        }
+    }
+
+    private void loadThemeChangedFromServer(QuizService service, String pLanguage) {
+
+        String lang_code = Utility.getLangCode(mContext);
+
+        DB_ThemeQuiz last_theme = DB_Utility.getLastTheme(mDatabaseHelper, pLanguage);
+        DB_ThemeQuiz max_update_theme = DB_Utility.getMaxUpdateTheme(mDatabaseHelper, pLanguage);
+
+        if (last_theme != null) {
+
+            Calendar last_update_date = Calendar.getInstance();
+            last_update_date.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            Calendar last_create_date = Calendar.getInstance();
+
+            Calendar test_date = Calendar.getInstance();
+            test_date.setTime(max_update_theme.getUpdated_at());
+
+            last_update_date.setTime(max_update_theme.getUpdated_at());
+
+            last_create_date.setTime(last_theme.getTarget_date());
+
+            loadThemeChanges(service, lang_code, last_update_date, last_create_date);
+        }
+    }
+
+    private void loadThemeByInterval(QuizService service, String lang_code, Calendar last_theme_date, Calendar cur_date) {
+
+        int cur_day = cur_date.get(Calendar.DAY_OF_MONTH);
+        int cur_month = cur_date.get(Calendar.MONTH) + 1;
+        int cur_year = cur_date.get(Calendar.YEAR);
+
+        int last_day = last_theme_date.get(Calendar.DAY_OF_MONTH);
+        int last_month = last_theme_date.get(Calendar.MONTH) + 1;
+        int last_year = last_theme_date.get(Calendar.YEAR);
+
+
+        Call<ResponseBody> retGetThemeByInterval = service.getThemeByInterval(lang_code, last_day, last_month, last_year, cur_day, cur_month, cur_year);
+        parseAndUpdate(retGetThemeByInterval);
+    }
+
+    private void loadThemeChanges(QuizService service, String lang_code, Calendar last_update_date, Calendar last_create_date) {
+
+        int create_day = last_create_date.get(Calendar.DAY_OF_MONTH);
+        int create_month = last_create_date.get(Calendar.MONTH) + 1;
+        int create_year = last_create_date.get(Calendar.YEAR);
+
+//        int last_update_day = last_update_date.get(Calendar.DAY_OF_MONTH);
+//        int last_update_month = last_update_date.get(Calendar.MONTH) + 1;
+//        int last_update_year = last_update_date.get(Calendar.YEAR);
+
+        Call<ResponseBody> retGetThemeChanges = service.getThemeGetChanges(
+                lang_code
+                , create_day
+                , create_month
+                , create_year
+                //, Utility.toUTC(last_update_date.getTimeInMillis(), TimeZone.getDefault())
+                , last_update_date.getTimeInMillis()
+        );
+//        Utility.toUTC(current_theme.getUpdated_at().getTime(), TimeZone.getDefault())
+        parseAndUpdate(retGetThemeChanges);
+    }
+
+    private void parseAndUpdate(Call<ResponseBody> pResponse) {
+        try {
+            Response<ResponseBody> response = pResponse.execute();
+
+            if (response.isSuccessful()) {
+
+                Log.d(LOG_TAG, "CallBack response is success " + response);
+
+                String jsonString = Utility.ReadRetrofitResponseToString(response);
+
+                List<ThemeWithQuestion> theme_questions_list = DB_Utility.parseThemeArray(jsonString);
+
+                DB_Utility.updateThemesWithQuestions(mDatabaseHelper, theme_questions_list);
+
+            } else {
+                //JSONObject error_obj = Utility.ReadRetrofitResponseToJsonObj(response);
+                Log.d(LOG_TAG, "Error. " + response.code() + " " + response.message());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ShowNewThemeNotification(String pLanguage) {
+
+        DB_ThemeQuiz main_theme = DB_Utility.getCurrentTheme(mDatabaseHelper, pLanguage);
+
+        if (main_theme != null) {
+            DB_SentNotification notification = DB_Utility.getNotificationByTheme(mDatabaseHelper, main_theme);
+
+            if (notification == null) {
+
+                Calendar ten_o_clock = Calendar.getInstance();
+                ten_o_clock.set(Calendar.HOUR_OF_DAY, HOUR_FROM_SYNC);
+                Calendar twelve_o_clock = Calendar.getInstance();
+                twelve_o_clock.set(Calendar.HOUR_OF_DAY, HOUR_BEFORE_SYNC);
+                Calendar now = Calendar.getInstance();
+
+                if (now.after(ten_o_clock) && now.before(twelve_o_clock)) {
+                    NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+                    Bitmap largeIcon = BitmapFactory.decodeResource(getContext().getResources(), R.mipmap.ic_launcher);
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(getContext())
+                                    .setSmallIcon(R.mipmap.ic_launcher)
+                                    .setLargeIcon(largeIcon)
+                                    .setContentTitle(getContext().getString(R.string.app_name))
+                                    //.setStyle(new NotificationCompat.BigTextStyle().bigText("You have " + newMessages.newAmount + " messages"))
+                                    .setContentText(getNotificationString(main_theme))
+                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+                    mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+                    DB_Utility.notificationWasSentByTheme(mDatabaseHelper, main_theme);
+                }
+            }
+        }
+    }
+
+    private String getNotificationString(DB_ThemeQuiz theme) {
         Random r = new Random();
 
         int first_word = r.nextInt(column_one.length);

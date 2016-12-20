@@ -30,9 +30,8 @@ import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -83,6 +82,7 @@ public class ThemeFragment extends BaseFragmentWithHeader implements LoaderManag
         textViewEmpty.setTypeface(custom_font_regular);
 
         Bundle arguments = getArguments();
+        theme_id = -1;
 
         if (arguments != null) {
             theme_id = arguments.getLong(MainActivity.KEY_THEME_ID);
@@ -99,15 +99,16 @@ public class ThemeFragment extends BaseFragmentWithHeader implements LoaderManag
 
     public void initViewByCurrentDay(){
 
-        DB_ThemeQuiz main_theme = DB_Utility.getCurrentTheme(mDatabaseHelper);
+        if(theme_id == -1) {
+            DB_ThemeQuiz main_theme = DB_Utility.getCurrentTheme(mDatabaseHelper, pLanguage);
 
-        if(main_theme != null){
-            current_theme = main_theme;
+            if (main_theme != null) {
+                current_theme = main_theme;
+            }
+
+            if (current_theme != null)
+                theme_id = current_theme.getId();
         }
-
-        if(current_theme != null)
-            theme_id = current_theme.getId();
-
     }
 
     static {

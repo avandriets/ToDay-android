@@ -1,0 +1,54 @@
+[
+  {
+    "theme": {
+      "theme_image": "/media/picture1_r6eA4Bp.jpg",
+      "theme_background_image": "/media/picture2.jpg",
+      "target_date": "2016-12-10",
+      "main_theme": true,
+      "id": 10,
+      "language": "R",
+      "name": "Hello you !!!",
+      "description": "Hello from the other side / I must have called a thousand times / To tell you I'm sorry for everything that I've done / But when I call you never seem to be home…",
+      "created_at": "2016-12-02T11:00:40.444597Z",
+      "updated_at": "2016-12-20T01:07:08.123721Z"
+    },
+    "questions": [
+      {
+        "id": 10,
+        "header": 5,
+        "language": "R",
+        "question": "Зачем вьетнамская традиция рекомендует счастливым обладателям пруда у своего дома к Новому\r\nгоду выпускать карпа в этот самый пруд?",
+        "answer1": "Чтобы карп принес богатство !",
+        "answer2": "Чтобы карп катал домового.",
+        "right_answer": 2,
+        "description": "И это не шутка! По вьетнамским поверьям, карп катает на своей\r\nспине домового, а домовой весь год присматривает за домом и семьей обладателя карпа и\r\nпруда",
+        "created_at": "2016-12-02T11:04:11.877078Z",
+        "updated_at": "2016-12-05T11:39:31.304456Z"
+      },
+      {
+        "id": 42,
+        "header": 36,
+        "language": "R",
+        "question": "2*2 = ?",
+        "answer1": "3",
+        "answer2": "4",
+        "right_answer": 2,
+        "description": "Это же элементарно !!!!",
+        "created_at": "2016-12-06T13:30:28.796305Z",
+        "updated_at": "2016-12-06T13:30:28.796338Z"
+      },
+      {
+        "id": 44,
+        "header": 37,
+        "language": "R",
+        "question": "3*3 = ?",
+        "answer1": "10",
+        "answer2": "9",
+        "right_answer": 2,
+        "description": "It's working fine. I'm able to see the image. But now I want to change the color for the svg image at runtime.",
+        "created_at": "2016-12-10T07:07:41.449879Z",
+        "updated_at": "2016-12-10T07:07:41.449914Z"
+      }
+    ]
+  }
+]

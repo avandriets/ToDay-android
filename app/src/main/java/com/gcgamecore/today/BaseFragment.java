@@ -10,6 +10,8 @@ import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.Utility.Utility;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import okhttp3.internal.Util;
+
 
 public class BaseFragment extends Fragment {
 
@@ -19,10 +21,13 @@ public class BaseFragment extends Fragment {
     protected Typeface custom_font_regular;
     protected Typeface custom_font_bold;
     protected Typeface custom_font_times;
+    protected String pLanguage;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        pLanguage = Utility.getLangCode(getContext());
 
         Log.d(LOG_TAG, "Get dataBase helper");
         mDatabaseHelper = Utility.getDBHelper(getActivity());

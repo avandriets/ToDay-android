@@ -77,7 +77,11 @@ public class FavoritesListFragment extends ThemeListFragment {
             }
 
             QueryBuilder<DB_ThemeQuiz, Long> queryBuilder = mOrderDao.queryBuilder();
-            Where<DB_ThemeQuiz, Long> where = queryBuilder.where().in(DB_ThemeQuiz.ID,listFoIds);// .eq(DB_ThemeQuiz.TARGET_DATE, today_date);
+            Where<DB_ThemeQuiz, Long> where = queryBuilder
+                    .where()
+                    .in(DB_ThemeQuiz.ID,listFoIds)
+                    .and()
+                    .eq(DB_ThemeQuiz.LANGUAGE, pLanguage);// .eq(DB_ThemeQuiz.TARGET_DATE, today_date);
             preparedQuery = where.prepare();
 
         } catch (SQLException e) {
