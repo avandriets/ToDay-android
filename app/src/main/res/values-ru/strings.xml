@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="string_archive">Темы</string>
     <string name="string_quiz">Викторина</string>
@@ -17,17 +17,19 @@
     <string name="questionsCount">Заданных \nвопросов</string>
     <string name="rightAnswers">Правильных \nответов</string>
     <string name="back">Назад</string>
-    <string name="next">Дальше</string>
-    <string name="finish_round_description">Вы дали правильные ответы на %s вопросов.</string>
-    <string name="exit_mesage">Выйти из игры!</string>
-    <string name="exit_button">Выйти</string>
-    <string name="cancel_button">Отмена</string>
-    <string name="winner_text">ВЕРНО !</string>
-    <string name="looser_text">НЕ ВЕРНО !</string>
-    <string name="finish">КОНЕЦ</string>
+    <string name="next">Вперед</string>
+    <string name="finish_round_description">Вы правильно ответили на %s вопросa(ов)!</string>
+    <string name="exit_mesage">Хотите покинуть игру?</string>
+    <string name="exit_button">Да</string>
+    <string name="cancel_button">Нет</string>
+    <string name="winner_text">ВЕРНО!</string>
+    <string name="looser_text">НЕ ВЕРНО!</string>
+    <string name="finish">ФИНИШ</string>
     <string name="how_much_time_do_you_have">Сколько у вас есть времени?</string>
     <string name="no_questions_string">Еще нет вопросов для викторины :(</string>
     <string name="success_add_to_fav">Вопрос был добавлен в избранное.</string>
     <string name="delete_from_favorite">Вопрос был удален из избранного.</string>
     <string name="new_theme_notification">У вас есть новые вопросы на сегодня.</string>
+    <string name="No_information_available_for_favorite">"Вы еще не добавляли вопросов в Избранное</string>
+    <string name="No_information_available_in_events">Сейчас нет новых событий</string>
 </resources>

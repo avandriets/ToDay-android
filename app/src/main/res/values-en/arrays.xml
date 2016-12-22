@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="column_one">
+        <item>The most interesting</item>
+        <item>The wonderful</item>
+        <item>The amazing</item>
+        <item>The unusual</item>
+        <item>The unbelievable</item>
+        <item>The entertaining</item>
+        <item>The curious</item>
+        <item>The secret</item>
+    </string-array>
+    <string-array name="column_two">
+        <item>facts!</item>
+        <item>stories!</item>
+        <item>discoveries!</item>
+        <item>information!</item>
+        <item>data!</item>
+        <item>news!</item>
+        <item>knowledge!</item>
+        <item>events!</item>
+    </string-array>
+</resources>

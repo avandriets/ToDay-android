@@ -48,6 +48,34 @@ public class DB_Utility {
         return main_theme;
     }
 
+    public static DB_ThemeQuiz getThemeForToday(DatabaseHelper mDatabaseHelper, String pLanguage) {
+
+        Calendar cur_date = Calendar.getInstance();
+        cur_date.set(Calendar.MILLISECOND, 0);
+        cur_date.set(Calendar.SECOND, 0);
+        cur_date.set(Calendar.MINUTE, 0);
+        cur_date.set(Calendar.HOUR_OF_DAY, 0);
+
+        DB_ThemeQuiz main_theme = null;
+
+        try {
+            main_theme = mDatabaseHelper.getThemeQuizDataDao().queryBuilder()
+                    .orderBy(DB_ThemeQuiz.TARGET_DATE, false)
+                    .where()
+                    .eq(DB_ThemeQuiz.MAIN_THEME, true)
+                    .and()
+                    .eq(DB_ThemeQuiz.TARGET_DATE, cur_date.getTime())
+                    .and()
+                    .eq(DB_ThemeQuiz.LANGUAGE, pLanguage)
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return main_theme;
+    }
+
     public static DB_SentNotification getNotificationByTheme(DatabaseHelper mDatabaseHelper, DB_ThemeQuiz theme) {
         DB_SentNotification notification = null;
 

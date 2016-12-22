@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,6 +77,13 @@ public class QuizQuestionsFragment extends BaseFragment {
 
     @BindView(R.id.imageButtonNEXT)
     Button imageButtonNEXT;
+
+    @BindView(R.id.time_indicator)
+    View topLine;
+
+    @BindView(R.id.currentTime)
+    TextView tv_currentTime;
+
 
     Drawable drw_answerOneOriginal;
     Drawable drw_answerOneLoser;
@@ -159,11 +167,16 @@ public class QuizQuestionsFragment extends BaseFragment {
         gameLayout.setVisibility(View.VISIBLE);
         finishLayout.setVisibility(View.GONE);
 
-        game_timer = new CountDownTimer(time_for_game * 60 * 1000, 10000) {
+        game_timer = new CountDownTimer(time_for_game * 60 * 1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 //Calendar c = Calendar.getInstance();
                 //tv_currentTime.setText(String.format("%02d:%02d",c.get(Calendar.HOUR_OF_DAY),c.get(Calendar.MINUTE) ));
+
+                long min = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
+                long sec = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished));
+                tv_currentTime.setText(String.format("%02d:%02d", min, sec));
             }
 
             public void onFinish() {

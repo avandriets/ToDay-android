@@ -8,11 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
-
 import java.sql.SQLException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,7 +19,6 @@ public class QuizChoiceFragment extends BaseFragmentWithHeader {
 
     @BindView(R.id.textViewHeadline)
     TextView headLine;
-
 
     public interface Callback {
         void onStartQuiz(int min);

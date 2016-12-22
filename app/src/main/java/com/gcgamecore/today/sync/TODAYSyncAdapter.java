@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncRequest;
 import android.content.SyncResult;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -70,11 +71,8 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
         mContext = context;
     }
 
-    private String[] column_one = {"Интереснейшие", "Удивительные", "Поразительные",
-            "Необычные", "Невероятные", "Занимательные", "Любопытные", "Тайные"};
-
-    private String[] column_two = {"факты", "истории", "открытия",
-            "сведения", "данные", "новости", "знания", "события"};
+    private String[] column_one;
+    private String[] column_two;
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
@@ -86,6 +84,10 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
+        Resources res = getContext().getResources();
+        column_one = res.getStringArray(R.array.column_one);
+        column_two = res.getStringArray(R.array.column_two);
+
         getHelper();
 
         //GET DATA from server
@@ -95,9 +97,6 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
                 .build();
 
         QuizService service = retrofit.create(QuizService.class);
-
-//        loadQuestionsFromServer(service);
-
 
         String pLanguage = Utility.getLangCode(getContext());
         loadThemeChangedFromServer(service, pLanguage);
@@ -361,7 +360,7 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void ShowNewThemeNotification(String pLanguage) {
 
-        DB_ThemeQuiz main_theme = DB_Utility.getCurrentTheme(mDatabaseHelper, pLanguage);
+        DB_ThemeQuiz main_theme = DB_Utility.getThemeForToday(mDatabaseHelper, pLanguage);
 
         if (main_theme != null) {
             DB_SentNotification notification = DB_Utility.getNotificationByTheme(mDatabaseHelper, main_theme);

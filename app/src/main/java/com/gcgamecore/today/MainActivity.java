@@ -1,6 +1,7 @@
 package com.gcgamecore.today;
 
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements
     View relativeLayout_Favorite;
     @BindView(R.id.rl_quiz)
     View relativeLayout_Quiz;
+
+    @BindView(R.id.time_indicator)
+    View topLine;
 
     @BindView(R.id.currentDate)
     TextView tv_currentDate;

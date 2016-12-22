@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.gcgamecore.today.Data.DB_Answers;
 import com.gcgamecore.today.Data.DB_FavoriteThemeQuestions;
 import com.gcgamecore.today.Data.DB_LastQuestionInTheme;
@@ -25,10 +26,12 @@ import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -184,7 +187,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
         try {
             question_list = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryBuilder()
-                    .orderBy(DB_ThemeQuestion.ID, true)
+                    .orderBy(DB_ThemeQuestion.CREATED_AT, true)
                     .where()
                     .eq(DB_ThemeQuestion.THEME, theme_id).query();
         } catch (SQLException e) {
@@ -193,20 +196,20 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
         last_question_index = 0;
 
-        if(theme_id != -1) {
+        if (theme_id != -1) {
             try {
                 DB_LastQuestionInTheme last_q = mDatabaseHelper.getLastQuestionDataDao().queryBuilder()
                         .where()
                         .eq(DB_LastQuestionInTheme.THEME_ID, theme_id).queryForFirst();
 
-                if(last_q != null){
+                if (last_q != null) {
 
                     for (int i = 0; i < question_list.size(); i++) {
-                        if(question_list.get(i).getId() == last_q.getQuestion_id()){
+                        if (question_list.get(i).getId() == last_q.getQuestion_id()) {
                             last_question_index = i;
                         }
                     }
-                } else{
+                } else {
                     last_question_index = -1;
                 }
 
@@ -216,23 +219,24 @@ public class ThemeQuestionsFragment extends BaseFragment {
         }
 
         if (question_list.size() > 0) {
-            if(last_question_index> 0) {
-                if(last_question_index < question_list.size() -1)
+            if ( last_question_index >= 0) {
+                if (last_question_index < question_list.size() - 1)
                     current_question_index = last_question_index + 1;
                 else
                     current_question_index = last_question_index;
-
-            }
-            else
-            {
+            } else {
                 last_question_index = 0;
                 current_question_index = last_question_index;
             }
         }
 
         initHeadLine();
-        initNexQuestion();
 
+        if(current_question_index != question_list.size() - 1) {
+            initNexQuestion();
+        }else{
+            initOpenQuestion((int) current_question_index);
+        }
 
         gameLayout.setVisibility(View.VISIBLE);
         finishLayout.setVisibility(View.GONE);
@@ -256,13 +260,65 @@ public class ThemeQuestionsFragment extends BaseFragment {
         imgButtonShare.setVisibility(View.VISIBLE);
     }
 
-    private void initNextPrevButtons(long position){
-        if(position == 0)
-            imageButtonBACK.setVisibility(View.GONE);
+    private int getIndexQuestionInList(DB_ThemeQuestion pQuest){
+        int index = -1;
+        for (int i = 0; i < question_list.size(); i++) {
+            if (question_list.get(i).getId() == pQuest.getId()) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    private boolean isQuestionAnswered(long questionId) {
+
+        DB_LastQuestionInTheme lastQuestion = null;
+        try {
+            lastQuestion = mDatabaseHelper.getLastQuestionDataDao().queryBuilder()
+                    .where()
+                    .eq(DB_LastQuestionInTheme.THEME_ID, theme_id)
+                    .queryForFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (lastQuestion != null) {
+            long answeredQuestion = lastQuestion.getQuestion_id();
+
+            DB_ThemeQuestion answeredQuest = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryForId(answeredQuestion);
+            DB_ThemeQuestion curQuest = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryForId(questionId);
+
+            int index_cur_question = getIndexQuestionInList(curQuest);
+            int index_ans_question = getIndexQuestionInList(answeredQuest);
+
+            if(index_cur_question <= index_ans_question){
+                return true;
+            }else{
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private void initNextPrevButtons(long position) {
+        if (position == 0)
+            imageButtonBACK.setVisibility(View.INVISIBLE);
         else
             imageButtonBACK.setVisibility(View.VISIBLE);
 
-        if(position == question_list.size()-1)
+        boolean isAnswered = isQuestionAnswered(question_list.get((int) current_question_index).getId());
+        if( isAnswered){
+            imageButtonNEXT.setVisibility(View.VISIBLE);
+        }else{
+            imageButtonNEXT.setVisibility(View.INVISIBLE);
+        }
+
+        if(current_question_index == question_list.size()-1 && !isAnswered){
+            imageButtonNEXT.setVisibility(View.INVISIBLE);
+        }
+
+        if (position == question_list.size() - 1)
             imageButtonNEXT.setText(getString(R.string.finish));
         else
             imageButtonNEXT.setText(getString(R.string.next));
@@ -293,8 +349,8 @@ public class ThemeQuestionsFragment extends BaseFragment {
         one_image_answer.setImageDrawable(drw_answerOneOriginal);
         two_image_answer.setImageDrawable(drw_answerTwoOriginal);
 
-        one_answer_text.setTextColor(Utility.getColor(getContext(),R.color.ToDayColorTextGray));
-        two_answer_text.setTextColor(Utility.getColor(getContext(),R.color.ToDayColorTextGray));
+        one_answer_text.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorTextGray));
+        two_answer_text.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorTextGray));
 
         DB_FavoriteThemeQuestions isFavorite = null;
         try {
@@ -308,7 +364,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-        if(isFavorite != null)
+        if (isFavorite != null)
             imgButtonFavorite.setImageDrawable(drw_favorite_on);
         else
             imgButtonFavorite.setImageDrawable(drw_favorite_off);
@@ -339,8 +395,8 @@ public class ThemeQuestionsFragment extends BaseFragment {
         one_image_answer.setImageDrawable(drw_answerOneOriginal);
         two_image_answer.setImageDrawable(drw_answerTwoOriginal);
 
-        one_answer_text.setTextColor(Utility.getColor(getContext(),R.color.ToDayColorTextGray));
-        two_answer_text.setTextColor(Utility.getColor(getContext(),R.color.ToDayColorTextGray));
+        one_answer_text.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorTextGray));
+        two_answer_text.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorTextGray));
 
         DB_FavoriteThemeQuestions isFavorite = null;
         try {
@@ -354,7 +410,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-        if(isFavorite != null)
+        if (isFavorite != null)
             imgButtonFavorite.setImageDrawable(drw_favorite_on);
         else
             imgButtonFavorite.setImageDrawable(drw_favorite_off);
@@ -366,10 +422,14 @@ public class ThemeQuestionsFragment extends BaseFragment {
                     .and().eq(DB_Answers.QUESTION_ID, current_question.getId())
                     .queryForFirst();
 
-            if(answer_state.getAnswer() == 1)
+            if (answer_state.getAnswer() == 1) {
+                currentAnswer = 1;
                 ShowResult(true);
-            else
+            }
+            else {
+                currentAnswer = 2;
                 ShowResult(false);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -443,28 +503,33 @@ public class ThemeQuestionsFragment extends BaseFragment {
                     .queryForFirst();
 
             long q = current_question.getId();
-            if(current_question_index == question_list.size() - 1){
-                q =0;
-            }
+//            if (current_question_index == question_list.size() - 1) {
+//                //q =0;
+////                if (lastQuestion != null)
+////                    mDatabaseHelper.getLastQuestionDataDao().delete(lastQuestion);
+//            } else {
+                if (lastQuestion != null) {
+                    lastQuestion.setQuestion_id(q);
+                    mDatabaseHelper.getLastQuestionDataDao().createOrUpdate(lastQuestion);
+                } else {
+                    lastQuestion = new DB_LastQuestionInTheme();
+                    lastQuestion.setTheme_id(theme_id);
+                    lastQuestion.setQuestion_id(q);
+                    mDatabaseHelper.getLastQuestionDataDao().createIfNotExists(lastQuestion);
+                }
+//            }
 
-            if(lastQuestion != null){
-                lastQuestion.setQuestion_id(q);
-                mDatabaseHelper.getLastQuestionDataDao().createOrUpdate(lastQuestion);
-            }else{
-                lastQuestion = new DB_LastQuestionInTheme();
-                lastQuestion.setTheme_id(theme_id);
-                lastQuestion.setQuestion_id(q);
-                mDatabaseHelper.getLastQuestionDataDao().createIfNotExists(lastQuestion);
-            }
-
-            last_question_index = question_list.indexOf(current_question);
+            last_question_index = getIndexQuestionInList(current_question);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        initNextPrevButtons(current_question_index);
+//        imageButtonNEXT.setVisibility(View.VISIBLE);
     }
 
-    public void ShowResult(boolean flag_winner){
+    public void ShowResult(boolean flag_winner) {
         // Show right answer
         switch ((int) currentAnswer) {
             case 1:
@@ -480,7 +545,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
     public void hideResultPanels(View view, ImageView img_view, Drawable drw_loser, Drawable drw_winner, TextView caption, boolean winner) {
 
-        caption.setTextColor(Utility.getColor(getContext(),R.color.ToDayColorWhite));
+        caption.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorWhite));
         if (winner) {
             view.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorGreen));
             img_view.setImageDrawable(drw_winner);
@@ -515,7 +580,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
                 mDatabaseHelper.getFavoriteDataDao().createIfNotExists(favorite_item);
                 imgButtonFavorite.setImageDrawable(drw_favorite_on);
                 Toast.makeText(getActivity(), R.string.success_add_to_fav, Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
                 mDatabaseHelper.getFavoriteDataDao().delete(favorite_item);
                 imgButtonFavorite.setImageDrawable(drw_favorite_off);
                 Toast.makeText(getActivity(), R.string.delete_from_favorite, Toast.LENGTH_SHORT).show();
@@ -538,10 +603,10 @@ public class ThemeQuestionsFragment extends BaseFragment {
         newShareActivity.putExtra(Utility.KEY_QUESTION_ID, current_question.getId());
 
         if (current_theme.getTheme_image() != null) {
-            newShareActivity.putExtra(Utility.KEY_BACKGROUND_IMAGE_URL,Utility.BASE_URL + current_theme.getTheme_background_image());
+            newShareActivity.putExtra(Utility.KEY_BACKGROUND_IMAGE_URL, Utility.BASE_URL + current_theme.getTheme_background_image());
         }
 
-        startActivityForResult(newShareActivity,SHARE_ACTIVITY_REQUEST_CODE);
+        startActivityForResult(newShareActivity, SHARE_ACTIVITY_REQUEST_CODE);
 
 //        DB_ThemeQuestion current_question = question_list.get((int) current_question_index);
 //        View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
@@ -557,10 +622,10 @@ public class ThemeQuestionsFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == SHARE_ACTIVITY_REQUEST_CODE){
+        if (requestCode == SHARE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 String newText = data.getStringExtra("FullFileName");
-                File dir = new File (newText);
+                File dir = new File(newText);
 
                 Utility.shareImage(dir, getActivity());
             }
@@ -588,19 +653,19 @@ public class ThemeQuestionsFragment extends BaseFragment {
                     .eq(DB_Answers.THEME_ID, theme_id)
                     .countOf();
 
-            if(numQuestions != 0)
-                res = (long)(((float)numRightAnswers / numQuestions) * 100);
+            if (numQuestions != 0)
+                res = (long) (((float) numRightAnswers / numQuestions) * 100);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        String finish_message = String.format(getEndGameMessage(), String.valueOf(res)+ " %");
+        String finish_message = String.format(getEndGameMessage(), String.valueOf(res) + " %");
 
-        if(res <= 69){
+        if (res <= 69) {
             img_sign.setImageDrawable(drw_status_1);
-        }else if(res >= 70 && res <=89 ){
+        } else if (res >= 70 && res <= 89) {
             img_sign.setImageDrawable(drw_status_2);
-        }else{
+        } else {
             img_sign.setImageDrawable(drw_status_3);
         }
 
@@ -613,36 +678,49 @@ public class ThemeQuestionsFragment extends BaseFragment {
     }
 
     @OnClick(R.id.btnFinish)
-    public void onClickFinishGame(){
-        ((ThemeQuestionsFragment.Callback)getActivity()).onFinishGame();
+    public void onClickFinishGame() {
+
+        try {
+            DB_LastQuestionInTheme lastQuestion = mDatabaseHelper.getLastQuestionDataDao().queryBuilder()
+                    .where()
+                    .eq(DB_LastQuestionInTheme.THEME_ID, theme_id)
+                    .queryForFirst();
+
+            if (lastQuestion != null)
+                mDatabaseHelper.getLastQuestionDataDao().delete(lastQuestion);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ((ThemeQuestionsFragment.Callback) getActivity()).onFinishGame();
     }
 
     @OnClick(R.id.imageButtonBACK)
-    protected void OnBACKClick(){
+    protected void OnBACKClick() {
 
-        gameLayout.scrollTo(0,0);
+        gameLayout.scrollTo(0, 0);
 
-        if(current_question_index > 0)
+        if (current_question_index > 0)
             current_question_index -= 1;
 
         initOpenQuestion((int) current_question_index);
     }
 
     @OnClick(R.id.imageButtonNEXT)
-    protected void OnNEXTClick(){
+    protected void OnNEXTClick() {
         if (currentAnswer == -1)
             return;
 
-        gameLayout.scrollTo(0,0);
+        gameLayout.scrollTo(0, 0);
 
-        if(current_question_index == question_list.size()-1){
+        if (current_question_index == question_list.size() - 1) {
             ShowFinishScreen();
-        }else if(last_question_index > current_question_index){
-            current_question_index +=1;
+        } else if (last_question_index > current_question_index) {
+            current_question_index += 1;
             initOpenQuestion((int) current_question_index);
-        }
-        else{
-            current_question_index +=1;
+        } else {
+            current_question_index += 1;
             currentAnswer = -1;
             initNexQuestion();
         }

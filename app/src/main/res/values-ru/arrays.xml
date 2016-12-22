@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="column_one">
+        <item>Интереснейшие</item>
+        <item>Удивительные</item>
+        <item>Поразительные</item>
+        <item>Необычные</item>
+        <item>Невероятные</item>
+        <item>Занимательные</item>
+        <item>Любопытные</item>
+        <item>Тайные</item>
+    </string-array>
+    <string-array name="column_two">
+        <item>факты!</item>
+        <item>истории!</item>
+        <item>открытия!</item>
+        <item>сведения!</item>
+        <item>данные!</item>
+        <item>новости!</item>
+        <item>знания!</item>
+        <item>события!</item>
+    </string-array>
+</resources>

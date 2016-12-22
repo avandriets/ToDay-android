@@ -1,6 +1,5 @@
 package com.gcgamecore.today;
 
-
 import android.widget.TextView;
 import com.gcgamecore.today.Data.DB_Answers;
 import com.j256.ormlite.dao.RuntimeExceptionDao;

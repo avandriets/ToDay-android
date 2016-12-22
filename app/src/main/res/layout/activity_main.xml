@@ -14,7 +14,9 @@
         android:layout_height="wrap_content"
         android:background="@color/ToDayColorGray"
         android:paddingTop="7dp"
-        android:paddingBottom="7dp">
+        android:paddingBottom="7dp"
+        android:visibility="gone"
+        android:id="@+id/time_indicator">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -28,7 +30,8 @@
                 android:id="@+id/currentDate"
                 android:layout_weight="4"
                 android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:visibility="invisible" />
 
             <ImageView
                 android:layout_width="0dp"
@@ -36,7 +39,7 @@
                 app:srcCompat="@drawable/ic_clock_on_top"
                 android:id="@+id/imageView4"
                 android:layout_weight="1"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <TextView
                 android:text="17:00"
@@ -46,7 +49,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:gravity="left"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
         </LinearLayout>
 
