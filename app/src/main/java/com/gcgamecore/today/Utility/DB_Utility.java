@@ -1,5 +1,6 @@
 package com.gcgamecore.today.Utility;
 
+import com.gcgamecore.today.Data.DB_Answers;
 import com.gcgamecore.today.Data.DB_SentNotification;
 import com.gcgamecore.today.Data.DB_ThemeQuestion;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
@@ -193,5 +194,91 @@ public class DB_Utility {
         }
 
         return main_theme;
+    }
+
+    public static long getNewEventsCount(DatabaseHelper mDatabaseHelper, String lang) {
+
+        long eventsCount = 0;
+        try {
+            List<DB_Answers> listAnsweredTheme = mDatabaseHelper.getAnswerDataDao()
+                    .queryBuilder()
+                    .groupBy(DB_Answers.THEME_ID)
+                    .query();
+
+            ArrayList<Long> listFoIds = new ArrayList<>();
+            for (DB_Answers cc :listAnsweredTheme) {
+                listFoIds.add(cc.getTheme_id());
+            }
+
+            if(listFoIds.size() > 0 ){
+
+                eventsCount = mDatabaseHelper.getThemeQuizDataDao().queryBuilder()
+                        .where()
+                        .notIn(DB_ThemeQuiz.ID, listFoIds)
+                        .and()
+                        .eq(DB_ThemeQuiz.LANGUAGE, lang)
+                        .and()
+                        .eq(DB_ThemeQuiz.MAIN_THEME, false)
+                        .countOf();
+
+                System.out.print(eventsCount);
+            }else{
+                eventsCount = mDatabaseHelper.getThemeQuizDataDao().queryBuilder()
+                        .where()
+                        .eq(DB_ThemeQuiz.LANGUAGE, lang)
+                        .and()
+                        .eq(DB_ThemeQuiz.MAIN_THEME, false)
+                        .countOf();
+                System.out.print(eventsCount);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return eventsCount;
+    }
+
+    public static long getNewThemeCount(DatabaseHelper mDatabaseHelper, String lang) {
+
+        long eventsCount = 0;
+        try {
+            List<DB_Answers> listAnsweredTheme = mDatabaseHelper.getAnswerDataDao()
+                    .queryBuilder()
+                    .groupBy(DB_Answers.THEME_ID)
+                    .query();
+
+            ArrayList<Long> listFoIds = new ArrayList<>();
+            for (DB_Answers cc :listAnsweredTheme) {
+                listFoIds.add(cc.getTheme_id());
+            }
+
+            if(listFoIds.size() > 0 ){
+
+                eventsCount = mDatabaseHelper.getThemeQuizDataDao().queryBuilder()
+                        .where()
+                        .notIn(DB_ThemeQuiz.ID, listFoIds)
+                        .and()
+                        .eq(DB_ThemeQuiz.LANGUAGE, lang)
+                        .and()
+                        .eq(DB_ThemeQuiz.MAIN_THEME, true)
+                        .countOf();
+
+                System.out.print(eventsCount);
+            }else{
+                eventsCount = mDatabaseHelper.getThemeQuizDataDao().queryBuilder()
+                        .where()
+                        .eq(DB_ThemeQuiz.LANGUAGE, lang)
+                        .and()
+                        .eq(DB_ThemeQuiz.MAIN_THEME, true)
+                        .countOf();
+                System.out.print(eventsCount);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return eventsCount;
     }
 }

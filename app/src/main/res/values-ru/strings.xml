@@ -23,7 +23,7 @@
     <string name="exit_button">Да</string>
     <string name="cancel_button">Нет</string>
     <string name="winner_text">ВЕРНО!</string>
-    <string name="looser_text">НЕ ВЕРНО!</string>
+    <string name="looser_text">НЕВЕРНО!</string>
     <string name="finish">ФИНИШ</string>
     <string name="how_much_time_do_you_have">Сколько у вас есть времени?</string>
     <string name="no_questions_string">Еще нет вопросов для викторины :(</string>
@@ -32,4 +32,5 @@
     <string name="new_theme_notification">У вас есть новые вопросы на сегодня.</string>
     <string name="No_information_available_for_favorite">"Вы еще не добавляли вопросов в Избранное</string>
     <string name="No_information_available_in_events">Сейчас нет новых событий</string>
+    <string name="exit_from_game">Выход</string>
 </resources>

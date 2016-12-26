@@ -1,7 +1,6 @@
 package com.gcgamecore.today;
 
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.gcgamecore.today.Adapters.ArchiveRecyclerViewAdapter;
 import com.gcgamecore.today.Data.DatabaseHelper;
+import com.gcgamecore.today.Utility.DB_Utility;
 import com.gcgamecore.today.Utility.Utility;
 import com.gcgamecore.today.sync.TODAYSyncAdapter;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -72,6 +72,12 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.currentTime)
     TextView tv_currentTime;
 
+    @BindView(R.id.textViewGameCount)
+    TextView textViewGameCount;
+
+    @BindView(R.id.newActions)
+    View newActions;
+
     private CountDownTimer new_timer = null;
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -105,6 +111,24 @@ public class MainActivity extends AppCompatActivity implements
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         goToMainPage();
+
+        ShowNewEvents();
+    }
+
+    @Override
+    public void onAnswer() {
+        ShowNewEvents();
+    }
+
+    private void ShowNewEvents() {
+        long countNewEvents = DB_Utility.getNewEventsCount(mDatabaseHelper, Utility.getLangCode(this));
+
+        if(countNewEvents > 0){
+            newActions.setVisibility(View.VISIBLE);
+            textViewGameCount.setText(String.valueOf(countNewEvents));
+        }else{
+            newActions.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void initInterface() {
@@ -282,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
             new AlertDialog.Builder(this)
-                    .setTitle(R.string.exit_button)
+                    .setTitle(R.string.exit_from_game)
                     .setMessage(R.string.exit_mesage)
                     .setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener(){
 

@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_main"
+<LinearLayout android:id="@+id/activity_main"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.gcgamecore.today.MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.gcgamecore.today.MainActivity">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/time_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/ToDayColorGray"
-        android:paddingTop="7dp"
+        android:orientation="vertical"
         android:paddingBottom="7dp"
-        android:visibility="gone"
-        android:id="@+id/time_indicator">
+        android:paddingTop="7dp"
+        android:visibility="gone">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <TextView
-                android:text="FRIDAY, MARCH , 2017"
+                android:id="@+id/currentDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/currentDate"
-                android:layout_weight="4"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="4"
                 android:gravity="center_horizontal"
+                android:text="FRIDAY, MARCH , 2017"
                 android:visibility="invisible" />
 
             <ImageView
+                android:id="@+id/imageView4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_clock_on_top"
-                android:id="@+id/imageView4"
                 android:layout_weight="1"
-                android:visibility="visible" />
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_clock_on_top" />
 
             <TextView
-                android:text="17:00"
+                android:id="@+id/currentTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/currentTime"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:gravity="left"
+                android:text="17:00"
                 android:visibility="visible" />
 
         </LinearLayout>
@@ -56,125 +56,164 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <FrameLayout
             android:id="@+id/fragment_list_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"        />
+            android:layout_height="match_parent">
+
+        </FrameLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/background_dark">
+        android:layout_height="45dp"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="-12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="@android:color/background_dark"
+            android:orientation="horizontal"
+            android:layout_height="40dp"
+            android:gravity="bottom"
+            android:layout_alignParentBottom="true">
+
+            <RelativeLayout
+                android:id="@+id/rl_main"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="false"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="false"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_home_black_24dp" />
+
+                <Button
+                    android:id="@+id/btn_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="false"
+                    android:background="@android:color/transparent"
+                    android:textAllCaps="false"
+                    android:textColor="@color/ToDayColorWhite" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_archive"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3">
+
+                <Button
+                    android:id="@+id/btn_archive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="false"
+                    android:background="@android:color/transparent"
+                    android:text="@string/string_archive"
+                    android:textAllCaps="false"
+                    android:textColor="@color/ToDayColorWhite"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_quiz"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3">
+
+                <Button
+                    android:id="@+id/btn_quiz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/transparent"
+                    android:text="@string/string_quiz"
+                    android:textAllCaps="false"
+                    android:textColor="@color/ToDayColorWhite"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_favorite"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3">
+
+                <Button
+                    android:id="@+id/btn_favorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/transparent"
+                    android:text="@string/string_favorite"
+                    android:textAllCaps="false"
+                    android:textColor="@color/ToDayColorWhite"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_action"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:clipChildren="false">
+
+                <Button
+                    android:id="@+id/btn_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/transparent"
+                    android:text="@string/string_action"
+                    android:textAllCaps="false"
+                    android:textColor="@color/ToDayColorWhite"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
         <RelativeLayout
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/rl_main"
-            android:layout_width="0dp">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="30dp"
+            android:id="@+id/newActions">
 
-            <ImageView
+            <View android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/circle"/>
+
+            <TextView
+                android:id="@+id/textViewGameCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_home_black_24dp"
-                android:id="@+id/imageView3"
-                android:layout_centerInParent="false"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="false" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_main"
-                android:background="@android:color/transparent"
-                android:textAllCaps="false"
-                android:layout_centerVertical="false"
-                android:layout_centerInParent="true"
-                android:textColor="@color/ToDayColorWhite" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:id="@+id/rl_archive">
-
-            <Button
-                android:text="@string/string_archive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_archive"
-                android:background="@android:color/transparent"
-                android:textAllCaps="false"
-                android:layout_centerVertical="false"
-                android:layout_centerInParent="true"
-                android:textColor="@color/ToDayColorWhite"
-                android:textSize="12sp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:id="@+id/rl_quiz">
-
-            <Button
-                android:text="@string/string_quiz"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_quiz"
-                android:background="@android:color/transparent"
-                android:textColor="@color/ToDayColorWhite"
-                android:textAllCaps="false"
-                android:layout_centerHorizontal="true"
-                android:textSize="12sp" />
+                android:text="2"
+                android:textColor="@color/ToDayColorBlack"
+                android:layout_centerInParent="true" />
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:id="@+id/rl_favorite">
 
-            <Button
-                android:text="@string/string_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_favorite"
-                android:background="@android:color/transparent"
-                android:textAllCaps="false"
-                android:textColor="@color/ToDayColorWhite"
-                android:layout_centerHorizontal="true"
-                android:textSize="12sp" />
-        </RelativeLayout>
+    </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:id="@+id/rl_action">
-
-            <Button
-                android:text="@string/string_action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_action"
-                android:textAllCaps="false"
-                android:background="@android:color/transparent"
-                android:textColor="@color/ToDayColorWhite"
-                android:layout_centerHorizontal="true"
-                android:textSize="12sp" />
-        </RelativeLayout>
-
-    </LinearLayout>
 
 </LinearLayout>

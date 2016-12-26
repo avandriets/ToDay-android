@@ -5,78 +5,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="113dp">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="111dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginTop="25dp">
-
-            <TextView
-                android:text="@string/questionsCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textQuestionCountCaption"
-                android:gravity="right"
-                android:textSize="12sp" />
-
-            <TextView
-                android:text="333"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/idQuestionsCount"
-                android:gravity="right" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:layout_width="0dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:layout_width="0dp">
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_logo_today"
-                android:id="@+id/imageView"
-                android:contentDescription="Logo" />
+                app:srcCompat="@drawable/ic_header"
+                android:id="@+id/topHeaderImage"
+                android:contentDescription="Logo"
+                android:layout_height="82dp"
+                android:scaleType="centerCrop" />
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginTop="25dp">
-
-            <TextView
-                android:text="@string/rightAnswers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textPercentCaption"
-                android:textSize="12sp" />
-
-            <TextView
-                android:text="67%"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/idPercentQuestions" />
-        </LinearLayout>
     </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        app:srcCompat="@drawable/ic_line_dotted"
-        android:id="@+id/imageView2" />
 
 </LinearLayout>

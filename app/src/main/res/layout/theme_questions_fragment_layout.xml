@@ -6,6 +6,8 @@
     android:background="@color/ToDayColorWhite"
     android:orientation="vertical">
 
+    <include layout="@layout/titlebar" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,44 +18,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
-            android:paddingBottom="24dp"
+            android:paddingBottom="10dp"
             android:paddingEnd="33dp"
             android:paddingStart="33dp"
-            android:paddingTop="30dp"
+            android:paddingTop="10dp"
             android:text="Merry Christmass"
             android:textAllCaps="true"
             android:textColor="@color/ToDayColorBlack"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            android:gravity="top|center_horizontal"/>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/imgButtonFavorite"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="5dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/ic_favorite_off" />
-
-            <ImageButton
-                android:id="@+id/imgButtonShare"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="5dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/ic_share" />
-        </LinearLayout>
     </LinearLayout>
 
     <ImageView
@@ -81,10 +55,10 @@
                 android:id="@+id/textQuestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="27dp"
+                android:paddingBottom="10dp"
                 android:paddingEnd="33dp"
                 android:paddingStart="33dp"
-                android:paddingTop="18dp"
+                android:paddingTop="10dp"
                 android:text="Зачем вьетнамская традиция рекомендует счастливым обладателям пруда у своего дома к Новому году выпускать карпа в этот самый пруд?"
                 android:textColor="@color/ToDayColorTextGray"
                 android:textSize="18sp" />
@@ -188,15 +162,43 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/textResultView"
+                            <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:gravity="center"
-                                android:padding="10dp"
-                                android:text="weew"
-                                android:textSize="18sp" />
+                                android:layout_height="match_parent"
+                                android:layout_margin="10dp">
+
+                                <ImageButton
+                                    android:id="@+id/imgButtonFavorite"
+                                    android:layout_gravity="center_vertical|center_horizontal"
+                                    android:layout_margin="5dp"
+                                    android:background="@android:color/transparent"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/ic_favorite_off"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp" />
+
+                                <TextView
+                                    android:id="@+id/textResultView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:gravity="center"
+                                    android:text="weew"
+                                    android:textSize="18sp"
+                                    android:layout_gravity="center_vertical|center_horizontal" />
+
+                                <ImageButton
+                                    android:id="@+id/imgButtonShare"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_gravity="center_vertical|center_horizontal"
+                                    android:layout_margin="5dp"
+                                    android:background="@android:color/transparent"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/ic_share"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp" />
+                            </RelativeLayout>
 
                             <TextView
                                 android:id="@+id/answerDescription"

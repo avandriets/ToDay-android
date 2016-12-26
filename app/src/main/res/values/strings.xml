@@ -34,4 +34,5 @@
     <string name="new_theme_notification">You have new questions for ToDay.</string>
     <string name="No_information_available_for_favorite">You have added no questions to favorites yet</string>
     <string name="No_information_available_in_events">There is no new events.</string>
+    <string name="exit_from_game">Exit</string>
 </resources>

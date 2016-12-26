@@ -78,7 +78,7 @@ public class ThemeFragment extends BaseFragmentWithHeader implements LoaderManag
         ButterKnife.bind(this, rootView);
 
         headLine.setTypeface(custom_font_bold);
-        leadText.setTypeface(custom_font_regular);
+        leadText.setTypeface(custom_font_times);
         textViewEmpty.setTypeface(custom_font_regular);
 
         Bundle arguments = getArguments();

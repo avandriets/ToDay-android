@@ -16,7 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-
 import com.gcgamecore.today.Data.DB_Questions;
 import com.gcgamecore.today.Data.DB_SentNotification;
 import com.gcgamecore.today.Data.DB_ThemeQuestion;
@@ -32,10 +31,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
@@ -44,7 +41,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.TimeZone;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -384,7 +380,8 @@ public class TODAYSyncAdapter extends AbstractThreadedSyncAdapter {
                                     .setContentTitle(getContext().getString(R.string.app_name))
                                     //.setStyle(new NotificationCompat.BigTextStyle().bigText("You have " + newMessages.newAmount + " messages"))
                                     .setContentText(getNotificationString(main_theme))
-                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                                    .setAutoCancel(true);
 
                     mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 

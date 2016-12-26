@@ -2,7 +2,6 @@ package com.gcgamecore.today;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -29,7 +28,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -112,6 +110,10 @@ public class ThemeQuestionsFragment extends BaseFragment {
     @BindView(R.id.img_sign)
     ImageView img_sign;
 
+    @BindView(R.id.topHeaderImage)
+    ImageView topHeaderImage;
+
+
     Drawable drw_answerOneOriginal;
     Drawable drw_answerOneLoser;
     Drawable drw_answerOneWinner;
@@ -127,9 +129,20 @@ public class ThemeQuestionsFragment extends BaseFragment {
     Drawable drw_status_1;
     Drawable drw_status_2;
     Drawable drw_status_3;
+    private Drawable drw_happy_face;
+    private Drawable drw_sad_face;
+    private Drawable drw_usual_face;
 
     public interface Callback {
         void onFinishGame();
+        void onAnswer();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        topHeaderImage.setImageDrawable(drw_usual_face);
     }
 
     public ThemeQuestionsFragment() {
@@ -164,6 +177,10 @@ public class ThemeQuestionsFragment extends BaseFragment {
         drw_status_1 = ContextCompat.getDrawable(getContext(), R.drawable.ic_status_element1);
         drw_status_2 = ContextCompat.getDrawable(getContext(), R.drawable.ic_status_element2);
         drw_status_3 = ContextCompat.getDrawable(getContext(), R.drawable.ic_status_element3);
+
+        drw_happy_face = ContextCompat.getDrawable(getContext(), R.drawable.ic_happy_face);
+        drw_sad_face = ContextCompat.getDrawable(getContext(), R.drawable.ic_sad_face);
+        drw_usual_face = ContextCompat.getDrawable(getContext(), R.drawable.ic_header);
 
         imageButtonNEXT.setCompoundDrawablesWithIntrinsicBounds(
                 null
@@ -232,10 +249,10 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
         initHeadLine();
 
-        if(current_question_index != question_list.size() - 1) {
-            initNexQuestion();
-        }else{
+        if( isQuestionAnswered(question_list.get((int) current_question_index).getId(), pLanguage) /*current_question_index != question_list.size() - 1*/) {
             initOpenQuestion((int) current_question_index);
+        }else{
+            initNexQuestion();
         }
 
         gameLayout.setVisibility(View.VISIBLE);
@@ -258,6 +275,8 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
         imgButtonFavorite.setVisibility(View.VISIBLE);
         imgButtonShare.setVisibility(View.VISIBLE);
+
+        topHeaderImage.setImageDrawable(drw_usual_face);
     }
 
     private int getIndexQuestionInList(DB_ThemeQuestion pQuest){
@@ -270,7 +289,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
         return index;
     }
 
-    private boolean isQuestionAnswered(long questionId) {
+    private boolean isQuestionAnswered(long questionId, String lang) {
 
         DB_LastQuestionInTheme lastQuestion = null;
         try {
@@ -278,6 +297,17 @@ public class ThemeQuestionsFragment extends BaseFragment {
                     .where()
                     .eq(DB_LastQuestionInTheme.THEME_ID, theme_id)
                     .queryForFirst();
+
+            DB_ThemeQuestion check_question = mDatabaseHelper.getThemeQuizQuestionsDataDao().queryBuilder()
+                    .where()
+                    .eq(DB_ThemeQuestion.ID, questionId)
+                    .and()
+                    .eq(DB_ThemeQuiz.LANGUAGE, lang).queryForFirst();
+
+            if(check_question == null){
+                return false;
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -307,7 +337,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
         else
             imageButtonBACK.setVisibility(View.VISIBLE);
 
-        boolean isAnswered = isQuestionAnswered(question_list.get((int) current_question_index).getId());
+        boolean isAnswered = isQuestionAnswered(question_list.get((int) current_question_index).getId(), pLanguage);
         if( isAnswered){
             imageButtonNEXT.setVisibility(View.VISIBLE);
         }else{
@@ -328,6 +358,8 @@ public class ThemeQuestionsFragment extends BaseFragment {
         if (theme_id == -1) {
             return;
         }
+
+        topHeaderImage.setImageDrawable(drw_usual_face);
 
         initNextPrevButtons(current_question_index);
 
@@ -422,13 +454,14 @@ public class ThemeQuestionsFragment extends BaseFragment {
                     .and().eq(DB_Answers.QUESTION_ID, current_question.getId())
                     .queryForFirst();
 
-            if (answer_state.getAnswer() == 1) {
-                currentAnswer = 1;
-                ShowResult(true);
-            }
-            else {
-                currentAnswer = 2;
-                ShowResult(false);
+            if(answer_state != null) {
+                if (answer_state.getAnswer() == 1) {
+                    currentAnswer = 1;
+                    ShowResult(true);
+                } else {
+                    currentAnswer = 2;
+                    ShowResult(false);
+                }
             }
 
         } catch (SQLException e) {
@@ -493,6 +526,15 @@ public class ThemeQuestionsFragment extends BaseFragment {
             e.printStackTrace();
         }
 
+        switch ((int) currentAnswer) {
+            case 1:
+                gameLayout.scrollTo(0, question_text.getHeight());
+                break;
+            case 2:
+                gameLayout.scrollTo(0, question_text.getHeight());
+                break;
+        }
+
         ShowResult(flag_winner);
 
         // Save last question
@@ -525,6 +567,8 @@ public class ThemeQuestionsFragment extends BaseFragment {
             e.printStackTrace();
         }
 
+        ((ThemeQuestionsFragment.Callback) getActivity()).onAnswer();
+
         initNextPrevButtons(current_question_index);
 //        imageButtonNEXT.setVisibility(View.VISIBLE);
     }
@@ -551,11 +595,13 @@ public class ThemeQuestionsFragment extends BaseFragment {
             img_view.setImageDrawable(drw_winner);
             textResultView.setText(getString(R.string.winner_text));
             textResultView.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorGreen));
+            topHeaderImage.setImageDrawable(drw_happy_face);
         } else {
             view.setBackgroundColor(Utility.getColor(getContext(), R.color.ToDayColorRed));
             img_view.setImageDrawable(drw_loser);
             textResultView.setText(getString(R.string.looser_text));
             textResultView.setTextColor(Utility.getColor(getContext(), R.color.ToDayColorRed));
+            topHeaderImage.setImageDrawable(drw_sad_face);
         }
 
         finishGameDescription.setVisibility(View.VISIBLE);
@@ -659,7 +705,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-        String finish_message = String.format(getEndGameMessage(), String.valueOf(res) + " %");
+        String finish_message = String.format(getEndGameMessage(), String.valueOf(numRightAnswers));
 
         if (res <= 69) {
             img_sign.setImageDrawable(drw_status_1);

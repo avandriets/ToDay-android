@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "50149287644",
-    "project_id": "today-f52b7"
+    "firebase_url": "https://today-f52b7.firebaseio.com",
+    "project_id": "today-f52b7",
+    "storage_bucket": "today-f52b7.appspot.com"
   },
   "client": [
     {
@@ -12,6 +14,10 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "50149287644-hmnfcapcg4ift1fn6v39rljm2elg9smq.apps.googleusercontent.com",
+          "client_type": 3
+        },
         {
           "client_id": "50149287644-jog7k6np4snh1uql99lm0tkgih5qe3hq.apps.googleusercontent.com",
           "client_type": 3
@@ -34,7 +40,7 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

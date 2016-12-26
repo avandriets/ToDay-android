@@ -18,6 +18,8 @@ import com.gcgamecore.today.Data.DB_Questions;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -185,6 +187,18 @@ public class QuizQuestionsFragment extends BaseFragment {
         };
         game_timer.start();
 
+        // load image
+        try {
+            // get input stream
+            InputStream ims = getActivity().getAssets().open("quiz_background.jpg");
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            // set image to ImageView
+            ImageBackground.setImageDrawable(d);
+        }
+        catch(IOException ex) {
+        }
+
         return rootView;
     }
 
@@ -290,7 +304,7 @@ public class QuizQuestionsFragment extends BaseFragment {
         if (numQuestions != 0)
             res = (long) (((float) numRightAnswers / numQuestions) * 100);
 
-        String finish_message = String.format(getEndGameMessage(), String.valueOf(res) + " %");
+        String finish_message = String.format(getEndGameMessage(), String.valueOf(numRightAnswers));
 
         textFinishMessage.setText(finish_message);
     }

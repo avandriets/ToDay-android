@@ -84,10 +84,9 @@
                 <ImageView
                     android:id="@+id/ImageBackground"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_below="@+id/questions_layout"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/questions_layout"
+                    android:scaleType="centerCrop" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -95,7 +94,8 @@
                     android:orientation="vertical"
                     android:visibility="visible"
                     android:layout_alignParentTop="true"
-                    android:id="@+id/questions_layout">
+                    android:id="@+id/questions_layout"
+                    android:minHeight="500dp">
 
                     <LinearLayout
                         android:id="@+id/layout_answer_one"
@@ -177,7 +177,8 @@
                             android:layout_centerInParent="true"
                             android:textSize="18sp"
                             android:gravity="center"
-                            android:padding="5dp" />
+                            android:padding="5dp"
+                            android:textColor="@color/ToDayColorBlack" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
