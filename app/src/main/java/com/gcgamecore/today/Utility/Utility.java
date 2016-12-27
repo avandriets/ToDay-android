@@ -39,7 +39,7 @@ public class Utility {
 
     private static final String LOG_TAG = Utility.class.getSimpleName();
 
-    public static final String BASE_URL             = "http://today1077.cloudapp.net";
+    public static final String BASE_URL             = "http://today2401.cloudapp.net";
     public static final String KEY_THEME_NAME = "key_theme_name";
     public static final String KEY_QUESTION = "key_question";
     public static final String KEY_BACKGROUND_IMAGE_URL = "key_back_ground_url";

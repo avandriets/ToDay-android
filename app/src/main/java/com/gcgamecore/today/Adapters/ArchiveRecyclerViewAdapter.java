@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.gcgamecore.today.Data.DB_Answers;
 import com.gcgamecore.today.Data.DB_FavoriteThemeQuestions;
 import com.gcgamecore.today.Data.DB_ThemeQuestion;
@@ -20,7 +19,6 @@ import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.R;
 import com.gcgamecore.today.Utility.Utility;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
