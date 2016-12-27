@@ -136,9 +136,9 @@ public class ArchiveRecyclerViewAdapter extends OrmliteCursorRecyclerViewAdapter
         Calendar c = Calendar.getInstance();
         c.setTime(theme_quiz.getTarget_date());
 
-        String date_of_theme = String.format("%s %d, %d  ",
-                Utility.getMonthForInt(c.get(Calendar.MONTH)),
+        String date_of_theme = String.format("%d %s , %d  ",
                 c.get(Calendar.DAY_OF_MONTH),
+                Utility.getMonthForInt(c.get(Calendar.MONTH)),
                 c.get(Calendar.YEAR));
 
         holder.tvDate.setText( date_of_theme );
