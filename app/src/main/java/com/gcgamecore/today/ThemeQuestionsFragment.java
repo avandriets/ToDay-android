@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.gcgamecore.today.Data.DB_Answers;
 import com.gcgamecore.today.Data.DB_FavoriteThemeQuestions;
 import com.gcgamecore.today.Data.DB_LastQuestionInTheme;
@@ -25,11 +24,9 @@ import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -163,6 +160,9 @@ public class ThemeQuestionsFragment extends BaseFragment {
         textFinishMessage.setTypeface(custom_font_regular);
         textResultView.setTypeface(custom_font_bold);
 
+        imageButtonBACK.setTypeface(custom_font_regular);
+        imageButtonNEXT.setTypeface(custom_font_regular);
+
         drw_answerOneOriginal = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_one_original);
         drw_answerOneLoser = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_one_loser);
         drw_answerOneWinner = ContextCompat.getDrawable(getContext(), R.drawable.ic_answer_one_winner);
@@ -269,8 +269,15 @@ public class ThemeQuestionsFragment extends BaseFragment {
         headLine.setText(current_theme.getName());
 
         if (current_theme.getTheme_image() != null) {
-            Picasso.with(getContext()).load(Utility.BASE_URL + current_theme.getTheme_background_image())
-                    .into(ImageBackground);
+
+            Drawable targetImage = Utility.getImageFromAsset(current_theme.getTheme_background_image(), getContext());
+
+            if(targetImage != null){
+                ImageBackground.setImageDrawable(targetImage);
+            }else{
+                Picasso.with(getContext()).load(Utility.BASE_URL + current_theme.getTheme_background_image())
+                        .into(ImageBackground);
+            }
         }
 
         imgButtonFavorite.setVisibility(View.VISIBLE);

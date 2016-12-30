@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -18,8 +20,10 @@ import android.widget.Toast;
 import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.R;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,7 +43,7 @@ public class Utility {
 
     private static final String LOG_TAG = Utility.class.getSimpleName();
 
-    public static final String BASE_URL             = "http://today2401.cloudapp.net";
+    public static final String BASE_URL = "http://today2401.cloudapp.net";
     public static final String KEY_THEME_NAME = "key_theme_name";
     public static final String KEY_QUESTION = "key_question";
     public static final String KEY_BACKGROUND_IMAGE_URL = "key_back_ground_url";
@@ -56,6 +60,7 @@ public class Utility {
     public static final String ThemeURLGetChanges = "/rest/theme-questions/get-changed-theme-questions/";
 
     public static final TimeZone utcTZ = TimeZone.getTimeZone("UTC");
+    public static String[] randomBackGround = {"background1.jpg", "background2.jpg", "background3.jpg", "background4.jpg", "background5.jpg"};
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -71,9 +76,9 @@ public class Utility {
         BufferedReader reader = null;
         InputStream inputStream;
 
-        if(response.isSuccessful()){
+        if (response.isSuccessful()) {
             inputStream = response.body().byteStream();
-        }else{
+        } else {
             inputStream = response.errorBody().byteStream();
         }
 
@@ -96,7 +101,7 @@ public class Utility {
 
         if (buffer.length() == 0) {
             // Stream was empty.  No point in parsing.
-            Log.d(LOG_TAG,"buffer.length() == 0");
+            Log.d(LOG_TAG, "buffer.length() == 0");
             return null;
         }
 
@@ -120,9 +125,9 @@ public class Utility {
         BufferedReader reader = null;
         InputStream inputStream;
 
-        if(response.isSuccessful()){
+        if (response.isSuccessful()) {
             inputStream = response.body().byteStream();
-        }else{
+        } else {
             inputStream = response.errorBody().byteStream();
         }
 
@@ -130,7 +135,7 @@ public class Utility {
         if (inputStream == null) {
             // Nothing to do.
             //return null;
-            Log.d(LOG_TAG,"inputStream == null");
+            Log.d(LOG_TAG, "inputStream == null");
             return null;
         }
         reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -145,7 +150,7 @@ public class Utility {
 
         if (buffer.length() == 0) {
             // Stream was empty.  No point in parsing.
-            Log.d(LOG_TAG,"buffer.length() == 0");
+            Log.d(LOG_TAG, "buffer.length() == 0");
             return null;
         }
 
@@ -163,7 +168,7 @@ public class Utility {
         if (inputStream == null) {
             // Nothing to do.
             //return null;
-            Log.d(LOG_TAG,"inputStream == null");
+            Log.d(LOG_TAG, "inputStream == null");
             return null;
         }
         reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -178,7 +183,7 @@ public class Utility {
 
         if (buffer.length() == 0) {
             // Stream was empty.  No point in parsing.
-            Log.d(LOG_TAG,"buffer.length() == 0");
+            Log.d(LOG_TAG, "buffer.length() == 0");
             return null;
         }
         try {
@@ -210,8 +215,8 @@ public class Utility {
     }
 
     /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-	/*::	This function converts decimal degrees to radians						 :*/
-	/*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+    /*::	This function converts decimal degrees to radians						 :*/
+    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
     private static double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
@@ -237,7 +242,7 @@ public class Utility {
         }
     }
 
-    public static String getDayOfWeek(Context context,int day){
+    public static String getDayOfWeek(Context context, int day) {
         Resources res = context.getResources();
         String day_of_week = "";
 
@@ -271,7 +276,7 @@ public class Utility {
         String month = "wrong";
         DateFormatSymbols dfs = new DateFormatSymbols();
         String[] months = dfs.getMonths();
-        if (num >= 0 && num <= 11 ) {
+        if (num >= 0 && num <= 11) {
             month = months[num];
         }
         return month;
@@ -286,10 +291,10 @@ public class Utility {
         return bitmap;
     }
 
-    public static File store(Bitmap bm, String fileName){
+    public static File store(Bitmap bm, String fileName) {
         final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
         File dir = new File(dirPath);
-        if(!dir.exists())
+        if (!dir.exists())
             dir.mkdirs();
         File file = new File(dirPath, fileName);
         try {
@@ -304,7 +309,7 @@ public class Utility {
         return file;
     }
 
-    public static void shareImage(File file, Context context){
+    public static void shareImage(File file, Context context) {
         Uri uri = Uri.fromFile(file);
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
@@ -320,17 +325,20 @@ public class Utility {
         }
     }
 
-    public static String getLangCode(Context mContext){
+    public static String getLangCode(Context mContext) {
 
-        String lang = mContext.getResources().getString(R.string.locale);
-        String lang_code = "";
+        //TODO CHANE IT TO E for english version
+        return "R";
 
-        if (lang.equals("rus")){
-            lang_code = "R";
-        }else{
-            lang_code = "E";
-        }
-        return lang_code;
+//        String lang = mContext.getResources().getString(R.string.locale);
+//        String lang_code = "";
+//
+//        if (lang.equals("rus")) {
+//            lang_code = "R";
+//        } else {
+//            lang_code = "E";
+//        }
+//        return lang_code;
     }
 
     public static long toLocalTime(long time, TimeZone to) {
@@ -345,23 +353,23 @@ public class Utility {
         return time + getTimeZoneOffset(time, from, to);
     }
 
-    private static long getTimeZoneOffset(long time, TimeZone from, TimeZone to)    {
+    private static long getTimeZoneOffset(long time, TimeZone from, TimeZone to) {
         int fromOffset = from.getOffset(time);
         int toOffset = to.getOffset(time);
         int diff = 0;
 
-        if (fromOffset >= 0){
-            if (toOffset > 0){
-                toOffset = -1*toOffset;
+        if (fromOffset >= 0) {
+            if (toOffset > 0) {
+                toOffset = -1 * toOffset;
             } else {
                 toOffset = Math.abs(toOffset);
             }
-            diff = (fromOffset+toOffset)*-1;
+            diff = (fromOffset + toOffset) * -1;
         } else {
-            if (toOffset <= 0){
-                toOffset = -1*Math.abs(toOffset);
+            if (toOffset <= 0) {
+                toOffset = -1 * Math.abs(toOffset);
             }
-            diff = (Math.abs(fromOffset)+toOffset);
+            diff = (Math.abs(fromOffset) + toOffset);
         }
         return diff;
     }
@@ -380,5 +388,43 @@ public class Utility {
             return null;
         }
         return json;
+    }
+
+    public static Drawable getBackGroundPlaceholderFromAsset(String imageFile, Context pContext) {
+
+        Drawable d = null;
+        try {
+            // get input stream
+            InputStream ims = pContext.getAssets().open(imageFile);
+            // load image as Drawable
+            d = Drawable.createFromStream(ims, null);
+        } catch (IOException ex) {
+            Drawable mPlaceholderDrawable = ResourcesCompat.getDrawable(
+                    pContext.getResources(),
+                    R.drawable.ic_oval_placeholder, null);
+
+            return mPlaceholderDrawable;
+        }
+        return d;
+    }
+
+    public static Drawable getImageFromAsset(String sFileName, Context pContext) {
+
+        Drawable d = null;
+        try {
+            InputStream ims = null;
+            // get input stream
+            if(sFileName.substring(0,1).equals("/")){
+                ims = pContext.getAssets().open(sFileName.substring(1,sFileName.length()));
+            }else{
+                ims = pContext.getAssets().open(sFileName);
+            }
+
+            // load image as Drawable
+            d = Drawable.createFromStream(ims, null);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return d;
     }
 }

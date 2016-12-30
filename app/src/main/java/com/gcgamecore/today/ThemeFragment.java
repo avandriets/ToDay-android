@@ -28,9 +28,12 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -121,16 +124,24 @@ public class ThemeFragment extends BaseFragmentWithHeader implements LoaderManag
             headLine.setText(current_theme.getName());
             leadText.setText(current_theme.getDescription());
 
+            Random r = new Random();
+            int backGroundIndex = r.nextInt(Utility.randomBackGround.length);
+            Drawable mPlaceholderDrawable = Utility.getBackGroundPlaceholderFromAsset(Utility.randomBackGround[backGroundIndex], getContext());
+
             if (current_theme.getTheme_image() != null) {
 
-                Drawable mPlaceholderDrawable = ResourcesCompat.getDrawable(
-                        getContext().getResources(),
-                        R.drawable.ic_oval_placeholder, null);
+                Drawable targetImage = Utility.getImageFromAsset(current_theme.getTheme_image(), getContext());
 
-                Picasso.with(getContext()).load(Utility.BASE_URL + current_theme.getTheme_image())
-                        .placeholder(mPlaceholderDrawable)
-                        .error(mPlaceholderDrawable)
-                        .into(background_image);
+                if(targetImage != null){
+                    background_image.setImageDrawable(targetImage);
+                }else{
+                    Picasso.with(getContext()).load(Utility.BASE_URL + current_theme.getTheme_image())
+                            .placeholder(mPlaceholderDrawable)
+                            .error(mPlaceholderDrawable)
+                            .into(background_image);
+                }
+            }else{
+                background_image.setImageDrawable(mPlaceholderDrawable);
             }
 
             themeIntroduction.setVisibility(View.VISIBLE);

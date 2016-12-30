@@ -71,8 +71,9 @@
                     android:id="@+id/ImageBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/questions_layout"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:minHeight="500dp"
+                    android:layout_alignParentBottom="true" />
 
                 <LinearLayout
                     android:id="@+id/questions_layout"
