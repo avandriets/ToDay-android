@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.gcgamecore.today.BuildConfig;
 import com.gcgamecore.today.R;
 import com.gcgamecore.today.Utility.DB_Utility;
 import com.gcgamecore.today.Utility.ThemeWithQuestion;
@@ -84,7 +85,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.d(DatabaseHelper.class.getName(), "Start read JSON DATA");
 
-            String RusJSON = Utility.loadJSONFromAsset(mContext, "initDataRUS.json");
+            String RusJSON = Utility.loadJSONFromAsset(mContext, BuildConfig.QUESTIONS_FILE);
 
             Log.d(DatabaseHelper.class.getName(), "Finish read JSON DATA");
 
@@ -94,18 +95,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Log.e(DatabaseHelper.class.getName(), "Can't add data", e);
         }
 
-        try {
-            Log.d(DatabaseHelper.class.getName(), "Start read JSON DATA");
-
-            String EngJSON = Utility.loadJSONFromAsset(mContext, "initDataENG.json");
-
-            Log.d(DatabaseHelper.class.getName(), "Finish read JSON DATA");
-
-            List<ThemeWithQuestion> engList = DB_Utility.parseThemeArray(EngJSON);
-            DB_Utility.updateThemesWithQuestions(this, engList);
-        } catch (Exception e) {
-            Log.e(DatabaseHelper.class.getName(), "Can't add data", e);
-        }
+//        try {
+//            Log.d(DatabaseHelper.class.getName(), "Start read JSON DATA");
+//
+//            String EngJSON = Utility.loadJSONFromAsset(mContext, "initDataENG.json");
+//
+//            Log.d(DatabaseHelper.class.getName(), "Finish read JSON DATA");
+//
+//            List<ThemeWithQuestion> engList = DB_Utility.parseThemeArray(EngJSON);
+//            DB_Utility.updateThemesWithQuestions(this, engList);
+//        } catch (Exception e) {
+//            Log.e(DatabaseHelper.class.getName(), "Can't add data", e);
+//        }
     }
 
     /**

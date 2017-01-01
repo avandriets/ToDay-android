@@ -198,6 +198,14 @@ public class DB_Utility {
 
     public static long getNewEventsCount(DatabaseHelper mDatabaseHelper, String lang) {
 
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+
+        Date today_date = c.getTime();
+
         long eventsCount = 0;
         try {
             List<DB_Answers> listAnsweredTheme = mDatabaseHelper.getAnswerDataDao()
@@ -218,6 +226,8 @@ public class DB_Utility {
                         .and()
                         .eq(DB_ThemeQuiz.LANGUAGE, lang)
                         .and()
+                        .le(DB_ThemeQuiz.TARGET_DATE, today_date)
+                        .and()
                         .eq(DB_ThemeQuiz.MAIN_THEME, false)
                         .countOf();
 
@@ -226,6 +236,8 @@ public class DB_Utility {
                 eventsCount = mDatabaseHelper.getThemeQuizDataDao().queryBuilder()
                         .where()
                         .eq(DB_ThemeQuiz.LANGUAGE, lang)
+                        .and()
+                        .le(DB_ThemeQuiz.TARGET_DATE, today_date)
                         .and()
                         .eq(DB_ThemeQuiz.MAIN_THEME, false)
                         .countOf();

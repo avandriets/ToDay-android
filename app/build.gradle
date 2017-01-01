@@ -17,7 +17,7 @@ android {
         applicationId "com.gcgamecore.today"
         minSdkVersion 10
         targetSdkVersion 25
-        versionCode 3
+        versionCode 4
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -29,6 +29,21 @@ android {
         }
     }
     productFlavors {
+        devel {
+            buildConfigField 'String', 'HOST', '"http://today1070.cloudapp.net"'
+            buildConfigField "String", "QUESTIONS_LANGUAGE", "\"R\""
+            buildConfigField "String", "QUESTIONS_FILE", "\"initDataTEST.json\""
+        }
+        prodRUS {
+            buildConfigField "String", "QUESTIONS_LANGUAGE", "\"R\""
+            buildConfigField 'String', 'HOST', '"http://today2401.cloudapp.net"'
+            buildConfigField "String", "QUESTIONS_FILE", "\"initDataRUS.json\""
+        }
+        prodENG {
+            buildConfigField "String", "QUESTIONS_LANGUAGE", "\"E\""
+            buildConfigField 'String', 'HOST', '"http://today2401.cloudapp.net"'
+            buildConfigField "String", "QUESTIONS_FILE", "\"initDataENG.json\""
+        }
     }
 }
 

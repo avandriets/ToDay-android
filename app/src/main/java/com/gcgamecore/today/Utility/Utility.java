@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.gcgamecore.today.BuildConfig;
 import com.gcgamecore.today.Data.DatabaseHelper;
 import com.gcgamecore.today.R;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -43,7 +44,7 @@ public class Utility {
 
     private static final String LOG_TAG = Utility.class.getSimpleName();
 
-    public static final String BASE_URL = "http://today2401.cloudapp.net";
+    public static final String BASE_URL = BuildConfig.HOST;//"http://today2401.cloudapp.net";
     public static final String KEY_THEME_NAME = "key_theme_name";
     public static final String KEY_QUESTION = "key_question";
     public static final String KEY_BACKGROUND_IMAGE_URL = "key_back_ground_url";
@@ -205,9 +206,9 @@ public class Utility {
         dist = Math.acos(dist);
         dist = rad2deg(dist);
         dist = dist * 60 * 1.1515;
-        if (unit == "K") {
+        if (unit.equals("K") ) {
             dist = dist * 1.609344;
-        } else if (unit == "N") {
+        } else if (unit.equals("N")) {
             dist = dist * 0.8684;
         }
 
@@ -328,7 +329,8 @@ public class Utility {
     public static String getLangCode(Context mContext) {
 
         //TODO CHANE IT TO E for english version
-        return "R";
+        //return "R";
+        return BuildConfig.QUESTIONS_LANGUAGE;
 
 //        String lang = mContext.getResources().getString(R.string.locale);
 //        String lang_code = "";
