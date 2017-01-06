@@ -60,7 +60,7 @@
                 android:paddingStart="33dp"
                 android:paddingTop="10dp"
                 android:text="Зачем вьетнамская традиция рекомендует счастливым обладателям пруда у своего дома к Новому году выпускать карпа в этот самый пруд?"
-                android:textColor="@color/ToDayColorTextGray"
+                android:textColor="@color/ToDayColorBlack"
                 android:textSize="18sp" />
 
             <RelativeLayout
@@ -95,7 +95,8 @@
                         android:minHeight="60dp"
                         android:orientation="horizontal"
                         android:paddingEnd="16dp"
-                        android:paddingStart="16dp">
+                        android:paddingStart="16dp"
+                        android:alpha="0.9">
 
                         <ImageView
                             android:id="@+id/imageAnswerOne"
@@ -114,7 +115,7 @@
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="16dp"
                             android:text="Чтобы карп принес богатство."
-                            android:textColor="@color/ToDayColorTextGray"
+                            android:textColor="@color/ToDayColorBlack"
                             android:textSize="18sp" />
                     </LinearLayout>
 
@@ -129,7 +130,8 @@
                         android:minHeight="60dp"
                         android:orientation="horizontal"
                         android:paddingEnd="16dp"
-                        android:paddingStart="16dp">
+                        android:paddingStart="16dp"
+                        android:alpha="0.9">
 
                         <ImageView
                             android:id="@+id/imageAnswerTwo"
@@ -148,7 +150,8 @@
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="16dp"
                             android:text="Чтобы карп принес богатство."
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textColor="@color/ToDayColorBlack"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -211,7 +214,7 @@
                                 android:paddingStart="33dp"
                                 android:paddingTop="16dp"
                                 android:text="Описание ответа"
-                                android:textColor="@color/ToDayColorTextGray"
+                                android:textColor="@color/ToDayColorBlack"
                                 android:textSize="20sp" />
 
                         </LinearLayout>

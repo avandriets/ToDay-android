@@ -156,7 +156,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
         question_text.setTypeface(custom_font_regular);
         one_answer_text.setTypeface(custom_font_regular);
         two_answer_text.setTypeface(custom_font_regular);
-        answerDescription.setTypeface(custom_font_times);
+        answerDescription.setTypeface(custom_font_regular);
         textFinishMessage.setTypeface(custom_font_regular);
         textResultView.setTypeface(custom_font_bold);
 
