@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="string_archive">Темы</string>
-    <string name="string_quiz">Викторина</string>
+    <string name="string_quiz">Купить</string>
     <string name="string_favorite">Избранное</string>
     <string name="string_action">События</string>
     <string name="locale">rus</string>

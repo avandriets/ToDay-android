@@ -16,6 +16,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.gcgamecore.today.BuildConfig;
 import com.gcgamecore.today.Data.DB_Questions;
 import com.gcgamecore.today.Data.DB_SentNotification;
 import com.gcgamecore.today.Data.DB_ThemeQuestion;

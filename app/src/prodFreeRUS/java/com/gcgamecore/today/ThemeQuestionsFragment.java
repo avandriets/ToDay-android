@@ -22,6 +22,9 @@ import com.gcgamecore.today.Data.DB_LastQuestionInTheme;
 import com.gcgamecore.today.Data.DB_ThemeQuestion;
 import com.gcgamecore.today.Data.DB_ThemeQuiz;
 import com.gcgamecore.today.Utility.Utility;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.squareup.picasso.Picasso;
 import java.io.File;
@@ -129,6 +132,8 @@ public class ThemeQuestionsFragment extends BaseFragment {
     private Drawable drw_happy_face;
     private Drawable drw_sad_face;
     private Drawable drw_usual_face;
+    private int clickCounter;
+    private InterstitialAd mInterstitialAd;
 
     public interface Callback {
         void onFinishGame();
@@ -257,6 +262,20 @@ public class ThemeQuestionsFragment extends BaseFragment {
 
         gameLayout.setVisibility(View.VISIBLE);
         finishLayout.setVisibility(View.GONE);
+
+        clickCounter = 0;
+
+        mInterstitialAd = new InterstitialAd(getActivity());
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+            }
+        });
+
+        requestNewInterstitial();
 
         return rootView;
     }
@@ -493,7 +512,25 @@ public class ThemeQuestionsFragment extends BaseFragment {
         }
     }
 
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+    }
+
     public void applyAnswer() {
+
+        if (mInterstitialAd.isLoaded()) {
+
+            if(clickCounter >= 3){
+                mInterstitialAd.show();
+                clickCounter = 0;
+            }else{
+                clickCounter+=1;
+            }
+        }
 
         DB_ThemeQuestion current_question = question_list.get((int) current_question_index);
         boolean flag_winner = false;

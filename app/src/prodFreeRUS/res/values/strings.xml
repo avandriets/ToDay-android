@@ -1,7 +1,7 @@
 <resources>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="sync_account_type" translatable="false">today.gcgamecore.com</string>
-    <string name="content_authority" translatable="false">com.gcgamecore.today</string>
+    <string name="content_authority" translatable="false">com.gcgamecore.today.free</string>
     <string name="app_name" translatable="false">ToDay</string>
     <string name="string_archive">Topics</string>
     <string name="string_quiz">Buy</string>

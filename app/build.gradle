@@ -30,16 +30,25 @@ android {
     }
     productFlavors {
         devel {
+            applicationId 'com.gcgamecore.today.developer'
             buildConfigField 'String', 'HOST', '"http://today1070.cloudapp.net"'
             buildConfigField "String", "QUESTIONS_LANGUAGE", "\"R\""
             buildConfigField "String", "QUESTIONS_FILE", "\"initDataTEST.json\""
         }
         prodRUS {
+            applicationId 'com.gcgamecore.today'
+            buildConfigField "String", "QUESTIONS_LANGUAGE", "\"R\""
+            buildConfigField 'String', 'HOST', '"http://today2401.cloudapp.net"'
+            buildConfigField "String", "QUESTIONS_FILE", "\"initDataRUS.json\""
+        }
+        prodFreeRUS {
+            applicationId 'com.gcgamecore.today.free'
             buildConfigField "String", "QUESTIONS_LANGUAGE", "\"R\""
             buildConfigField 'String', 'HOST', '"http://today2401.cloudapp.net"'
             buildConfigField "String", "QUESTIONS_FILE", "\"initDataRUS.json\""
         }
         prodENG {
+            applicationId 'com.gcgamecore.today.english'
             buildConfigField "String", "QUESTIONS_LANGUAGE", "\"E\""
             buildConfigField 'String', 'HOST', '"http://today2401.cloudapp.net"'
             buildConfigField "String", "QUESTIONS_FILE", "\"initDataENG.json\""
@@ -68,6 +77,7 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-ads:10.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
