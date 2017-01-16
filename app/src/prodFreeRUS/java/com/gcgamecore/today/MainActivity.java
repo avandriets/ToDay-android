@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements
         ShowNewEvents();
 
         //Load AD
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-6013004568754454~3121921322");
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);

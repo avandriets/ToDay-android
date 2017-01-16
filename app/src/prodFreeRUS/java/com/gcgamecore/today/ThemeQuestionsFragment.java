@@ -266,7 +266,7 @@ public class ThemeQuestionsFragment extends BaseFragment {
         clickCounter = 0;
 
         mInterstitialAd = new InterstitialAd(getActivity());
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId("ca-app-pub-6013004568754454/9028854127");
 
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
